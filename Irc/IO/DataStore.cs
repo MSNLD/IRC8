@@ -23,10 +23,7 @@ public class DataStore : IDataStore
             // Workaround for forced case comparison
             // (specifying PropertyNameCaseInsensitive = true in JsonSerializerOptions also didnt work)
             var tempSet = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
-            foreach (var kvp in tempSet)
-            {
-                _sets.Add(kvp.Key, kvp.Value);
-            }
+            foreach (var kvp in tempSet) _sets.Add(kvp.Key, kvp.Value);
         }
     }
 
@@ -56,7 +53,7 @@ public class DataStore : IDataStore
     public T GetAs<T>(string key)
     {
         var json = Get(key);
-        if (json == null) return default(T);
+        if (json == null) return default;
         return JsonSerializer.Deserialize<T>(json) ?? default(T);
     }
 
@@ -76,7 +73,7 @@ public class DataStore : IDataStore
         {
             if (!Directory.Exists("states")) Directory.CreateDirectory("states");
             var origFileName = $"{_section}_{_id}.json";
-            var invalids = new char[] { '\0', '/', '¥', '\\' };
+            var invalids = new[] { '\0', '/', '¥', '\\' };
             var newName = string.Join('_', origFileName.Split(invalids, StringSplitOptions.RemoveEmptyEntries))
                 .TrimEnd('.');
             File.WriteAllText($"states/{newName}", JsonSerializer.Serialize(_sets));

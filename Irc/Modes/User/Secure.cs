@@ -1,12 +1,12 @@
-using Irc.Constants;
 using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Modes.User;
 
 public class Secure : ModeRule, IModeRule
 {
-    public Secure() : base(Resources.UserModeSecure)
+    public Secure() : base(IrcStrings.UserModeSecure)
     {
     }
 

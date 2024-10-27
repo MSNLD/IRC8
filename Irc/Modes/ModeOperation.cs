@@ -1,7 +1,7 @@
-using Irc.Constants;
 using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Modes;
 
@@ -24,7 +24,7 @@ public class ModeOperation
                 // -> sky-8a15b323126 MODE #test +l hello
                 // < - :sky - 8a15b323126 461 Sky MODE +l :Not enough parameters
                 Source.Send(Raw.IRCX_ERR_NEEDMOREPARAMS_461(Source.Server, Source,
-                    $"{Resources.CommandMode} {Mode.GetModeChar()}"));
+                    $"{IrcStrings.CommandMode} {Mode.GetModeChar()}"));
                 break;
             }
             case EnumIrcError.ERR_NOCHANOP:

@@ -5,7 +5,7 @@ using Irc.Objects.Server;
 
 namespace Irc.Interfaces;
 
-public interface IChannel
+public interface IChannel: IChatObject
 {
     IDataStore ChannelStore { get; }
     IChannelModes Modes { get; }

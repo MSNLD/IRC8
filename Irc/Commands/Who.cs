@@ -1,10 +1,10 @@
 ﻿using System.Text.RegularExpressions;
-using Irc.Constants;
 using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Objects.Channel;
 using Irc.Objects.Server;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -69,7 +69,7 @@ public class Who : Command, ICommand
         foreach (var chatUser in chatUsers)
         {
             var isCurrentUser = user == chatUser;
-            if (chatUser.Modes.GetMode(Resources.UserModeInvisible).Get() == 0 || ignoreInvisible || isCurrentUser)
+            if (chatUser.Modes.GetMode(IrcStrings.UserModeInvisible).Get() == 0 || ignoreInvisible || isCurrentUser)
             {
                 // 352     RPL_WHOREPLY
                 //                 "<channel> <user> <host> <server> <nick> \

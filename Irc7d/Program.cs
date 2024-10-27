@@ -2,17 +2,12 @@
 using System.Reflection;
 using System.Text.Json;
 using Irc.Extensions.Apollo.Directory;
-using Irc.Extensions.Apollo.Factories;
-using Irc.Extensions.Apollo.Objects.Channel;
-using Irc.Extensions.Apollo.Objects.Server;
-using Irc.Extensions.Factories;
-using Irc.Extensions.Objects.Channel;
-using Irc.Extensions.Objects.Server;
 using Irc.Extensions.Security.Credentials;
 using Irc.Factories;
 using Irc.Interfaces;
 using Irc.IO;
 using Irc.Logger;
+using Irc.Objects.Channel;
 using Irc.Objects.Server;
 using Irc.Security;
 using Microsoft.Extensions.CommandLineUtils;
@@ -22,7 +17,7 @@ namespace Irc7d;
 
 internal class Program
 {
-    public static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
+    public static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     private static IServer server;
     private static CancellationTokenSource cancellationTokenSource;
@@ -111,25 +106,11 @@ internal class Program
 
             switch (type)
             {
-                case IrcType.IRC:
-                {
-                    server = new Server(socketServer, new SecurityManager(), new FloodProtectionManager(),
-                        new DataStore("DefaultServer.json"),
-                        new List<IChannel>(), null, new UserFactory());
-                    break;
-                }
-                case IrcType.IRCX:
-                {
-                    server = new ExtendedServer(socketServer, new SecurityManager(), new FloodProtectionManager(),
-                        new DataStore("DefaultServer.json"),
-                        new List<IChannel>(), null, new ExtendedUserFactory(), credentialProvider);
-                    break;
-                }
-                case IrcType.DIR:
+                case IrcType.Dir:
                 {
                     server = new DirectoryServer(socketServer, new SecurityManager(), new FloodProtectionManager(),
                         new DataStore("DefaultServer.json"),
-                        new List<IChannel>(), null, new ApolloUserFactory(), credentialProvider);
+                        new List<IChannel>(), null, new UserFactory(), credentialProvider);
 
                     var parts = forwardServer.Split(':');
                     if (parts.Length > 0) ((DirectoryServer)server).ChatServerIP = parts[0];
@@ -139,9 +120,9 @@ internal class Program
                 }
                 default:
                 {
-                    server = new ApolloServer(socketServer, new SecurityManager(), new FloodProtectionManager(),
+                    server = new Server(socketServer, new SecurityManager(), new FloodProtectionManager(),
                         new DataStore("DefaultServer.json"),
-                        new List<IChannel>(), null, new ApolloUserFactory(), credentialProvider);
+                        new List<IChannel>(), null, new UserFactory(), credentialProvider);
                     break;
                 }
             }
@@ -153,16 +134,15 @@ internal class Program
                 JsonSerializer.Deserialize<List<DefaultChannel>>(File.ReadAllText("DefaultChannels.json"));
             foreach (var defaultChannel in defaultChannels)
             {
-                var name = type == IrcType.IRC ? $"#{defaultChannel.Name}" : $"%#{defaultChannel.Name}";
+                var name = $"%#{defaultChannel.Name}";
                 var channel = server.CreateChannel(name);
                 channel.ChannelStore.Set("topic", defaultChannel.Topic);
                 foreach (var keyValuePair in defaultChannel.Modes)
                     channel.Modes.SetModeChar(keyValuePair.Key, keyValuePair.Value);
 
-                if (channel is ExtendedChannel || channel is ApolloChannel)
-                    foreach (var keyValuePair in defaultChannel.Props)
-                        ((ExtendedChannel)channel).PropCollection.GetProp(keyValuePair.Key)
-                            .SetValue(keyValuePair.Value);
+                foreach (var keyValuePair in defaultChannel.Props)
+                    ((Channel)channel).Props.GetProp(keyValuePair.Key)
+                        .SetValue(keyValuePair.Value);
 
                 server.AddChannel(channel);
             }
@@ -187,9 +167,7 @@ internal class Program
 
     private enum IrcType
     {
-        IRC,
-        IRCX,
-        MSN,
-        DIR
+        Chat,
+        Dir
     }
 }

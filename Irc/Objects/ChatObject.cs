@@ -1,37 +1,35 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.IO;
+using Irc.Resources;
 
 namespace Irc.Objects;
 
 public class ChatObject : IChatObject
 {
-    public readonly IDataStore DataStore;
-    public virtual EnumUserAccessLevel Level
-    {
-        get
-        {
-            return EnumUserAccessLevel.None;
-        }
-    }
     protected readonly IModeCollection _modes;
-    public virtual IModeCollection Modes
-    {
-        get
-        {
-            return _modes;
-        }
-    }
+    private readonly IPropCollection _props;
+    public readonly IDataStore DataStore;
 
-    public ChatObject(IModeCollection modes, IDataStore dataStore)
+    public ChatObject(IModeCollection modes, IPropCollection props, IDataStore dataStore)
     {
         _modes = modes;
+        _props = props;
         DataStore = dataStore;
         DataStore.SetId(Id.ToString());
     }
 
-    public IModeCollection GetModes() => _modes;
+    public virtual EnumUserAccessLevel Level => EnumUserAccessLevel.None;
+
+    public virtual IModeCollection Modes => _modes;
+
+    public IPropCollection Props => _props;
+    public IAccessList AccessList { get; }
+
+    public IModeCollection GetModes()
+    {
+        return _modes;
+    }
 
     public Guid Id { get; } = Guid.NewGuid();
 
@@ -39,7 +37,7 @@ public class ChatObject : IChatObject
 
     public string Name
     {
-        get => DataStore.Get("Name") ?? Resources.Wildcard;
+        get => DataStore.Get("Name") ?? IrcStrings.Wildcard;
         set => DataStore.Set("Name", value);
     }
 

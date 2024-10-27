@@ -1,8 +1,5 @@
-﻿using System;
-namespace Irc.Logging
-{
-	public class FileIO
-	{
-	}
-}
+﻿namespace Irc.Logging;
 
+public class FileIO
+{
+}

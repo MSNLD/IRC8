@@ -1,8 +1,8 @@
 using Irc.Commands;
-using Irc.Constants;
 using Irc.Enumerations;
 using Irc.Helpers;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Extensions.Apollo.Directory.Commands;
 
@@ -29,9 +29,9 @@ public class Nick : Command, ICommand
 
     public static bool ValidateNickname(string nickname)
     {
-        var mask = Resources.PreAuthNicknameMask;
+        var mask = IrcStrings.PreAuthNicknameMask;
 
-        return nickname.Length <= Resources.MaxFieldLen &&
+        return nickname.Length <= IrcStrings.MaxFieldLen &&
                RegularExpressions.Match(mask, nickname, true);
     }
 

@@ -1,12 +1,12 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Modes.User;
 
 public class WallOps : ModeRule, IModeRule
 {
-    public WallOps() : base(Resources.UserModeWallops)
+    public WallOps() : base(IrcStrings.UserModeWallops)
     {
     }
 

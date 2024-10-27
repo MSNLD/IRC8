@@ -1,24 +1,31 @@
 ﻿using System.Text.RegularExpressions;
 using Irc.Commands;
-using Irc.Constants;
 using Irc.Enumerations;
+using Irc.Extensions.Access.Channel;
 using Irc.Interfaces;
 using Irc.IO;
+using Irc.Modes;
 using Irc.Objects.Server;
+using Irc.Resources;
 
 namespace Irc.Objects.Channel;
 
 public class Channel : ChatObject, IChannel
 {
+    private readonly ChannelAccess _accessList = new();
     protected readonly IList<IChannelMember> _members = new List<IChannelMember>();
     public HashSet<string> BanList = new();
     public HashSet<string> InviteList = new();
 
-    public Channel(string name, IChannelModes modes, IDataStore dataStore) : base(modes, dataStore)
+    public Channel(string name, IChannelModes modes, IDataStore dataStore) : base(modes, new ChannelPropCollection(), dataStore)
     {
         SetName(name);
         DataStore.SetId(Name);
+        base.Props.SetProp("NAME", name);
     }
+
+    public IPropCollection PropCollection => base.Props;
+    public IAccessList AccessList => _accessList;
 
     public override IChannelModes Modes => (IChannelModes)base.Modes;
 
@@ -53,8 +60,27 @@ public class Channel : ChatObject, IChannel
 
     public virtual IChannel Join(IUser user, EnumChannelAccessResult accessResult = EnumChannelAccessResult.NONE)
     {
-        AddMember(user);
-        Send(IrcRaws.RPL_JOIN(user, this));
+        var joinMember = AddMember(user, accessResult);
+        foreach (var channelMember in GetMembers())
+        {
+            var channelUser = channelMember.GetUser();
+            if (channelUser.GetProtocol().GetProtocolType() <= EnumProtocolType.IRC3)
+            {
+                channelMember.GetUser().Send(IrcRaws.RPL_JOIN(user, this));
+
+                if (!joinMember.IsNormal())
+                {
+                    var modeChar = joinMember.IsOwner() ? 'q' : joinMember.IsHost() ? 'o' : 'v';
+                    ModeRule.DispatchModeChange((ChatObject)channelUser, modeChar,
+                        (ChatObject)user, this, true, user.ToString());
+                }
+            }
+            else
+            {
+                channelUser.Send(ApolloRaws.RPL_JOIN_MSN(channelMember, this, joinMember));
+            }
+        }
+
         return this;
     }
 
@@ -239,7 +265,47 @@ public class Channel : ChatObject, IChannel
 
     public virtual EnumChannelAccessResult GetAccess(IUser user, string key, bool IsGoto = false)
     {
-        var accessPermissions = GetAccessEx(user, key, IsGoto);
+        var hostKeyCheck = CheckHostKey(user, key);
+
+        var accessLevel = GetChannelAccess(user);
+        var accessResult = EnumChannelAccessResult.NONE;
+
+        switch (accessLevel)
+        {
+            case EnumAccessLevel.OWNER:
+            {
+                accessResult = EnumChannelAccessResult.SUCCESS_OWNER;
+                break;
+            }
+            case EnumAccessLevel.HOST:
+            {
+                accessResult = EnumChannelAccessResult.SUCCESS_HOST;
+                break;
+            }
+            case EnumAccessLevel.VOICE:
+            {
+                accessResult = EnumChannelAccessResult.SUCCESS_VOICE;
+                break;
+            }
+            case EnumAccessLevel.GRANT:
+            {
+                accessResult = EnumChannelAccessResult.SUCCESS_MEMBER;
+                break;
+            }
+            case EnumAccessLevel.DENY:
+            {
+                accessResult = EnumChannelAccessResult.ERR_BANNEDFROMCHAN;
+                break;
+            }
+        }
+
+        var accessPermissions = (EnumChannelAccessResult)new[]
+        {
+            (int)GetAccessEx(user, key, IsGoto),
+            (int)hostKeyCheck,
+            (int)accessResult
+        }.Max();
+
         return accessPermissions == EnumChannelAccessResult.NONE
             ? EnumChannelAccessResult.SUCCESS_GUEST
             : accessPermissions;
@@ -302,7 +368,7 @@ public class Channel : ChatObject, IChannel
 
     public static bool ValidName(string channel)
     {
-        var regex = new Regex(Resources.IrcxChannelRegex);
+        var regex = new Regex(IrcStrings.IrcxChannelRegex);
         return regex.Match(channel).Success;
     }
 
@@ -334,7 +400,7 @@ public class Channel : ChatObject, IChannel
     {
         if (string.IsNullOrWhiteSpace(key)) return EnumChannelAccessResult.NONE;
 
-        if (Modes.GetModeChar(Resources.ChannelModeKey) == 1)
+        if (Modes.GetModeChar(IrcStrings.ChannelModeKey) == 1)
         {
             if (Modes.Key == key)
                 return EnumChannelAccessResult.SUCCESS_MEMBER;
@@ -361,6 +427,43 @@ public class Channel : ChatObject, IChannel
         if (IsGoto) userLimit = (int)Math.Ceiling(userLimit * 1.2);
 
         if (GetMembers().Count >= userLimit) return EnumChannelAccessResult.ERR_CHANNELISFULL;
+        return EnumChannelAccessResult.NONE;
+    }
+
+    public EnumAccessLevel GetChannelAccess(IUser user)
+    {
+        var userAccessLevel = EnumAccessLevel.NONE;
+        var addressString = user.GetAddress().GetFullAddress();
+        var accessEntries = AccessList.GetEntries();
+
+        foreach (var accessKvp in accessEntries)
+        {
+            var accessLevel = accessKvp.Key;
+            var accessList = accessKvp.Value;
+
+            foreach (var accessEntry in accessList)
+            {
+                var maskAddress = accessEntry.Mask;
+
+                var regExStr = maskAddress.Replace("*", ".*").Replace("?", ".");
+                var regEx = new Regex(regExStr, RegexOptions.IgnoreCase);
+                if (regEx.Match(addressString).Success)
+                    if ((int)accessLevel > (int)userAccessLevel)
+                        userAccessLevel = accessLevel;
+            }
+        }
+
+        return userAccessLevel;
+    }
+
+
+    protected EnumChannelAccessResult CheckHostKey(IUser user, string key)
+    {
+        if (string.IsNullOrWhiteSpace(key)) return EnumChannelAccessResult.NONE;
+
+        if (PropCollection.GetProp("OWNERKEY").GetValue(this) == key)
+            return EnumChannelAccessResult.SUCCESS_OWNER;
+        if (PropCollection.GetProp("HOSTKEY").GetValue(this) == key) return EnumChannelAccessResult.SUCCESS_HOST;
         return EnumChannelAccessResult.NONE;
     }
 }

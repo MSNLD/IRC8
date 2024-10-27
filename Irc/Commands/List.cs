@@ -7,10 +7,6 @@ namespace Irc.Commands;
 
 internal class List : Command, ICommand
 {
-    public List() : base()
-    {
-    }
-
     public new EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.Data;

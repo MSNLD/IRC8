@@ -1,6 +1,4 @@
-﻿using Irc.Extensions.Security;
-
-namespace Irc.Security;
+﻿namespace Irc.Security;
 
 public interface ICredentialProvider
 {

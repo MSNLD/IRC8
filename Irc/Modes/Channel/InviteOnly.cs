@@ -1,12 +1,12 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
 public class InviteOnly : ModeRuleChannel, IModeRule
 {
-    public InviteOnly() : base(Resources.ChannelModeInvite)
+    public InviteOnly() : base(IrcStrings.ChannelModeInvite)
     {
     }
 

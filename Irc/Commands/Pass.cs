@@ -1,6 +1,6 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Commands;
 

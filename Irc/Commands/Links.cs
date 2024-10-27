@@ -1,15 +1,11 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
 public class Links : Command, ICommand
 {
-    public Links() : base()
-    {
-    }
-
     public new EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
@@ -25,6 +21,6 @@ public class Links : Command, ICommand
         var linkCount = 0;
         chatFrame.User.Send(IrcRaws.IRC_RAW_364(chatFrame.Server, chatFrame.User, chatFrame.Server.ToString(),
             linkCount));
-        chatFrame.User.Send(IrcRaws.IRC_RAW_365(chatFrame.Server, chatFrame.User, Resources.Wildcard));
+        chatFrame.User.Send(IrcRaws.IRC_RAW_365(chatFrame.Server, chatFrame.User, IrcStrings.Wildcard));
     }
 }

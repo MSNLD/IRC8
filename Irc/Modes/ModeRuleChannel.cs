@@ -28,6 +28,25 @@ public class ModeRuleChannel : ModeRule, IModeRule
         return EnumIrcError.OK;
     }
 
+    public interface IModeRuleCallback
+    {
+        IChatObject source { get; set; }
+        IChatObject target { get; set; }
+        bool flag { get; set; }
+        string parameter { get; set; }
+    }
+
+    public EnumIrcError EvaluateAndExecute(IModeRuleCallback iModeRuleParams, Action<ModeRuleChannel.IModeRuleCallback> callback)
+    {
+        var result = Evaluate(iModeRuleParams.source, iModeRuleParams.target, iModeRuleParams.flag, iModeRuleParams.parameter);
+        if (result == EnumIrcError.OK)
+        {
+            callback(iModeRuleParams);
+        }
+
+        return result;
+    }
+
     public EnumIrcError EvaluateAndSet(IChatObject source, IChatObject target, bool flag, string parameter)
     {
         var result = Evaluate(source, target, flag, parameter);

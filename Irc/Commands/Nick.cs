@@ -1,7 +1,7 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Helpers;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -31,13 +31,13 @@ public class Nick : Command, ICommand
     public static bool ValidateNickname(string nickname, bool guest = false, bool oper = false, bool preAuth = false,
         bool preReg = false)
     {
-        var mask = Resources.PostAuthNicknameMask;
+        var mask = IrcStrings.PostAuthNicknameMask;
 
-        if (preAuth) mask = Resources.PreAuthNicknameMask;
-        else if (oper) mask = Resources.PostAuthOperNicknameMask;
-        else if (guest) mask = Resources.PostAuthGuestNicknameMask;
+        if (preAuth) mask = IrcStrings.PreAuthNicknameMask;
+        else if (oper) mask = IrcStrings.PostAuthOperNicknameMask;
+        else if (guest) mask = IrcStrings.PostAuthGuestNicknameMask;
 
-        return nickname.Length <= Resources.MaxFieldLen &&
+        return nickname.Length <= IrcStrings.MaxFieldLen &&
                RegularExpressions.Match(mask, nickname, true);
     }
 

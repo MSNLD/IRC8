@@ -1,12 +1,12 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
 public class NoExtern : ModeRuleChannel, IModeRule
 {
-    public NoExtern() : base(Resources.ChannelModeNoExtern)
+    public NoExtern() : base(IrcStrings.ChannelModeNoExtern)
     {
     }
 

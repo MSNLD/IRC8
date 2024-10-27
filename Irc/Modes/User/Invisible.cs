@@ -1,12 +1,12 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Modes.User;
 
 public class Invisible : ModeRule, IModeRule
 {
-    public Invisible() : base(Resources.UserModeInvisible)
+    public Invisible() : base(IrcStrings.UserModeInvisible)
     {
     }
 
@@ -14,7 +14,7 @@ public class Invisible : ModeRule, IModeRule
     {
         if (source == target)
         {
-            target.Modes[Resources.UserModeInvisible].Set(flag);
+            target.Modes[IrcStrings.UserModeInvisible].Set(flag);
             DispatchModeChange(source, target, flag, parameter);
             return EnumIrcError.OK;
         }

@@ -1,13 +1,13 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
 public class UserLimit : ModeRuleChannel, IModeRule
 {
-    public UserLimit() : base(Resources.ChannelModeUserLimit, true)
+    public UserLimit() : base(IrcStrings.ChannelModeUserLimit, true)
     {
     }
 
@@ -26,7 +26,7 @@ public class UserLimit : ModeRuleChannel, IModeRule
             {
                 // TODO: Currently does not support unsetting limit without extra parameter
 
-                channel.Modes.GetMode(Resources.ChannelModeUserLimit).Set(0);
+                channel.Modes.GetMode(IrcStrings.ChannelModeUserLimit).Set(0);
                 DispatchModeChange(source, target, false, string.Empty);
             }
 
@@ -38,7 +38,7 @@ public class UserLimit : ModeRuleChannel, IModeRule
 
         if (limit > 0 && (limit <= 100 || isAdministrator))
         {
-            channel.Modes.GetMode(Resources.ChannelModeUserLimit).Set(limit);
+            channel.Modes.GetMode(IrcStrings.ChannelModeUserLimit).Set(limit);
             DispatchModeChange(source, target, true, limit.ToString());
         }
 

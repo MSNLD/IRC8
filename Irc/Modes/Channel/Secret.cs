@@ -1,12 +1,12 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
 public class Secret : ModeRuleChannel, IModeRule
 {
-    public Secret() : base(Resources.ChannelModeSecret)
+    public Secret() : base(IrcStrings.ChannelModeSecret)
     {
     }
 
@@ -22,13 +22,13 @@ public class Secret : ModeRuleChannel, IModeRule
                 if (channel.Modes.Private)
                 {
                     channel.Modes.Private = false;
-                    DispatchModeChange(Resources.ChannelModePrivate, source, target, false, string.Empty);
+                    DispatchModeChange(IrcStrings.ChannelModePrivate, source, target, false, string.Empty);
                 }
 
                 if (channel.Modes.Hidden)
                 {
                     channel.Modes.Hidden = false;
-                    DispatchModeChange(Resources.ChannelModeHidden, source, target, false, string.Empty);
+                    DispatchModeChange(IrcStrings.ChannelModeHidden, source, target, false, string.Empty);
                 }
             }
 

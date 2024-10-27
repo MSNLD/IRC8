@@ -1,20 +1,22 @@
 ﻿using System.Collections.Concurrent;
 using System.Text;
-using Irc.Constants;
 using Irc.Enumerations;
+using Irc.Extensions.Access.User;
 using Irc.Extensions.Security.Packages;
 using Irc.Interfaces;
 using Irc.IO;
 using Irc.Modes;
 using Irc.Objects.Server;
+using Irc.Resources;
 using Irc7d;
 using NLog;
 
-namespace Irc.Objects;
+namespace Irc.Objects.User;
 
 public class User : ChatObject, IUser
 {
     public static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
+    private readonly UserAccess _accessList = new();
 
     //public Access Access;
     private readonly IConnection _connection;
@@ -38,7 +40,7 @@ public class User : ChatObject, IUser
 
     public User(IConnection connection, IProtocol protocol, IDataRegulator dataRegulator,
         IFloodProtectionProfile floodProtectionProfile, IDataStore dataStore, IModeCollection modes,
-        IServer server) : base(modes, dataStore)
+        IServer server) : base(modes, new UserPropCollection(dataStore, server), dataStore)
     {
         Server = server;
         _connection = connection;
@@ -63,6 +65,11 @@ public class User : ChatObject, IUser
     public override EnumUserAccessLevel Level => GetLevel();
 
     public Address Address { get; set; } = new();
+    private Profile Profile { get; } = new();
+
+    public IPropCollection PropCollection => base.Props;
+
+    public IAccessList AccessList => _accessList;
     public bool Utf8 { get; set; }
     public DateTime LastIdle { get; set; } = DateTime.UtcNow;
     public DateTime LoggedOn { get; private set; } = DateTime.UtcNow;
@@ -215,6 +222,7 @@ public class User : ChatObject, IUser
 
     public virtual void SetGuest(bool guest)
     {
+        Profile.Guest = guest;
         if (Server.DisableGuestMode) return;
         _guest = guest;
     }
@@ -246,16 +254,17 @@ public class User : ChatObject, IUser
 
     public bool IsSysop()
     {
-        return Modes.GetModeChar(Resources.UserModeOper) == 1;
+        return Modes.GetModeChar(IrcStrings.UserModeOper) == 1;
     }
 
     public bool IsAdministrator()
     {
-        return Modes.HasMode('a') && Modes.GetModeChar(Resources.UserModeAdmin) == 1;
+        return Modes.HasMode('a') && Modes.GetModeChar(IrcStrings.UserModeAdmin) == 1;
     }
 
     public virtual void SetAway(IServer server, IUser user, string message)
     {
+        Profile.Away = true;
         user.Away = true;
         foreach (var channelPair in user.GetChannels())
         {
@@ -268,6 +277,7 @@ public class User : ChatObject, IUser
 
     public virtual void SetBack(IServer server, IUser user)
     {
+        Profile.Away = false;
         user.Away = false;
         foreach (var channelPair in user.GetChannels())
         {
@@ -280,7 +290,8 @@ public class User : ChatObject, IUser
 
     public virtual void PromoteToAdministrator()
     {
-        var mode = Modes[Resources.UserModeAdmin];
+        Profile.Level = EnumUserAccessLevel.Administrator;
+        var mode = Modes[IrcStrings.UserModeAdmin];
         mode.Set(true);
         mode.DispatchModeChange(this, this, true);
         _level = EnumUserAccessLevel.Administrator;
@@ -289,7 +300,8 @@ public class User : ChatObject, IUser
 
     public virtual void PromoteToSysop()
     {
-        var mode = Modes[Resources.UserModeOper];
+        Profile.Level = EnumUserAccessLevel.Sysop;
+        var mode = Modes[IrcStrings.UserModeOper];
         mode.Set(true);
         mode.DispatchModeChange(this, this, true);
         _level = EnumUserAccessLevel.Sysop;
@@ -298,7 +310,8 @@ public class User : ChatObject, IUser
 
     public virtual void PromoteToGuide()
     {
-        var mode = Modes[Resources.UserModeOper];
+        Profile.Level = EnumUserAccessLevel.Guide;
+        var mode = Modes[IrcStrings.UserModeOper];
         mode.Set(true);
         mode.DispatchModeChange(this, this, true);
         _level = EnumUserAccessLevel.Guide;
@@ -394,5 +407,9 @@ public class User : ChatObject, IUser
     public virtual bool CanBeModifiedBy(ChatObject source)
     {
         return source == this;
+    }
+    public Profile GetProfile()
+    {
+        return Profile;
     }
 }

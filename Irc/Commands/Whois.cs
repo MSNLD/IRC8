@@ -1,8 +1,9 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Objects.Server;
+using Irc.Objects.User;
+using Irc.Resources;
 
 namespace Irc.Commands;
 

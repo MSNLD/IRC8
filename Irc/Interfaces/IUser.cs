@@ -3,6 +3,7 @@ using Irc.Interfaces;
 using Irc.IO;
 using Irc.Modes;
 using Irc.Objects.Server;
+using Irc.Objects.User;
 using Irc7d;
 
 namespace Irc.Objects;
@@ -64,4 +65,5 @@ public interface IUser
     IDataStore GetDataStore();
     void DisconnectIfInactive();
     Queue<ModeOperation> GetModeOperations();
+    Profile GetProfile();
 }

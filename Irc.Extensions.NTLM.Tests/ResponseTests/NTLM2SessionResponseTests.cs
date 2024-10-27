@@ -1,9 +1,10 @@
 ﻿using Irc.Helpers;
+using Irc.Security.NTLM;
 using NUnit.Framework;
 
-namespace Irc.Extensions.NTLM.Tests;
+namespace Irc.Extensions.NTLM.Tests.ResponseTests;
 
-public class NTLM2SessionResponseTests
+public class Ntlm2SessionResponseTests
 {
     [Test]
     public void NTLM2SessionResponse_Test()

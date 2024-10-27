@@ -1,12 +1,12 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Modes.User;
 
 public class ServerNotice : ModeRule, IModeRule
 {
-    public ServerNotice() : base(Resources.UserModeServerNotice)
+    public ServerNotice() : base(IrcStrings.UserModeServerNotice)
     {
     }
 

@@ -1,7 +1,7 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -21,7 +21,7 @@ internal class Quit : Command, ICommand
         var server = chatFrame.Server;
         var user = chatFrame.User;
 
-        var quitMessage = Resources.CONNRESETBYPEER;
+        var quitMessage = IrcStrings.CONNRESETBYPEER;
         if (chatFrame.Message.Parameters.Count > 0) quitMessage = chatFrame.Message.Parameters.First();
 
         QuitChannels(user, quitMessage);

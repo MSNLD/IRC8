@@ -1,5 +1,6 @@
 ﻿using System;
 using Irc.Helpers;
+using Irc.Security.NTLM;
 using NUnit.Framework;
 
 namespace Irc.Extensions.NTLM.Tests;

@@ -1,27 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AssemblyVersion>6.0.0.0</AssemblyVersion>
-    <FileVersion>6.0.0.0</FileVersion>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyVersion>6.0.0.0</AssemblyVersion>
+        <FileVersion>6.0.0.0</FileVersion>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Operations\**" />
-    <EmbeddedResource Remove="Operations\**" />
-    <None Remove="Operations\**" />
-    <None Remove="Logging\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Operations\**"/>
+        <EmbeddedResource Remove="Operations\**"/>
+        <None Remove="Operations\**"/>
+        <None Remove="Logging\"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Irc.ClassExtensions\Irc.Helpers.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Irc.ClassExtensions\Irc.Helpers.csproj"/>
+        <ProjectReference Include="..\Irc.Security.Packages\Irc.Security.Packages.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Logging\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Logging\"/>
+    </ItemGroup>
 
 </Project>

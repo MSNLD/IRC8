@@ -1,13 +1,13 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Modes.Channel.Member;
 
 public class Voice : ModeRule, IModeRule
 {
-    public Voice() : base(Resources.MemberModeVoice, true)
+    public Voice() : base(IrcStrings.MemberModeVoice, true)
     {
     }
 

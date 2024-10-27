@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Security.Cryptography;
 using Irc.Helpers;
+using Irc.Security.NTLM;
 using NUnit.Framework;
 
-namespace Irc.Extensions.NTLM.Tests;
+namespace Irc.Extensions.NTLM.Tests.ResponseTests;
 
-public class LMResponseTests
+public class LmResponseTests
 {
     [Test]
     public void LMResponse_Test()

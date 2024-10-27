@@ -4,9 +4,9 @@ namespace Irc.Objects;
 
 public class ModeCollection : IModeCollection
 {
-    protected Dictionary<char, IModeRule> modes = new();
     // TODO: <CHANKEY> Below is temporary until implemented properly
     protected string keypass = null;
+    protected Dictionary<char, IModeRule> modes = new();
 
     public void SetModeChar(char mode, int value)
     {
@@ -24,7 +24,8 @@ public class ModeCollection : IModeCollection
         return value.Get();
     }
 
-    public string GetModeString() {
+    public string GetModeString()
+    {
         return $"{new string(modes.Where(mode => mode.Value.Get() > 0).Select(mode => mode.Key).ToArray())}";
     }
 
@@ -33,6 +34,7 @@ public class ModeCollection : IModeCollection
         modes.TryGetValue(mode, out var value);
         return value;
     }
+
     public IModeRule this[char mode]
     {
         get
@@ -44,7 +46,7 @@ public class ModeCollection : IModeCollection
 
     public string GetSupportedModes()
     {
-        return new(modes.Keys.OrderBy(x => x).ToArray());
+        return new string(modes.Keys.OrderBy(x => x).ToArray());
     }
 
     public bool HasMode(char mode)

@@ -1,5 +1,5 @@
-﻿using Irc.Constants;
-using Irc.Objects;
+﻿using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Modes;
 
@@ -60,7 +60,7 @@ public class ModeEngine
                             // Not enough parameters
                             //:sky-8a15b323126 461 Sky MODE +q :Not enough parameters
                             source.Send(Raw.IRCX_ERR_NEEDMOREPARAMS_461(source.Server, source,
-                                $"{Resources.CommandMode} {c}"));
+                                $"{IrcStrings.CommandMode} {c}"));
                             continue;
                         }
                     }

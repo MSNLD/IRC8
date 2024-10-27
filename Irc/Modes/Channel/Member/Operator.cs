@@ -1,7 +1,7 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Modes.Channel.Member;
 
@@ -18,7 +18,7 @@ public class Operator : ModeRule, IModeRule
     -> sky-8a15b323126 MODE #test +o Sky2k
     <- :sky-8a15b323126 485 Sky3k #test :You're not channel owner
      */
-    public Operator() : base(Resources.MemberModeHost, true)
+    public Operator() : base(IrcStrings.MemberModeHost, true)
     {
     }
 
@@ -38,7 +38,7 @@ public class Operator : ModeRule, IModeRule
         if (targetMember.IsOwner())
         {
             targetMember.SetOwner(false);
-            DispatchModeChange(Resources.MemberModeOwner, source, target, false, targetMember.GetUser().ToString());
+            DispatchModeChange(IrcStrings.MemberModeOwner, source, target, false, targetMember.GetUser().ToString());
         }
 
         targetMember.SetHost(flag);

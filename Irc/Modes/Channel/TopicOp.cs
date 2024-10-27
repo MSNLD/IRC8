@@ -1,12 +1,12 @@
-﻿using Irc.Constants;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
 public class TopicOp : ModeRuleChannel, IModeRule
 {
-    public TopicOp() : base(Resources.ChannelModeTopicOp)
+    public TopicOp() : base(IrcStrings.ChannelModeTopicOp)
     {
     }
 
