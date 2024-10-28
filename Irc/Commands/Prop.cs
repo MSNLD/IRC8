@@ -3,6 +3,7 @@ using Irc.Extensions.Interfaces;
 using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Objects.Channel;
+using Irc.Objects.Collections;
 using Irc.Objects.Server;
 using Irc.Resources;
 
@@ -46,7 +47,7 @@ public class Prop : Command, ICommand
                         if (string.Compare("NICK", chatFrame.Message.Parameters[1], true) == 0)
                         {
                             chatFrame.User.Nickname = chatFrame.User.Name;
-                            SendProp(chatFrame.Server, chatFrame.User, (IExtendedChatObject)chatFrame.User, "NICK",
+                            SendProp(chatFrame.Server, chatFrame.User, (ChatObject)chatFrame.User, "NICK",
                                 chatFrame.User.Name);
                         }
                         else if (string.Compare("MSNREGCOOKIE", chatFrame.Message.Parameters[1], true) == 0)
@@ -89,13 +90,13 @@ public class Prop : Command, ICommand
         }
         else
         {
-            IExtendedChatObject chatObject = null;
+            IChatObject chatObject = null;
 
             // <$> The $ value is used to indicate the user that originated the request.
             if (objectName == "$")
-                chatObject = (IExtendedChatObject)chatFrame.User;
+                chatObject = (IChatObject)chatFrame.User;
             else
-                chatObject = (IExtendedChatObject)chatFrame.Server.GetChatObject(objectName);
+                chatObject = (IChatObject)chatFrame.Server.GetChatObject(objectName);
 
             if (chatObject == null)
             {
@@ -111,7 +112,7 @@ public class Prop : Command, ICommand
 
                     // Setter
                     // TODO: Needs refactoring
-                    var prop = chatObject.PropCollection.GetProp(chatFrame.Message.Parameters[1]);
+                    var prop = chatObject.Props.GetProp(chatFrame.Message.Parameters[1]);
                     if (prop != null)
                     {
                         if (chatObject.CanBeModifiedBy((ChatObject)chatFrame.User))
@@ -133,7 +134,8 @@ public class Prop : Command, ICommand
 
                             if (ircError == EnumIrcError.OK)
                             {
-                                prop.SetValue(propValue);
+                                chatObject.Props.Properties[prop.Name] = propValue;
+                                // prop.SetValue(propValue);
                                 chatObject.Send(
                                     Raw.RPL_PROP_IRCX(chatFrame.Server, chatFrame.User, (ChatObject)chatObject,
                                         prop.Name, propValue), prop.WriteAccessLevel);
@@ -157,11 +159,11 @@ public class Prop : Command, ICommand
 
                     if (chatFrame.Message.Parameters[1] == "*")
                     {
-                        props.AddRange(chatObject.PropCollection.GetProps());
+                        props.AddRange(chatObject.Props.GetProps());
                     }
                     else
                     {
-                        var prop = chatObject.PropCollection.GetProp(chatFrame.Message.Parameters[1]);
+                        var prop = chatObject.Props.GetProp(chatFrame.Message.Parameters[1]);
                         if (prop != null)
                             props.Add(prop);
                         else
@@ -177,7 +179,7 @@ public class Prop : Command, ICommand
     }
 
     // TODO: Rewrite this code
-    public void SendProps(IServer server, IUser user, IExtendedChatObject targetObject, List<IPropRule> props)
+    public void SendProps(IServer server, IUser user, IChatObject targetObject, List<IPropRule> props)
     {
         var propsSent = 0;
         foreach (var prop in props)
@@ -194,7 +196,8 @@ public class Prop : Command, ICommand
                 if (kvp.Value != null)
                 {
                     var member = kvp.Value;
-                    var propValue = prop.GetValue(targetObject);
+                    // var propValue = prop.GetValue(targetObject);
+                    var propValue = targetObject.Props.Properties[prop.Name];
                     if (!string.IsNullOrEmpty(propValue))
                     {
                         SendProp(server, user, targetObject, prop.Name, propValue);
@@ -213,7 +216,7 @@ public class Prop : Command, ICommand
         if (propsSent > 0) user.Send(IrcxRaws.IRCX_RPL_PROPEND_819(server, user, targetObject));
     }
 
-    public void SendProp(IServer server, IUser user, IExtendedChatObject targetObject, string propName,
+    public void SendProp(IServer server, IUser user, IChatObject targetObject, string propName,
         string propValue)
     {
         user.Send(IrcxRaws.IRCX_RPL_PROPLIST_818(server, user, targetObject, propName, propValue));

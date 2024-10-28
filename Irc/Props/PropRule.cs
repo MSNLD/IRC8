@@ -4,7 +4,7 @@ using Irc.Extensions.Interfaces;
 using Irc.Interfaces;
 using Irc.Objects;
 
-namespace Irc.Extensions.Props;
+namespace Irc.Props;
 
 public class PropRule : IPropRule
 {
@@ -51,6 +51,8 @@ public class PropRule : IPropRule
         var match = regEx.Match(propValue);
         if (!match.Success || match.Value.Length != propValue.Length) return EnumIrcError.ERR_BADVALUE;
 
+        
+        
         return EnumIrcError.OK;
     }
 

@@ -1,6 +1,6 @@
 ﻿using Irc.Resources;
 
-namespace Irc.Extensions.Props.Channel;
+namespace Irc.Props.Channel;
 
 internal class Account : PropRule
 {

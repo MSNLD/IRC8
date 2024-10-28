@@ -1,7 +1,7 @@
 ﻿using Irc.Commands;
 using Irc.Enumerations;
 
-namespace Irc.Extensions.Protocols;
+namespace Irc.Protocols;
 
 public class IrcX : Irc
 {
@@ -19,7 +19,6 @@ public class IrcX : Irc
         AddCommand(new Request());
         AddCommand(new Whisper());
         AddCommand(new Auth());
-        AddCommand(new AuthX());
         AddCommand(new Ircx());
         AddCommand(new Prop());
         AddCommand(new Listx());

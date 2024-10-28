@@ -17,5 +17,5 @@ public interface IChatObject
     void Send(string message, ChatObject except = null);
     void Send(string message, EnumChannelAccessLevel accessLevel);
     string ToString();
-    bool CanBeModifiedBy(ChatObject source);
+    bool CanBeModifiedBy(IChatObject source);
 }

@@ -1,7 +1,7 @@
 ﻿using Irc.Commands;
 using Irc.Enumerations;
-using Irc.Extensions.Protocols;
 using Irc.Interfaces;
+using Irc.Protocols;
 
 namespace Irc.Extensions.Apollo.Protocols;
 

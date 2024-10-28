@@ -1,5 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Props;
 using Irc.Resources;
 
 namespace Irc.Extensions.Props.Channel;

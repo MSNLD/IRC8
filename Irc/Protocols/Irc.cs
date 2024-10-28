@@ -9,6 +9,9 @@ public class Irc : Protocol, IProtocol
 {
     public Irc()
     {
+        AddCommand(new Auth());
+        AddCommand(new Ircvers());
+        AddCommand(new Ircx());
         AddCommand(new Privmsg());
         AddCommand(new Notice());
         AddCommand(new Ping());

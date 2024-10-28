@@ -154,7 +154,7 @@ public class Channel : ChatObject, IChannel
         return false;
     }
 
-    public bool CanBeModifiedBy(IChatObject source)
+    public new bool CanBeModifiedBy(IChatObject source)
     {
         return source is IServer || ((IUser)source).GetChannels().Keys.Contains(this);
     }

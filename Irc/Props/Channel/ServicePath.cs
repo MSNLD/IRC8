@@ -1,4 +1,5 @@
-﻿using Irc.Resources;
+﻿using Irc.Props;
+using Irc.Resources;
 
 namespace Irc.Extensions.Props.Channel;
 

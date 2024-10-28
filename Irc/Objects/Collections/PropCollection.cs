@@ -6,6 +6,7 @@ namespace Irc.Objects.Collections;
 public class PropCollection : IPropCollection
 {
     protected Dictionary<string, IPropRule> properties = new(StringComparer.InvariantCultureIgnoreCase);
+    public Dictionary<string, string> Properties { get; set; } = new();
 
     public IPropRule GetProp(string name)
     {
