@@ -1,4 +1,6 @@
-﻿public enum EnumChannelAccessLevel
+﻿namespace Irc.Enumerations;
+
+public enum EnumChannelAccessLevel
 {
     ChatMember = 1,
     ChatVoice = 2,

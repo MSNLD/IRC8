@@ -1,20 +1,21 @@
-﻿namespace Irc.Interfaces;
-
-public interface IMemberModes
+﻿namespace Irc.Interfaces
 {
-    string GetModeString();
-    string GetListedMode();
+    public interface IMemberModes
+    {
+        string GetModeString();
+        string GetListedMode();
 
-    char GetModeChar();
+        char GetModeChar();
 
-    bool IsOwner();
-    bool IsHost();
-    bool IsVoice();
+        bool IsOwner();
+        bool IsHost();
+        bool IsVoice();
 
-    bool IsNormal();
+        bool IsNormal();
 
-    void SetOwner(bool flag);
-    void SetHost(bool flag);
-    void SetVoice(bool flag);
-    void SetNormal();
+        void SetOwner(bool flag);
+        void SetHost(bool flag);
+        void SetVoice(bool flag);
+        void SetNormal();
+    }
 }

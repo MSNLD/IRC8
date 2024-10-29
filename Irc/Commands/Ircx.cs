@@ -2,33 +2,34 @@
 using Irc.Interfaces;
 using Irc.Resources;
 
-namespace Irc.Commands;
-
-internal class Ircx : Command, ICommand
+namespace Irc.Commands
 {
-    public Ircx() : base(0, false)
+    internal class Ircx : Command, ICommand
     {
-    }
-
-    public new EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
-    public new void Execute(IChatFrame chatFrame)
-    {
-        var protocol = chatFrame.User.GetProtocol().GetProtocolType();
-        if (protocol < EnumProtocolType.IRCX)
+        public Ircx() : base(0, false)
         {
-            protocol = EnumProtocolType.IRCX;
-            chatFrame.User.SetProtocol(chatFrame.Server.GetProtocol(protocol));
         }
 
-        var isircx = protocol > EnumProtocolType.IRC;
-        chatFrame.User.Modes.ToggleModeChar(IrcStrings.UserModeIrcx, true);
+        public new EnumCommandDataType GetDataType()
+        {
+            return EnumCommandDataType.None;
+        }
+
+        public new void Execute(IChatFrame chatFrame)
+        {
+            var protocol = chatFrame.User.GetProtocol().GetProtocolType();
+            if (protocol < EnumProtocolType.IRCX)
+            {
+                protocol = EnumProtocolType.IRCX;
+                chatFrame.User.SetProtocol(chatFrame.Server.GetProtocol(protocol));
+            }
+
+            var isircx = protocol > EnumProtocolType.IRC;
+            chatFrame.User.Modes.ToggleModeChar(IrcStrings.UserModeIrcx, true);
 
 
-        chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
-            chatFrame.Server.MaxInputBytes, IrcStrings.IRCXOptions));
+            chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
+                chatFrame.Server.MaxInputBytes, IrcStrings.IRCXOptions));
+        }
     }
 }

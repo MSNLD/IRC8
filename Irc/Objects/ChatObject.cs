@@ -3,66 +3,69 @@ using Irc.Interfaces;
 using Irc.IO;
 using Irc.Resources;
 
-namespace Irc.Objects;
-
-public class ChatObject : IChatObject
+namespace Irc.Objects
 {
-    protected readonly IModeCollection _modes;
-    private readonly IPropCollection _props;
-    public readonly IDataStore DataStore;
-
-    public ChatObject(IModeCollection modes, IPropCollection props, IDataStore dataStore)
+    public class ChatObject : IChatObject
     {
-        _modes = modes;
-        _props = props;
-        DataStore = dataStore;
-        DataStore.SetId(Id.ToString());
-    }
+        protected readonly IModeCollection _modes;
+        public readonly IDataStore DataStore;
+        
+        public Dictionary<string, string?> Props { get; set; } = new()
+        {
+            { "NAME", null }
+        };
 
-    public virtual EnumUserAccessLevel Level => EnumUserAccessLevel.None;
+        public ChatObject(IModeCollection modes, IDataStore dataStore)
+        {
+            _modes = modes;
+            DataStore = dataStore;
+            DataStore.SetId(Id.ToString());
+        }
 
-    public virtual IModeCollection Modes => _modes;
+        public virtual EnumUserAccessLevel Level => EnumUserAccessLevel.None;
 
-    public IPropCollection Props => _props;
-    public IAccessList AccessList { get; }
+        public virtual IModeCollection Modes => _modes;
 
-    public IModeCollection GetModes()
-    {
-        return _modes;
-    }
+        public IAccessList AccessList { get; }
 
-    public Guid Id { get; } = Guid.NewGuid();
+        public IModeCollection GetModes()
+        {
+            return _modes;
+        }
 
-    public string ShortId => Id.ToString().Split('-').Last();
+        public Guid Id { get; } = Guid.NewGuid();
 
-    public string Name
-    {
-        get => DataStore.Get("Name") ?? IrcStrings.Wildcard;
-        set => DataStore.Set("Name", value);
-    }
+        public string ShortId => Id.ToString().Split('-').Last();
 
-    public virtual void Send(string message)
-    {
-        throw new NotImplementedException();
-    }
+        public string Name
+        {
+            get => Props["NAME"] ?? IrcStrings.Wildcard;
+            set => Props["NAME"] = value;
+        }
 
-    public virtual void Send(string message, ChatObject except = null)
-    {
-        throw new NotImplementedException();
-    }
+        public virtual void Send(string message)
+        {
+            throw new NotImplementedException();
+        }
 
-    public virtual void Send(string message, EnumChannelAccessLevel accessLevel)
-    {
-        throw new NotImplementedException();
-    }
+        public virtual void Send(string message, ChatObject except = null)
+        {
+            throw new NotImplementedException();
+        }
 
-    public override string ToString()
-    {
-        return Name;
-    }
+        public virtual void Send(string message, EnumChannelAccessLevel accessLevel)
+        {
+            throw new NotImplementedException();
+        }
 
-    public bool CanBeModifiedBy(IChatObject source)
-    {
-        throw new NotImplementedException();
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public bool CanBeModifiedBy(IChatObject source)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

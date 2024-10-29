@@ -1,9 +1,10 @@
-﻿namespace Irc.Helpers;
-
-public static class GuidExtensions
+﻿namespace Irc.Helpers
 {
-    public static string ToUnformattedString(this Guid guid)
+    public static class GuidExtensions
     {
-        return guid.ToString("N");
+        public static string ToUnformattedString(this Guid guid)
+        {
+            return guid.ToString("N");
+        }
     }
 }

@@ -1,12 +1,13 @@
-﻿namespace Irc.Enumerations;
-
-public enum EnumCommandDataType
+﻿namespace Irc.Enumerations
 {
-    Data,
-    Invitation,
-    Join,
-    WrongChannelPassword,
-    Standard,
-    HostMessage,
-    None
+    public enum EnumCommandDataType
+    {
+        Data,
+        Invitation,
+        Join,
+        WrongChannelPassword,
+        Standard,
+        HostMessage,
+        None
+    }
 }

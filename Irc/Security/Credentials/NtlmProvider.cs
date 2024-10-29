@@ -1,16 +1,17 @@
-﻿using Irc.Security;
+﻿using Irc.Interfaces;
 
-namespace Irc.Extensions.Security.Credentials;
-
-public class NtlmProvider : ICredentialProvider
+namespace Irc.Security.Credentials
 {
-    public ICredential ValidateTokens(Dictionary<string, string> tokens)
+    public class NtlmProvider : ICredentialProvider
     {
-        throw new NotImplementedException();
-    }
+        public ICredential ValidateTokens(Dictionary<string, string> tokens)
+        {
+            throw new NotImplementedException();
+        }
 
-    public ICredential GetUserCredentials(string domain, string username)
-    {
-        throw new NotImplementedException();
+        public ICredential GetUserCredentials(string domain, string username)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

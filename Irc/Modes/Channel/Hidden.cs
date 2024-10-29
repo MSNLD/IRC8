@@ -2,39 +2,40 @@
 using Irc.Interfaces;
 using Irc.Resources;
 
-namespace Irc.Modes.Channel;
-
-public class Hidden : ModeRuleChannel, IModeRule
+namespace Irc.Modes.Channel
 {
-    public Hidden() : base(IrcStrings.ChannelModeHidden)
+    public class Hidden : ModeRuleChannel, IModeRule
     {
-    }
-
-    public EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
-    {
-        var result = base.Evaluate(source, target, flag, parameter);
-        if (result == EnumIrcError.OK)
+        public Hidden() : base(IrcStrings.ChannelModeHidden)
         {
-            var channel = (IChannel)target;
-
-            if (flag)
-            {
-                if (channel.Modes.Secret)
-                {
-                    channel.Modes.Secret = false;
-                    DispatchModeChange(IrcStrings.ChannelModeSecret, source, target, false, string.Empty);
-                }
-
-                if (channel.Modes.Private)
-                {
-                    channel.Modes.Private = false;
-                    DispatchModeChange(IrcStrings.ChannelModePrivate, source, target, false, string.Empty);
-                }
-            }
-
-            SetChannelMode(source, (IChannel)target, flag, parameter);
         }
 
-        return result;
+        public EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+        {
+            var result = base.Evaluate(source, target, flag, parameter);
+            if (result == EnumIrcError.OK)
+            {
+                var channel = (IChannel)target;
+
+                if (flag)
+                {
+                    if (channel.Modes.Secret)
+                    {
+                        channel.Modes.Secret = false;
+                        DispatchModeChange(IrcStrings.ChannelModeSecret, source, target, false, string.Empty);
+                    }
+
+                    if (channel.Modes.Private)
+                    {
+                        channel.Modes.Private = false;
+                        DispatchModeChange(IrcStrings.ChannelModePrivate, source, target, false, string.Empty);
+                    }
+                }
+
+                SetChannelMode(source, (IChannel)target, flag, parameter);
+            }
+
+            return result;
+        }
     }
 }

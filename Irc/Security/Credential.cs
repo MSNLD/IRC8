@@ -1,56 +1,58 @@
 ﻿using Irc.Enumerations;
+using Irc.Interfaces;
 
-namespace Irc.Security;
-
-public class Credential : ICredential
+namespace Irc.Security
 {
-    public string Domain { get; set; }
-    public string Username { get; set; }
-    public string Password { get; set; }
-    public string Nickname { get; set; }
-    public string UserGroup { get; set; }
-    public string Modes { get; set; }
-    public bool Guest { get; set; }
-    public long IssuedAt { get; set; }
-    public EnumUserAccessLevel Level { get; set; }
-
-    public string GetDomain()
+    public class Credential : ICredential
     {
-        return Domain;
-    }
+        public string Domain { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Nickname { get; set; }
+        public string UserGroup { get; set; }
+        public string Modes { get; set; }
+        public bool Guest { get; set; }
+        public long IssuedAt { get; set; }
+        public EnumUserAccessLevel Level { get; set; }
 
-    public string GetUsername()
-    {
-        return Username;
-    }
+        public string GetDomain()
+        {
+            return Domain;
+        }
 
-    public string GetPassword()
-    {
-        return Password;
-    }
+        public string GetUsername()
+        {
+            return Username;
+        }
 
-    public string GetNickname()
-    {
-        return Nickname;
-    }
+        public string GetPassword()
+        {
+            return Password;
+        }
 
-    public string GetUserGroup()
-    {
-        return UserGroup;
-    }
+        public string GetNickname()
+        {
+            return Nickname;
+        }
 
-    public string GetModes()
-    {
-        return Modes;
-    }
+        public string GetUserGroup()
+        {
+            return UserGroup;
+        }
 
-    public long GetIssuedAt()
-    {
-        return IssuedAt;
-    }
+        public string GetModes()
+        {
+            return Modes;
+        }
 
-    public EnumUserAccessLevel GetLevel()
-    {
-        return Level;
+        public long GetIssuedAt()
+        {
+            return IssuedAt;
+        }
+
+        public EnumUserAccessLevel GetLevel()
+        {
+            return Level;
+        }
     }
 }

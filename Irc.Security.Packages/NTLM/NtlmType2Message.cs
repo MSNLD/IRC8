@@ -1,7 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
-using Irc.Security.NTLM;
 using Irc.Helpers;
+
+namespace Irc.Security.Packages.NTLM;
 
 public class NtlmType2Message
 {

@@ -1,5 +1,7 @@
 ﻿using Irc.Enumerations;
 
+namespace Irc.IO;
+
 public class FloodProtectionLevel
 {
     //Parameters, Invitation, Join, WrongChannelPassword, Standard, HostMessage, None

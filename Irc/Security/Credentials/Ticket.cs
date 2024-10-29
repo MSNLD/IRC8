@@ -1,6 +1,7 @@
-﻿namespace Irc.Extensions.Apollo.Security.Credentials;
-
-public class Ticket
+﻿namespace Irc.Security.Credentials
 {
-    public long IssueDate;
+    public class Ticket
+    {
+        public long IssueDate;
+    }
 }

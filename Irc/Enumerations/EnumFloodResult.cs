@@ -1,7 +1,8 @@
-﻿namespace Irc.Enumerations;
-
-public enum EnumFloodResult
+﻿namespace Irc.Enumerations
 {
-    Ok,
-    Wait
+    public enum EnumFloodResult
+    {
+        Ok,
+        Wait
+    }
 }

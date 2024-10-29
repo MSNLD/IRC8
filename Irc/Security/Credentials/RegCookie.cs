@@ -1,14 +1,15 @@
-﻿namespace Irc.Extensions.Apollo.Security.Credentials;
-
-public class RegCookie
+﻿namespace Irc.Security.Credentials
 {
-    public long issueDate;
-    public string nickname;
-    public string salt;
-    public int version;
-
-    public RegCookie(int version)
+    public class RegCookie
     {
-        this.version = version;
+        public long issueDate;
+        public string nickname;
+        public string salt;
+        public int version;
+
+        public RegCookie(int version)
+        {
+            this.version = version;
+        }
     }
 }

@@ -1,11 +1,12 @@
-﻿namespace Irc.Interfaces;
-
-public interface IMode
+﻿namespace Irc.Interfaces
 {
-    uint GetLevel();
-    void SetLevel(uint level);
-    byte GetModeChar();
-    void SetModeChar(byte modeChar);
-    int GetValue();
-    void SetValue(int value);
+    public interface IMode
+    {
+        uint GetLevel();
+        void SetLevel(uint level);
+        byte GetModeChar();
+        void SetModeChar(byte modeChar);
+        int GetValue();
+        void SetValue(int value);
+    }
 }

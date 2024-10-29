@@ -1,9 +1,8 @@
-using Irc.Interfaces;
-
-namespace Irc.Extensions.Apollo.Interfaces;
-
-public interface IApolloChannelModes : IChannelModes
+namespace Irc.Interfaces
 {
-    bool OnStage { get; set; }
-    bool Subscriber { get; set; }
+    public interface IApolloChannelModes : IChannelModes
+    {
+        bool OnStage { get; set; }
+        bool Subscriber { get; set; }
+    }
 }

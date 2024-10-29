@@ -2,16 +2,17 @@
 using Irc.Interfaces;
 using Irc.Resources;
 
-namespace Irc.Modes.Channel;
-
-public class NoExtern : ModeRuleChannel, IModeRule
+namespace Irc.Modes.Channel
 {
-    public NoExtern() : base(IrcStrings.ChannelModeNoExtern)
+    public class NoExtern : ModeRuleChannel, IModeRule
     {
-    }
+        public NoExtern() : base(IrcStrings.ChannelModeNoExtern)
+        {
+        }
 
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
-    {
-        return EvaluateAndSet(source, target, flag, parameter);
+        public new EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+        {
+            return EvaluateAndSet(source, target, flag, parameter);
+        }
     }
 }

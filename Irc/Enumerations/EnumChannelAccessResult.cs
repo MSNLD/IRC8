@@ -1,19 +1,20 @@
-﻿namespace Irc.Enumerations;
-
-public enum EnumChannelAccessResult
+﻿namespace Irc.Enumerations
 {
-    NONE = -9,
-    ERR_NICKINUSE = -8,
-    ERR_ALREADYINCHANNEL = -7,
-    ERR_CHANNELISFULL = -6,
-    ERR_INVITEONLYCHAN = -5,
-    ERR_BANNEDFROMCHAN = -4,
-    ERR_BADCHANNELKEY = -3,
-    ERR_AUTHONLYCHAN = -2,
-    ERR_SECUREONLYCHAN = -1,
-    SUCCESS_GUEST = 0,
-    SUCCESS_MEMBER = 1,
-    SUCCESS_VOICE = 2,
-    SUCCESS_HOST = 3,
-    SUCCESS_OWNER = 4
+    public enum EnumChannelAccessResult
+    {
+        NONE = -9,
+        ERR_NICKINUSE = -8,
+        ERR_ALREADYINCHANNEL = -7,
+        ERR_CHANNELISFULL = -6,
+        ERR_INVITEONLYCHAN = -5,
+        ERR_BANNEDFROMCHAN = -4,
+        ERR_BADCHANNELKEY = -3,
+        ERR_AUTHONLYCHAN = -2,
+        ERR_SECUREONLYCHAN = -1,
+        SUCCESS_GUEST = 0,
+        SUCCESS_MEMBER = 1,
+        SUCCESS_VOICE = 2,
+        SUCCESS_HOST = 3,
+        SUCCESS_OWNER = 4
+    }
 }

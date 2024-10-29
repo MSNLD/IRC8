@@ -1,41 +1,43 @@
 ﻿using Irc.Extensions.Security;
+using Irc.Interfaces;
 
-namespace Irc.Security;
-
-public class SecurityManager : ISecurityManager
+namespace Irc.Security
 {
-    private readonly Dictionary<string, SupportPackage> _supportProviders =
-        new(StringComparer.InvariantCultureIgnoreCase);
-
-    private string _supportedPackages = string.Empty;
-
-    public void AddSupportPackage(SupportPackage supportPackage)
+    public class SecurityManager : ISecurityManager
     {
-        _supportProviders.Add(supportPackage.GetType().Name, supportPackage);
-        UpdateSupportPackages();
-    }
+        private readonly Dictionary<string, SupportPackage> _supportProviders =
+            new(StringComparer.InvariantCultureIgnoreCase);
 
-    public SupportPackage CreatePackageInstance(string name, ICredentialProvider? credentialProvider)
-    {
-        try
+        private string _supportedPackages = string.Empty;
+
+        public void AddSupportPackage(SupportPackage supportPackage)
         {
-            return _supportProviders[name].CreateInstance(credentialProvider);
+            _supportProviders.Add(supportPackage.GetType().Name, supportPackage);
+            UpdateSupportPackages();
         }
-        catch (Exception)
+
+        public SupportPackage CreatePackageInstance(string name, ICredentialProvider? credentialProvider)
         {
-            return null;
+            try
+            {
+                return _supportProviders[name].CreateInstance(credentialProvider);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
-    }
 
-    public string GetSupportedPackages()
-    {
-        return _supportedPackages;
-    }
+        public string GetSupportedPackages()
+        {
+            return _supportedPackages;
+        }
 
-    private void UpdateSupportPackages()
-    {
-        _supportedPackages = string.Join(',',
-            _supportProviders.Where(provider => provider.Value.Listed)
-                .Select(provider => provider.Value.GetPackageName()).Reverse());
+        private void UpdateSupportPackages()
+        {
+            _supportedPackages = string.Join(',',
+                _supportProviders.Where(provider => provider.Value.Listed)
+                    .Select(provider => provider.Value.GetPackageName()).Reverse());
+        }
     }
 }

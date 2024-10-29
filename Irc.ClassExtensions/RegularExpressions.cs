@@ -1,26 +1,27 @@
 using System.Text.RegularExpressions;
 
-namespace Irc.Helpers;
-
-public class RegularExpressions
+namespace Irc.Helpers
 {
-    private readonly Regex regex;
-
-    public RegularExpressions(string pattern, bool ignoreCase)
+    public class RegularExpressions
     {
-        regex = new Regex(pattern, ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None);
-    }
+        private readonly Regex regex;
 
-    public static bool Match(string pattern, string text, bool ignoreCase)
-    {
-        var regex = new Regex(pattern, ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None);
-        var match = regex.Match(text);
-        return match.Success;
-    }
+        public RegularExpressions(string pattern, bool ignoreCase)
+        {
+            regex = new Regex(pattern, ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None);
+        }
 
-    public bool IsMatch(string text)
-    {
-        var match = regex.Match(text);
-        return match.Success;
+        public static bool Match(string pattern, string text, bool ignoreCase)
+        {
+            var regex = new Regex(pattern, ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None);
+            var match = regex.Match(text);
+            return match.Success;
+        }
+
+        public bool IsMatch(string text)
+        {
+            var match = regex.Match(text);
+            return match.Success;
+        }
     }
 }

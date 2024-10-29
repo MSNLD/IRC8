@@ -2,68 +2,69 @@
 using Irc.Interfaces;
 using Irc.Objects;
 
-namespace Irc.Commands;
-
-internal class Topic : Command, ICommand
+namespace Irc.Commands
 {
-    public Topic() : base(2)
+    internal class Topic : Command, ICommand
     {
-    }
-
-    public new EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.Standard;
-    }
-
-    public new void Execute(IChatFrame chatFrame)
-    {
-        var source = chatFrame.User;
-        var channelName = chatFrame.Message.Parameters.First();
-        var topic = chatFrame.Message.Parameters[1];
-
-        if (chatFrame.Message.Parameters.Count > 2) topic = chatFrame.Message.Parameters[2];
-
-        var channel = chatFrame.Server.GetChannelByName(channelName);
-        if (channel == null)
+        public Topic() : base(2)
         {
-            chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User,
-                chatFrame.Message.Parameters.First()));
         }
-        else
+
+        public new EnumCommandDataType GetDataType()
         {
-            var result = ProcessTopic(chatFrame, channel, source, topic);
-            switch (result)
+            return EnumCommandDataType.Standard;
+        }
+
+        public new void Execute(IChatFrame chatFrame)
+        {
+            var source = chatFrame.User;
+            var channelName = chatFrame.Message.Parameters.First();
+            var topic = chatFrame.Message.Parameters[1];
+
+            if (chatFrame.Message.Parameters.Count > 2) topic = chatFrame.Message.Parameters[2];
+
+            var channel = chatFrame.Server.GetChannelByName(channelName);
+            if (channel == null)
             {
-                case EnumIrcError.ERR_NOTONCHANNEL:
+                chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User,
+                    chatFrame.Message.Parameters.First()));
+            }
+            else
+            {
+                var result = ProcessTopic(chatFrame, channel, source, topic);
+                switch (result)
                 {
-                    chatFrame.User.Send(Raw.IRCX_ERR_NOTONCHANNEL_442(chatFrame.Server, source, channel));
-                    break;
-                }
-                case EnumIrcError.ERR_NOCHANOP:
-                {
-                    chatFrame.User.Send(
-                        Raw.IRCX_ERR_CHANOPRIVSNEEDED_482(chatFrame.Server, source, channel));
-                    break;
-                }
-                case EnumIrcError.OK:
-                {
-                    channel.Send(Raw.RPL_TOPIC_IRC(chatFrame.Server, source, channel, topic));
-                    break;
+                    case EnumIrcError.ERR_NOTONCHANNEL:
+                    {
+                        chatFrame.User.Send(Raw.IRCX_ERR_NOTONCHANNEL_442(chatFrame.Server, source, channel));
+                        break;
+                    }
+                    case EnumIrcError.ERR_NOCHANOP:
+                    {
+                        chatFrame.User.Send(
+                            Raw.IRCX_ERR_CHANOPRIVSNEEDED_482(chatFrame.Server, source, channel));
+                        break;
+                    }
+                    case EnumIrcError.OK:
+                    {
+                        channel.Send(Raw.RPL_TOPIC_IRC(chatFrame.Server, source, channel, topic));
+                        break;
+                    }
                 }
             }
         }
-    }
 
-    public static EnumIrcError ProcessTopic(IChatFrame chatFrame, IChannel channel, IUser source, string topic)
-    {
-        if (!channel.CanBeModifiedBy((ChatObject)source)) return EnumIrcError.ERR_NOTONCHANNEL;
+        public static EnumIrcError ProcessTopic(IChatFrame chatFrame, IChannel channel, IUser source, string topic)
+        {
+            if (!channel.CanBeModifiedBy((ChatObject)source)) return EnumIrcError.ERR_NOTONCHANNEL;
 
-        var sourceMember = channel.GetMember(source);
+            var sourceMember = channel.GetMember(source);
 
-        if (sourceMember.GetLevel() < EnumChannelAccessLevel.ChatHost && channel.Modes.TopicOp)
-            return EnumIrcError.ERR_NOCHANOP;
+            if (sourceMember.GetLevel() < EnumChannelAccessLevel.ChatHost && channel.Modes.TopicOp)
+                return EnumIrcError.ERR_NOCHANOP;
 
-        channel.ChannelStore.Set("topic", topic);
-        return EnumIrcError.OK;
+            channel.ChannelStore.Set("topic", topic);
+            return EnumIrcError.OK;
+        }
     }
 }

@@ -1,26 +1,27 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Irc.Extensions.Apollo.Security.Packages;
-
-public class GateKeeperTokenHelper
+namespace Irc.Security.Packages
 {
-    public static GateKeeperToken InitializeFromBytes(byte[] Data)
+    public class GateKeeperTokenHelper
     {
-        var AuthToken = new GateKeeperToken();
-        var pBuf = Marshal.AllocHGlobal(Marshal.SizeOf(AuthToken));
-        try
+        public static GateKeeperToken InitializeFromBytes(byte[] Data)
         {
-            Marshal.Copy(Data, 0, pBuf, Marshal.SizeOf(AuthToken));
-            AuthToken = Marshal.PtrToStructure<GateKeeperToken>(pBuf);
-        }
-        catch (Exception)
-        {
-        }
-        finally
-        {
-            Marshal.FreeHGlobal(pBuf);
-        }
+            var AuthToken = new GateKeeperToken();
+            var pBuf = Marshal.AllocHGlobal(Marshal.SizeOf(AuthToken));
+            try
+            {
+                Marshal.Copy(Data, 0, pBuf, Marshal.SizeOf(AuthToken));
+                AuthToken = Marshal.PtrToStructure<GateKeeperToken>(pBuf);
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(pBuf);
+            }
 
-        return AuthToken;
+            return AuthToken;
+        }
     }
 }

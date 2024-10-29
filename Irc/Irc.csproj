@@ -21,8 +21,4 @@
         <ProjectReference Include="..\Irc.Security.Packages\Irc.Security.Packages.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Logging\"/>
-    </ItemGroup>
-
 </Project>

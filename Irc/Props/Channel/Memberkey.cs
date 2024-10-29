@@ -1,35 +1,35 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Props;
 using Irc.Resources;
 
-namespace Irc.Extensions.Props.Channel;
-
-internal class Memberkey : PropRule
+namespace Irc.Props.Channel
 {
-    // The MEMBERKEY channel property is the keyword required to enter the channel. The MEMBERKEY property is limited to 31 characters. 
-    // It may never be read.
-    public Memberkey() : base(IrcStrings.ChannelPropMemberkey, EnumChannelAccessLevel.None,
-        EnumChannelAccessLevel.ChatHost, IrcStrings.GenericProps, string.Empty)
+    internal class Memberkey : PropRule
     {
-    }
-
-    public override EnumIrcError EvaluateSet(IChatObject source, IChatObject target, string propValue)
-    {
-        // MEMBERKEY being set to a value sends a prop reply but no MODE reply
-        // Mode +k is enforced server-side however.
-
-        // MEMBERKEY being set to blank sends a prop reply but no MODE reply
-        // Mode -k is enforced server-side however
-
-        var result = base.EvaluateSet(source, target, propValue);
-
-        if (result == EnumIrcError.OK)
+        // The MEMBERKEY channel property is the keyword required to enter the channel. The MEMBERKEY property is limited to 31 characters. 
+        // It may never be read.
+        public Memberkey() : base(IrcStrings.ChannelPropMemberkey, EnumChannelAccessLevel.None,
+            EnumChannelAccessLevel.ChatHost, IrcStrings.GenericProps, string.Empty)
         {
-            var channel = (IChannel)target;
-            channel.Modes.Key = propValue;
         }
 
-        return result;
+        public override EnumIrcError EvaluateSet(IChatObject source, IChatObject target, string propValue)
+        {
+            // MEMBERKEY being set to a value sends a prop reply but no MODE reply
+            // Mode +k is enforced server-side however.
+
+            // MEMBERKEY being set to blank sends a prop reply but no MODE reply
+            // Mode -k is enforced server-side however
+
+            var result = base.EvaluateSet(source, target, propValue);
+
+            if (result == EnumIrcError.OK)
+            {
+                var channel = (IChannel)target;
+                channel.Modes.Key = propValue;
+            }
+
+            return result;
+        }
     }
 }

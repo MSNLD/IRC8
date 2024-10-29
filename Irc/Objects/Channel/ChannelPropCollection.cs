@@ -1,43 +1,26 @@
-﻿using Irc.Extensions.Props.Channel;
-using Irc.Objects.Collections;
+﻿using Irc.Objects.Collections;
+using Irc.Props;
+using Irc.Props.Channel;
 
-namespace Irc.Objects.Channel;
-
-internal class ChannelPropCollection : PropCollection
+namespace Irc.Objects.Channel
 {
-    public ChannelPropCollection()
+    internal class ChannelPropCollection : PropCollection
     {
-        AddProp(new OID());
-        AddProp(new Name());
-        AddProp(new Creation());
-        AddProp(new Language());
-        AddProp(new Ownerkey());
-        AddProp(new Hostkey());
-        AddProp(new Memberkey());
-        AddProp(new Pics());
-        AddProp(new Topic());
-        AddProp(new Subject());
-        AddProp(new Onjoin());
-        AddProp(new Onpart());
-        AddProp(new Lag());
-        AddProp(new Client());
-        AddProp(new ClientGUID());
-        AddProp(new ServicePath());
-
-        Properties.Add(Resources.IrcStrings.ChannelPropOID, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropName, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropCreation, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropLanguage, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropOwnerkey, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropHostkey, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropPICS, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropTopic, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropSubject, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropOnJoin, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropOnPart, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropLag, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropClient, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropClientGuid, "");
-        Properties.Add(Resources.IrcStrings.ChannelPropServicePath, "");
+        public static Dictionary<string, PropRule> PropRules = new()
+        {
+            { Resources.IrcStrings.ChannelPropOID, new OID() },
+            { Resources.IrcStrings.ChannelPropLanguage, new Creation() },
+            { Resources.IrcStrings.ChannelPropOwnerkey, new Language() },
+            { Resources.IrcStrings.ChannelPropHostkey, new OID() },
+            { Resources.IrcStrings.ChannelPropPICS, new OID() },
+            { Resources.IrcStrings.ChannelPropTopic, new OID() },
+            { Resources.IrcStrings.ChannelPropSubject, new OID() },
+            { Resources.IrcStrings.ChannelPropOnJoin, new OID() },
+            { Resources.IrcStrings.ChannelPropOnPart, new OID() },
+            { Resources.IrcStrings.ChannelPropLag, new OID() },
+            { Resources.IrcStrings.ChannelPropClient, new OID() },
+            { Resources.IrcStrings.ChannelPropClientGuid, new OID() },
+            { Resources.IrcStrings.ChannelPropServicePath, new OID() }
+        };
     }
 }

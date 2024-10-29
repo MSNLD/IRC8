@@ -2,58 +2,59 @@
 using Irc.Interfaces;
 using Irc.Resources;
 
-namespace Irc.Objects.Member;
-
-public class Member : MemberModes, IChannelMember
+namespace Irc.Objects.Member
 {
-    protected readonly IUser _user;
-
-    public Member(IUser User)
+    public class Member : MemberModes, IChannelMember
     {
-        _user = User;
-    }
+        protected readonly IUser _user;
 
-    public EnumChannelAccessLevel GetLevel()
-    {
-        if (IsOwner())
-            return EnumChannelAccessLevel.ChatOwner;
+        public Member(IUser User)
+        {
+            _user = User;
+        }
 
-        if (IsHost())
-            return EnumChannelAccessLevel.ChatHost;
+        public EnumChannelAccessLevel GetLevel()
+        {
+            if (IsOwner())
+                return EnumChannelAccessLevel.ChatOwner;
 
-        if (IsVoice())
-            return EnumChannelAccessLevel.ChatVoice;
+            if (IsHost())
+                return EnumChannelAccessLevel.ChatHost;
 
-        return EnumChannelAccessLevel.ChatMember;
-    }
+            if (IsVoice())
+                return EnumChannelAccessLevel.ChatVoice;
 
-    public void SetOwner(bool flag)
-    {
-        modes[IrcStrings.MemberModeOwner].Set(flag ? 1 : 0);
-    }
+            return EnumChannelAccessLevel.ChatMember;
+        }
 
-    public EnumIrcError CanModify(IChannelMember target, EnumChannelAccessLevel requiredLevel, bool operCheck = true)
-    {
-        if (operCheck)
-            // Oper check
-            if (target.GetUser().GetLevel() >= EnumUserAccessLevel.Guide)
-            {
-                if (_user.GetLevel() < EnumUserAccessLevel.Guide) return EnumIrcError.ERR_NOIRCOP;
-                // TODO: Maybe there is better raws for below
-                if (_user.GetLevel() < EnumUserAccessLevel.Sysop && _user.GetLevel() < target.GetUser().GetLevel())
-                    return EnumIrcError.ERR_NOPERMS;
-                if (_user.GetLevel() < EnumUserAccessLevel.Administrator &&
-                    _user.GetLevel() < target.GetUser().GetLevel()) return EnumIrcError.ERR_NOPERMS;
-            }
+        public void SetOwner(bool flag)
+        {
+            modes[IrcStrings.MemberModeOwner].Set(flag ? 1 : 0);
+        }
 
-        if (!IsOwner() && requiredLevel >= EnumChannelAccessLevel.ChatOwner) return EnumIrcError.ERR_NOCHANOWNER;
-        if (!IsOwner() && !IsHost() && requiredLevel >= EnumChannelAccessLevel.ChatVoice)
-            return EnumIrcError.ERR_NOCHANOP;
-        return EnumIrcError.OK;
-    }
+        public EnumIrcError CanModify(IChannelMember target, EnumChannelAccessLevel requiredLevel, bool operCheck = true)
+        {
+            if (operCheck)
+                // Oper check
+                if (target.GetUser().GetLevel() >= EnumUserAccessLevel.Guide)
+                {
+                    if (_user.GetLevel() < EnumUserAccessLevel.Guide) return EnumIrcError.ERR_NOIRCOP;
+                    // TODO: Maybe there is better raws for below
+                    if (_user.GetLevel() < EnumUserAccessLevel.Sysop && _user.GetLevel() < target.GetUser().GetLevel())
+                        return EnumIrcError.ERR_NOPERMS;
+                    if (_user.GetLevel() < EnumUserAccessLevel.Administrator &&
+                        _user.GetLevel() < target.GetUser().GetLevel()) return EnumIrcError.ERR_NOPERMS;
+                }
 
-    public IUser GetUser()
-    {
-        return _user;
+            if (!IsOwner() && requiredLevel >= EnumChannelAccessLevel.ChatOwner) return EnumIrcError.ERR_NOCHANOWNER;
+            if (!IsOwner() && !IsHost() && requiredLevel >= EnumChannelAccessLevel.ChatVoice)
+                return EnumIrcError.ERR_NOCHANOP;
+            return EnumIrcError.OK;
+        }
+
+        public IUser GetUser()
+        {
+            return _user;
+        }
     }
 }

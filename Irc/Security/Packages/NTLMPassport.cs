@@ -1,73 +1,74 @@
 ﻿using System.Globalization;
-using Irc.Extensions.Security;
-using Irc.Security;
+using Irc.Enumerations;
+using Irc.Interfaces;
 
-namespace Irc.Extensions.Apollo.Security.Packages;
-
-public class NTLMPassport : Extensions.Security.Packages.NTLM
+namespace Irc.Security.Packages
 {
-    private readonly ICredentialProvider? _credentialProvider;
-
-    public string Puid;
-
-    public NTLMPassport(ICredentialProvider? credentialProvider) : base(credentialProvider)
+    public class NTLMPassport : Ntlm
     {
-        _credentialProvider = credentialProvider;
-        ServerSequence = EnumSupportPackageSequence.SSP_INIT;
-        Guest = false;
-        Listed = false;
-    }
+        private readonly ICredentialProvider? _credentialProvider;
 
-    public override SupportPackage CreateInstance(ICredentialProvider? credentialProvider)
-    {
-        return new GateKeeperPassport(_credentialProvider);
-    }
+        public string Puid;
 
-    public override EnumSupportPackageSequence AcceptSecurityContext(string data, string ip)
-    {
-        if (ServerSequence == EnumSupportPackageSequence.SSP_EXT)
+        public NTLMPassport(ICredentialProvider? credentialProvider) : base(credentialProvider)
         {
-            var result = base.AcceptSecurityContext(data, ip);
-            if (result != EnumSupportPackageSequence.SSP_OK && result != EnumSupportPackageSequence.SSP_EXT)
-                return EnumSupportPackageSequence.SSP_FAILED;
-
-            Authenticated = false;
-            ServerSequence = EnumSupportPackageSequence.SSP_CREDENTIALS;
-            return EnumSupportPackageSequence.SSP_CREDENTIALS;
+            _credentialProvider = credentialProvider;
+            ServerSequence = EnumSupportPackageSequence.SSP_INIT;
+            Guest = false;
+            Listed = false;
         }
 
-        if (ServerSequence == EnumSupportPackageSequence.SSP_CREDENTIALS)
+        public override SupportPackage CreateInstance(ICredentialProvider? credentialProvider)
         {
-            var ticket = extractCookie(data);
-            if (ticket == null) return EnumSupportPackageSequence.SSP_FAILED;
-
-            var profile = extractCookie(data.Substring(8 + ticket.Length));
-            if (profile == null) return EnumSupportPackageSequence.SSP_FAILED;
-
-            _credentials = _credentialProvider.ValidateTokens(
-                new Dictionary<string, string>
-                {
-                    { "ticket", ticket },
-                    { "profile", profile }
-                });
-
-            if (_credentials == null) return EnumSupportPackageSequence.SSP_FAILED;
-
-            Authenticated = true;
-            return EnumSupportPackageSequence.SSP_OK;
+            return new GateKeeperPassport(_credentialProvider);
         }
 
-        return EnumSupportPackageSequence.SSP_FAILED;
-    }
+        public override EnumSupportPackageSequence AcceptSecurityContext(string data, string ip)
+        {
+            if (ServerSequence == EnumSupportPackageSequence.SSP_EXT)
+            {
+                var result = base.AcceptSecurityContext(data, ip);
+                if (result != EnumSupportPackageSequence.SSP_OK && result != EnumSupportPackageSequence.SSP_EXT)
+                    return EnumSupportPackageSequence.SSP_FAILED;
 
-    private string extractCookie(string cookie)
-    {
-        if (cookie.Length < 8) return null;
+                Authenticated = false;
+                ServerSequence = EnumSupportPackageSequence.SSP_CREDENTIALS;
+                return EnumSupportPackageSequence.SSP_CREDENTIALS;
+            }
 
-        int.TryParse(cookie.Substring(0, 8), NumberStyles.HexNumber, null, out var cookieLen);
+            if (ServerSequence == EnumSupportPackageSequence.SSP_CREDENTIALS)
+            {
+                var ticket = extractCookie(data);
+                if (ticket == null) return EnumSupportPackageSequence.SSP_FAILED;
 
-        if (cookie.Length < 8 + cookieLen) return null;
+                var profile = extractCookie(data.Substring(8 + ticket.Length));
+                if (profile == null) return EnumSupportPackageSequence.SSP_FAILED;
 
-        return cookie.Substring(8, cookieLen);
+                _credentials = _credentialProvider.ValidateTokens(
+                    new Dictionary<string, string>
+                    {
+                        { "ticket", ticket },
+                        { "profile", profile }
+                    });
+
+                if (_credentials == null) return EnumSupportPackageSequence.SSP_FAILED;
+
+                Authenticated = true;
+                return EnumSupportPackageSequence.SSP_OK;
+            }
+
+            return EnumSupportPackageSequence.SSP_FAILED;
+        }
+
+        private string extractCookie(string cookie)
+        {
+            if (cookie.Length < 8) return null;
+
+            int.TryParse(cookie.Substring(0, 8), NumberStyles.HexNumber, null, out var cookieLen);
+
+            if (cookie.Length < 8 + cookieLen) return null;
+
+            return cookie.Substring(8, cookieLen);
+        }
     }
 }

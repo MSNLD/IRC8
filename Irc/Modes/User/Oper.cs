@@ -3,24 +3,25 @@ using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
-namespace Irc.Modes.User;
-
-public class Oper : ModeRule, IModeRule
+namespace Irc.Modes.User
 {
-    public Oper() : base(IrcStrings.UserModeOper)
+    public class Oper : ModeRule, IModeRule
     {
-    }
-
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
-    {
-        // :sky-8a15b323126 908 Sky :No permissions to perform command
-        if (source is IUser && ((IUser)source).IsSysop() && flag == false)
+        public Oper() : base(IrcStrings.UserModeOper)
         {
-            target.Modes[IrcStrings.UserModeOper].Set(flag);
-            DispatchModeChange(source, target, flag, parameter);
-            return EnumIrcError.OK;
         }
 
-        return EnumIrcError.ERR_NOPERMS;
+        public new EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+        {
+            // :sky-8a15b323126 908 Sky :No permissions to perform command
+            if (source is IUser && ((IUser)source).IsSysop() && flag == false)
+            {
+                target.Modes[IrcStrings.UserModeOper].Set(flag);
+                DispatchModeChange(source, target, flag, parameter);
+                return EnumIrcError.OK;
+            }
+
+            return EnumIrcError.ERR_NOPERMS;
+        }
     }
 }

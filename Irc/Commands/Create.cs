@@ -1,17 +1,18 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
 
-namespace Irc.Commands;
-
-internal class Create : Command, ICommand
+namespace Irc.Commands
 {
-    public new EnumCommandDataType GetDataType()
+    internal class Create : Command, ICommand
     {
-        return EnumCommandDataType.None;
-    }
+        public new EnumCommandDataType GetDataType()
+        {
+            return EnumCommandDataType.None;
+        }
 
-    public new void Execute(IChatFrame chatFrame)
-    {
-        chatFrame.User.Send(Raw.IRCX_ERR_NOTIMPLEMENTED(chatFrame.Server, chatFrame.User, nameof(Access)));
+        public new void Execute(IChatFrame chatFrame)
+        {
+            chatFrame.User.Send(Raw.IRCX_ERR_NOTIMPLEMENTED(chatFrame.Server, chatFrame.User, nameof(Access)));
+        }
     }
 }

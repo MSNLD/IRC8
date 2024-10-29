@@ -1,64 +1,64 @@
 using Irc.Enumerations;
-using Irc.Extensions.Apollo.Interfaces;
 using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Objects.Channel;
 using Irc.Resources;
 
-namespace Irc.Commands;
-
-public class Equestion : Command, ICommand
+namespace Irc.Commands
 {
-    public Equestion() : base(3)
+    public class Equestion : Command, ICommand
     {
-    }
-
-    public new EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
-    // EQUESTION %#OnStage Nickname :Why am I here?
-    public void Execute(IChatFrame chatFrame)
-    {
-        var targetName = chatFrame.Message.Parameters.First();
-        var nickname = chatFrame.Message.Parameters[1];
-        var message = chatFrame.Message.Parameters[2];
-
-        var targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
-        foreach (var target in targets)
+        public Equestion() : base(3)
         {
-            if (!Channel.ValidName(target))
-            {
-                chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, target));
-                return;
-            }
-
-            var chatObject = (IChatObject)chatFrame.Server.GetChannelByName(target);
-            var channel = (IChannel)chatObject;
-            var channelMember = channel.GetMember(chatFrame.User);
-            var isOnChannel = channelMember != null;
-
-            if (!isOnChannel)
-            {
-                chatFrame.User.Send(
-                    Raw.IRCX_ERR_NOTONCHANNEL_442(chatFrame.Server, chatFrame.User, channel));
-                return;
-            }
-
-            if (!((IApolloChannelModes)channel.Modes).OnStage)
-            {
-                chatFrame.User.Send(
-                    Raw.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));
-                return;
-            }
-
-            SubmitQuestion(chatFrame.User, channel, nickname, message);
         }
-    }
 
-    public static void SubmitQuestion(IUser user, IChannel channel, string nickname, string message)
-    {
-        channel.Send(ApolloRaws.RPL_EQUESTION(user, channel, nickname, message));
+        public new EnumCommandDataType GetDataType()
+        {
+            return EnumCommandDataType.None;
+        }
+
+        // EQUESTION %#OnStage Nickname :Why am I here?
+        public void Execute(IChatFrame chatFrame)
+        {
+            var targetName = chatFrame.Message.Parameters.First();
+            var nickname = chatFrame.Message.Parameters[1];
+            var message = chatFrame.Message.Parameters[2];
+
+            var targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var target in targets)
+            {
+                if (!Channel.ValidName(target))
+                {
+                    chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, target));
+                    return;
+                }
+
+                var chatObject = (IChatObject)chatFrame.Server.GetChannelByName(target);
+                var channel = (IChannel)chatObject;
+                var channelMember = channel.GetMember(chatFrame.User);
+                var isOnChannel = channelMember != null;
+
+                if (!isOnChannel)
+                {
+                    chatFrame.User.Send(
+                        Raw.IRCX_ERR_NOTONCHANNEL_442(chatFrame.Server, chatFrame.User, channel));
+                    return;
+                }
+
+                if (!((IApolloChannelModes)channel.Modes).OnStage)
+                {
+                    chatFrame.User.Send(
+                        Raw.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));
+                    return;
+                }
+
+                SubmitQuestion(chatFrame.User, channel, nickname, message);
+            }
+        }
+
+        public static void SubmitQuestion(IUser user, IChannel channel, string nickname, string message)
+        {
+            channel.Send(IrcxRaws.RPL_EQUESTION(user, channel, nickname, message));
+        }
     }
 }

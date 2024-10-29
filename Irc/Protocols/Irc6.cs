@@ -1,11 +1,12 @@
 ﻿using Irc.Enumerations;
 
-namespace Irc.Extensions.Apollo.Protocols;
-
-internal class Irc6 : Irc5
+namespace Irc.Protocols
 {
-    public override EnumProtocolType GetProtocolType()
+    internal class Irc6 : Irc5
     {
-        return EnumProtocolType.IRC6;
+        public override EnumProtocolType GetProtocolType()
+        {
+            return EnumProtocolType.IRC6;
+        }
     }
 }

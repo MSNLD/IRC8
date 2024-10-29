@@ -1,22 +1,15 @@
-﻿using Irc.Extensions.Props;
+﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.IO;
 using Irc.Resources;
 
-namespace Irc.Props.User;
-
-internal class OID : PropRule
+namespace Irc.Props.User
 {
-    private readonly IDataStore dataStore;
-
-    public OID(IDataStore dataStore) : base(IrcStrings.UserPropOid, EnumChannelAccessLevel.ChatMember,
-        EnumChannelAccessLevel.None, IrcStrings.GenericProps, "0", true)
+    internal class OID : PropRule
     {
-        this.dataStore = dataStore;
-    }
-
-    public override string GetValue(IChatObject target)
-    {
-        return dataStore.Get(IrcStrings.UserPropOid);
+        public OID() : base(IrcStrings.UserPropOid, EnumChannelAccessLevel.ChatMember,
+            EnumChannelAccessLevel.None, IrcStrings.GenericProps, "0", true)
+        {
+        }
     }
 }

@@ -1,24 +1,25 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
 
-namespace Irc.IO;
-
-public class FloodProtectionProfile : IFloodProtectionProfile
+namespace Irc.IO
 {
-    private FloodProtectionLevel _floodProtectionLevel;
-
-    public FloodProtectionProfile()
+    public class FloodProtectionProfile : IFloodProtectionProfile
     {
-        _floodProtectionLevel = new FloodProtectionLevel(EnumFloodProtectionLevel.Low);
-    }
+        private FloodProtectionLevel _floodProtectionLevel;
 
-    public void SetFloodProtectionLevel(FloodProtectionLevel floodProtectionLevel)
-    {
-        _floodProtectionLevel = floodProtectionLevel;
-    }
+        public FloodProtectionProfile()
+        {
+            _floodProtectionLevel = new FloodProtectionLevel(EnumFloodProtectionLevel.Low);
+        }
 
-    public FloodProtectionLevel GetFloodProtectionLevel()
-    {
-        return _floodProtectionLevel;
+        public void SetFloodProtectionLevel(FloodProtectionLevel floodProtectionLevel)
+        {
+            _floodProtectionLevel = floodProtectionLevel;
+        }
+
+        public FloodProtectionLevel GetFloodProtectionLevel()
+        {
+            return _floodProtectionLevel;
+        }
     }
 }

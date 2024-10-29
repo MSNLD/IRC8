@@ -1,14 +1,13 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
-using Irc.Objects;
 using Irc.Objects.User;
 
-namespace Irc.IO;
-
-public interface IFloodProtectionManager
+namespace Irc.Interfaces
 {
-    EnumFloodResult FloodCheck(EnumCommandDataType type, User user);
+    public interface IFloodProtectionManager
+    {
+        EnumFloodResult FloodCheck(EnumCommandDataType type, User user);
 
-    EnumFloodResult Audit(IFloodProtectionProfile protectionProfile, EnumCommandDataType type,
-        EnumUserAccessLevel level);
+        EnumFloodResult Audit(IFloodProtectionProfile protectionProfile, EnumCommandDataType type,
+            EnumUserAccessLevel level);
+    }
 }

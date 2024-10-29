@@ -1,7 +1,8 @@
 ﻿using Irc.Enumerations;
 
-namespace Irc.Objects.User;
-/*
+namespace Irc.Objects.User
+{
+    /*
 // TODO: MSNPROFILE
 (Code) - (MSNPROFILE) - (Description)
 FY - 13 - Female, has picture in profile.
@@ -41,97 +42,98 @@ IRC8 H,A,GO is correct as well as
 
 */
 
-public class Profile
-{
-    public EnumUserAccessLevel Level { get; set; }
-    public bool Away { get; set; }
-    public bool Guest { get; set; }
-    public bool Registered { get; set; }
-    public bool HasProfile { get; set; }
-    public bool IsMale { get; set; }
-    public bool IsFemale { get; set; }
-    public bool HasPicture { get; set; }
-    public bool IsSubscriber { get; set; }
-
-    public int GetProfileCode()
+    public class Profile
     {
-        return Convert.ToInt32(HasProfile) +
-               (Convert.ToInt32(IsMale) << 1) +
-               (Convert.ToInt32(IsFemale) << 2) +
-               (Convert.ToInt32(HasPicture) << 3);
-    }
+        public EnumUserAccessLevel Level { get; set; }
+        public bool Away { get; set; }
+        public bool Guest { get; set; }
+        public bool Registered { get; set; }
+        public bool HasProfile { get; set; }
+        public bool IsMale { get; set; }
+        public bool IsFemale { get; set; }
+        public bool HasPicture { get; set; }
+        public bool IsSubscriber { get; set; }
 
-    public void SetProfileCode(int code)
-    {
-        HasProfile = Convert.ToBoolean(code & 1);
-        IsMale = Convert.ToBoolean(code & 2);
-        IsFemale = Convert.ToBoolean(code & 4);
-        HasPicture = Convert.ToBoolean(code & 8);
-    }
-
-    public string GetAwayString()
-    {
-        return Away ? "G" : "H";
-    }
-
-    public string GetRegisteredString()
-    {
-        return Registered ? "B" : "O";
-    }
-
-    public string GetPictureString()
-    {
-        return Guest ? "" : HasPicture ? "Y" : "X";
-    }
-
-    public string GetProfileString()
-    {
-        return $"{GetGenderString()}{GetPictureString()}";
-    }
-
-    public string GetModeString()
-    {
-        switch (Level)
+        public int GetProfileCode()
         {
-            case EnumUserAccessLevel.Administrator:
+            return Convert.ToInt32(HasProfile) +
+                   (Convert.ToInt32(IsMale) << 1) +
+                   (Convert.ToInt32(IsFemale) << 2) +
+                   (Convert.ToInt32(HasPicture) << 3);
+        }
+
+        public void SetProfileCode(int code)
+        {
+            HasProfile = Convert.ToBoolean(code & 1);
+            IsMale = Convert.ToBoolean(code & 2);
+            IsFemale = Convert.ToBoolean(code & 4);
+            HasPicture = Convert.ToBoolean(code & 8);
+        }
+
+        public string GetAwayString()
+        {
+            return Away ? "G" : "H";
+        }
+
+        public string GetRegisteredString()
+        {
+            return Registered ? "B" : "O";
+        }
+
+        public string GetPictureString()
+        {
+            return Guest ? "" : HasPicture ? "Y" : "X";
+        }
+
+        public string GetProfileString()
+        {
+            return $"{GetGenderString()}{GetPictureString()}";
+        }
+
+        public string GetModeString()
+        {
+            switch (Level)
             {
-                return "A";
-            }
-            case EnumUserAccessLevel.Sysop:
-            {
-                return "S";
-            }
-            case EnumUserAccessLevel.Guide:
-            {
-                return "G";
-            }
-            default:
-            {
-                return "U";
+                case EnumUserAccessLevel.Administrator:
+                {
+                    return "A";
+                }
+                case EnumUserAccessLevel.Sysop:
+                {
+                    return "S";
+                }
+                case EnumUserAccessLevel.Guide:
+                {
+                    return "G";
+                }
+                default:
+                {
+                    return "U";
+                }
             }
         }
-    }
 
-    public string GetGenderString()
-    {
-        if (Guest) return "G";
-        if (!HasProfile) return "R";
+        public string GetGenderString()
+        {
+            if (Guest) return "G";
+            if (!HasProfile) return "R";
 
-        return !IsMale && !IsFemale ? "P" : IsMale ? "M" : "F";
-    }
+            return !IsMale && !IsFemale ? "P" : IsMale ? "M" : "F";
+        }
 
-    public string Irc5_ToString()
-    {
-        return $"{GetAwayString()},{GetModeString()},{GetGenderString()}";
-    }
+        public string Irc5_ToString()
+        {
+            return $"{GetAwayString()},{GetModeString()},{GetGenderString()}";
+        }
 
-    public string Irc7_ToString()
-    {
-        return $"{GetAwayString()},{GetModeString()},{GetProfileString()}";
-    }
+        public string Irc7_ToString()
+        {
+            return $"{GetAwayString()},{GetModeString()},{GetProfileString()}";
+        }
 
-    public override string ToString()
-    {
-        return $"{GetAwayString()},{GetModeString()},{GetProfileString()}{GetRegisteredString()}";
+        public override string ToString()
+        {
+            return $"{GetAwayString()},{GetModeString()},{GetProfileString()}{GetRegisteredString()}";
+        }
     }
 }

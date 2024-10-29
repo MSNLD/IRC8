@@ -1,11 +1,13 @@
-﻿using Irc.Objects;
+﻿using Irc.Interfaces;
+using Irc.Objects;
 
-namespace Irc.Extensions.Apollo.Directory;
-
-public static class ApolloDirectoryRaws
+namespace Irc.Extensions.Apollo.Directory
 {
-    public static string RPL_FINDS_MSN(DirectoryServer server, IUser user)
+    public static class ApolloDirectoryRaws
     {
-        return $":{server} 613 {user} :{server.ChatServerIP} {server.ChatServerPORT}";
+        public static string RPL_FINDS_MSN(DirectoryServer server, IUser user)
+        {
+            return $":{server} 613 {user} :{server.ChatServerIP} {server.ChatServerPORT}";
+        }
     }
 }

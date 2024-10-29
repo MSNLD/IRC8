@@ -1,14 +1,17 @@
-﻿namespace Irc.Security;
+﻿using Irc.Interfaces;
 
-public abstract class CredentialProvider : ICredentialProvider
+namespace Irc.Security
 {
-    public ICredential ValidateTokens(Dictionary<string, string> tokens)
+    public abstract class CredentialProvider : ICredentialProvider
     {
-        throw new NotImplementedException();
-    }
+        public ICredential ValidateTokens(Dictionary<string, string> tokens)
+        {
+            throw new NotImplementedException();
+        }
 
-    public ICredential GetUserCredentials(string domain, string username)
-    {
-        throw new NotImplementedException();
+        public ICredential GetUserCredentials(string domain, string username)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,9 +1,10 @@
-﻿namespace Irc.Enumerations;
-
-public enum EnumFloodProtectionLevel
+﻿namespace Irc.Enumerations
 {
-    None,
-    Low,
-    Medium,
-    High
+    public enum EnumFloodProtectionLevel
+    {
+        None,
+        Low,
+        Medium,
+        High
+    }
 }
