@@ -1,10 +1,9 @@
 ﻿using Irc.IO;
 
-namespace Irc.Interfaces
+namespace Irc.Interfaces;
+
+public interface IFloodProtectionProfile
 {
-    public interface IFloodProtectionProfile
-    {
-        void SetFloodProtectionLevel(FloodProtectionLevel floodProtectionLevel);
-        FloodProtectionLevel GetFloodProtectionLevel();
-    }
+    void SetFloodProtectionLevel(FloodProtectionLevel floodProtectionLevel);
+    FloodProtectionLevel GetFloodProtectionLevel();
 }

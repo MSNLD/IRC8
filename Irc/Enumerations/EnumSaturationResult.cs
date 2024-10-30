@@ -1,9 +1,8 @@
-﻿namespace Irc.Enumerations
+﻿namespace Irc.Enumerations;
+
+public enum EnumSaturationResult
 {
-    public enum EnumSaturationResult
-    {
-        Ok,
-        OutputExceeded,
-        InputExceeded
-    }
+    Ok,
+    OutputExceeded,
+    InputExceeded
 }

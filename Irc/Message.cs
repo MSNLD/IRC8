@@ -1,124 +1,122 @@
-﻿using Irc.Commands;
-using Irc.Interfaces;
+﻿using Irc.Interfaces;
 
-namespace Irc
+namespace Irc;
+
+public class Message
 {
-    public class Message
+    private readonly IProtocol _protocol;
+    private ICommand _command;
+    private string _commandName;
+
+    /*
+       <message>  ::= [':' <prefix> <SPACE> ] <command> <params> <crlf>
+        <prefix>   ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]
+        <command>  ::= <letter> { <letter> } | <number> <number> <number>
+        <SPACE>    ::= ' ' { ' ' }
+        <params>   ::= <SPACE> [ ':' <trailing> | <middle> <params> ]
+
+        <middle>   ::= <Any *non-empty* sequence of octets not including SPACE
+                       or NUL or CR or LF, the first of which may not be ':'>
+        <trailing> ::= <Any, possibly *empty*, sequence of octets not including
+                         NUL or CR or LF>
+
+        <crlf>     ::= CR LF
+     */
+
+    // TODO: Tests around Message class
+    // TODO: To get rid of below
+    public int ParamOffset;
+
+    public Message(IProtocol protocol, string message)
     {
-        private readonly IProtocol _protocol;
-        private ICommand _command;
-        private string _commandName;
+        _protocol = protocol;
+        OriginalText = message;
+        parse();
+    }
 
-        /*
-           <message>  ::= [':' <prefix> <SPACE> ] <command> <params> <crlf>
-            <prefix>   ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]
-            <command>  ::= <letter> { <letter> } | <number> <number> <number>
-            <SPACE>    ::= ' ' { ' ' }
-            <params>   ::= <SPACE> [ ':' <trailing> | <middle> <params> ]
+    public List<string> Parameters { get; } = new();
 
-            <middle>   ::= <Any *non-empty* sequence of octets not including SPACE
-                           or NUL or CR or LF, the first of which may not be ':'>
-            <trailing> ::= <Any, possibly *empty*, sequence of octets not including
-                             NUL or CR or LF>
+    public string OriginalText { get; }
 
-            <crlf>     ::= CR LF
-         */
+    public string GetPrefix { get; private set; }
 
-        // TODO: Tests around Message class
-        // TODO: To get rid of below
-        public int ParamOffset;
+    public bool HasCommand { get; private set; }
 
-        public Message(IProtocol protocol, string message)
+    public ICommand GetCommand()
+    {
+        return _command;
+    }
+
+    public string GetCommandName()
+    {
+        return _commandName;
+    }
+
+    public List<string> GetParameters()
+    {
+        return Parameters;
+    }
+
+    private bool getPrefix(string prefix)
+    {
+        if (prefix.StartsWith(':'))
         {
-            _protocol = protocol;
-            OriginalText = message;
-            parse();
+            GetPrefix = prefix.Substring(1);
+            return true;
         }
 
-        public List<string> Parameters { get; } = new();
+        return false;
+    }
 
-        public string OriginalText { get; }
-
-        public string GetPrefix { get; private set; }
-
-        public bool HasCommand { get; private set; }
-
-        public ICommand GetCommand()
+    private bool getCommand(string command)
+    {
+        if (!string.IsNullOrWhiteSpace(command))
         {
-            return _command;
+            HasCommand = true;
+            _commandName = command;
+            _command = _protocol.GetCommand(command);
+            return true;
         }
 
-        public string GetCommandName()
-        {
-            return _commandName;
-        }
+        return false;
+    }
 
-        public List<string> GetParameters()
-        {
-            return Parameters;
-        }
+    private void parse()
+    {
+        var trimmedText = OriginalText.TrimStart();
+        if (string.IsNullOrWhiteSpace(trimmedText)) return;
 
-        private bool getPrefix(string prefix)
+        var parts = trimmedText.Split(' ');
+
+        if (parts.Length > 0)
         {
-            if (prefix.StartsWith(':'))
+            var index = 0;
+            var cursor = 0;
+
+            if (getPrefix(parts[index]))
             {
-                GetPrefix = prefix.Substring(1);
-                return true;
+                index++;
+                cursor = GetPrefix.Length + 1;
             }
 
-            return false;
-        }
-
-        private bool getCommand(string command)
-        {
-            if (!string.IsNullOrWhiteSpace(command))
+            if (index >= parts.Length) return;
+            if (getCommand(parts[index]))
             {
-                HasCommand = true;
-                _commandName = command;
-                _command = _protocol.GetCommand(command);
-                return true;
+                cursor += parts[index].Length + 1;
+                index++;
             }
 
-            return false;
-        }
-
-        private void parse()
-        {
-            var trimmedText = OriginalText.TrimStart();
-            if (string.IsNullOrWhiteSpace(trimmedText)) return;
-
-            var parts = trimmedText.Split(' ');
-
-            if (parts.Length > 0)
+            for (; index < parts.Length; index++)
             {
-                var index = 0;
-                var cursor = 0;
-
-                if (getPrefix(parts[index]))
+                if (parts[index].StartsWith(':'))
                 {
-                    index++;
-                    cursor = GetPrefix.Length + 1;
+                    cursor++;
+                    Parameters.Add(trimmedText.Substring(cursor));
+                    break;
                 }
 
-                if (index >= parts.Length) return;
-                if (getCommand(parts[index]))
-                {
-                    cursor += parts[index].Length + 1;
-                    index++;
-                }
-
-                for (; index < parts.Length; index++)
-                {
-                    if (parts[index].StartsWith(':'))
-                    {
-                        cursor++;
-                        Parameters.Add(trimmedText.Substring(cursor));
-                        break;
-                    }
-
-                    Parameters.Add(parts[index]);
-                    cursor += parts[index].Length + 1;
-                }
+                Parameters.Add(parts[index]);
+                cursor += parts[index].Length + 1;
             }
         }
     }

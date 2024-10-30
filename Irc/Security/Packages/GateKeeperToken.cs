@@ -1,18 +1,17 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Irc.Security.Packages
+namespace Irc.Security.Packages;
+
+public struct GateKeeperToken
 {
-    public struct GateKeeperToken
-    {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6)]
-        public byte[] Signature;
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6)]
+    public byte[] Signature;
 
-        public ushort TimeStamp;
-        public uint Version;
-        public uint Sequence;
+    public ushort TimeStamp;
+    public uint Version;
+    public uint Sequence;
 
-        // Consider adding below for Type 2 message
-        //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-        //public byte[] Challenge;
-    }
+    // Consider adding below for Type 2 message
+    //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+    //public byte[] Challenge;
 }

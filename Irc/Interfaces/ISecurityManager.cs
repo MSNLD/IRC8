@@ -1,11 +1,10 @@
 ﻿using Irc.Security;
 
-namespace Irc.Interfaces
+namespace Irc.Interfaces;
+
+public interface ISecurityManager
 {
-    public interface ISecurityManager
-    {
-        void AddSupportPackage(SupportPackage supportPackage);
-        SupportPackage CreatePackageInstance(string name, ICredentialProvider? credentialProvider);
-        string GetSupportedPackages();
-    }
+    void AddSupportPackage(SupportPackage supportPackage);
+    SupportPackage CreatePackageInstance(string name, ICredentialProvider? credentialProvider);
+    string GetSupportedPackages();
 }

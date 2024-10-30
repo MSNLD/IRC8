@@ -1,22 +1,21 @@
 using System.Numerics;
 
-namespace Irc.Interfaces
-{
-    public interface IConnection
-    {
-        EventHandler<string> OnSend { get; set; }
-        EventHandler<string> OnReceive { get; set; }
-        EventHandler<BigInteger> OnConnect { get; set; }
-        EventHandler<BigInteger> OnDisconnect { get; set; }
-        EventHandler<Exception> OnError { get; set; }
+namespace Irc.Interfaces;
 
-        string GetIp();
-        string GetIpAndPort();
-        string GetHostname();
-        BigInteger GetId();
-        void Send(string message);
-        void Disconnect(string message);
-        void Accept();
-        bool TryOverrideRemoteAddress(string ip, string hostname);
-    }
+public interface IConnection
+{
+    EventHandler<string> OnSend { get; set; }
+    EventHandler<string> OnReceive { get; set; }
+    EventHandler<BigInteger> OnConnect { get; set; }
+    EventHandler<BigInteger> OnDisconnect { get; set; }
+    EventHandler<Exception> OnError { get; set; }
+
+    string GetIp();
+    string GetIpAndPort();
+    string GetHostname();
+    BigInteger GetId();
+    void Send(string message);
+    void Disconnect(string message);
+    void Accept();
+    bool TryOverrideRemoteAddress(string ip, string hostname);
 }

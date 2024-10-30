@@ -1,65 +1,63 @@
 using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects;
 using Irc.Objects.Channel;
 using Irc.Resources;
 
-namespace Irc.Commands
+namespace Irc.Commands;
+
+public class Esubmit : Command, ICommand
 {
-    public class Esubmit : Command, ICommand
+    public Esubmit() : base(2)
     {
-        public Esubmit() : base(2)
-        {
-        }
+    }
 
-        public new EnumCommandDataType GetDataType()
-        {
-            return EnumCommandDataType.None;
-        }
+    public new EnumCommandDataType GetDataType()
+    {
+        return EnumCommandDataType.None;
+    }
 
-        // ESUBMIT %#OnStage :Why am I here?
-        public new void Execute(IChatFrame chatFrame)
-        {
-            var targetName = chatFrame.Message.Parameters.First();
-            var message = chatFrame.Message.Parameters[1];
+    // ESUBMIT %#OnStage :Why am I here?
+    public new void Execute(IChatFrame chatFrame)
+    {
+        var targetName = chatFrame.Message.Parameters.First();
+        var message = chatFrame.Message.Parameters[1];
 
-            var targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            foreach (var target in targets)
+        var targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        foreach (var target in targets)
+        {
+            if (!Channel.ValidName(target))
             {
-                if (!Channel.ValidName(target))
-                {
-                    chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, target));
-                    return;
-                }
-
-                var chatObject = (IChatObject)chatFrame.Server.GetChannelByName(target);
-                var channel = (IChannel)chatObject;
-                var channelMember = channel.GetMember(chatFrame.User);
-                var isOnChannel = channelMember != null;
-
-                if (!isOnChannel)
-                {
-                    chatFrame.User.Send(
-                        Raw.IRCX_ERR_NOTONCHANNEL_442(chatFrame.Server, chatFrame.User, channel));
-                    return;
-                }
-
-                if (!((IApolloChannelModes)channel.Modes).OnStage)
-                {
-                    chatFrame.User.Send(
-                        Raw.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));
-                    return;
-                }
-
-                SubmitQuestion(chatFrame.User, channel, message);
+                chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, target));
+                return;
             }
-        }
 
-        // TODO: Instead of EQUESTION this needs to be something else such as a EVENT etc
+            var chatObject = (IChatObject)chatFrame.Server.GetChannelByName(target);
+            var channel = (IChannel)chatObject;
+            var channelMember = channel.GetMember(chatFrame.User);
+            var isOnChannel = channelMember != null;
 
-        public static void SubmitQuestion(IUser user, IChannel channel, string message)
-        {
-            channel.Send(IrcxRaws.RPL_EQUESTION(user, channel, user.ToString(), message));
+            if (!isOnChannel)
+            {
+                chatFrame.User.Send(
+                    Raw.IRCX_ERR_NOTONCHANNEL_442(chatFrame.Server, chatFrame.User, channel));
+                return;
+            }
+
+            if (!((IApolloChannelModes)channel.Modes).OnStage)
+            {
+                chatFrame.User.Send(
+                    Raw.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));
+                return;
+            }
+
+            SubmitQuestion(chatFrame.User, channel, message);
         }
+    }
+
+    // TODO: Instead of EQUESTION this needs to be something else such as a EVENT etc
+
+    public static void SubmitQuestion(IUser user, IChannel channel, string message)
+    {
+        channel.Send(IrcxRaws.RPL_EQUESTION(user, channel, user.ToString(), message));
     }
 }

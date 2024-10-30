@@ -1,18 +1,17 @@
 ﻿using Irc.Enumerations;
 
-namespace Irc.Access
+namespace Irc.Access;
+
+public class ChannelAccess : AccessList
 {
-    public class ChannelAccess : AccessList
+    public ChannelAccess()
     {
-        public ChannelAccess()
+        accessEntries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
         {
-            accessEntries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
-            {
-                { EnumAccessLevel.OWNER, new List<AccessEntry>() },
-                { EnumAccessLevel.HOST, new List<AccessEntry>() },
-                { EnumAccessLevel.VOICE, new List<AccessEntry>() },
-                { EnumAccessLevel.DENY, new List<AccessEntry>() }
-            };
-        }
+            { EnumAccessLevel.OWNER, new List<AccessEntry>() },
+            { EnumAccessLevel.HOST, new List<AccessEntry>() },
+            { EnumAccessLevel.VOICE, new List<AccessEntry>() },
+            { EnumAccessLevel.DENY, new List<AccessEntry>() }
+        };
     }
 }

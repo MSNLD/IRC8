@@ -18,7 +18,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Irc.ClassExtensions\Irc.Helpers.csproj"/>
-        <ProjectReference Include="..\Irc.Security.Packages\Irc.Security.Packages.csproj" />
+        <ProjectReference Include="..\Irc.Security.Packages\Irc.Security.Packages.csproj"/>
     </ItemGroup>
 
 </Project>

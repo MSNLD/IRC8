@@ -2,23 +2,22 @@
 using Irc.Enumerations;
 using Irc.Interfaces;
 
-namespace Irc.Extensions.Apollo.Directory.Commands
+namespace Irc.Extensions.Apollo.Directory.Commands;
+
+internal class Finds : Command, ICommand
 {
-    internal class Finds : Command, ICommand
+    public Finds()
     {
-        public Finds()
-        {
-            _requiredMinimumParameters = 1;
-        }
+        _requiredMinimumParameters = 1;
+    }
 
-        public EnumCommandDataType GetDataType()
-        {
-            return EnumCommandDataType.None;
-        }
+    public EnumCommandDataType GetDataType()
+    {
+        return EnumCommandDataType.None;
+    }
 
-        public void Execute(IChatFrame chatFrame)
-        {
-            chatFrame.User.Send(ApolloDirectoryRaws.RPL_FINDS_MSN((DirectoryServer)chatFrame.Server, chatFrame.User));
-        }
+    public void Execute(IChatFrame chatFrame)
+    {
+        chatFrame.User.Send(ApolloDirectoryRaws.RPL_FINDS_MSN((DirectoryServer)chatFrame.Server, chatFrame.User));
     }
 }

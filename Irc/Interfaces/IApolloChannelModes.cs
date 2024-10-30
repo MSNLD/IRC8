@@ -1,8 +1,7 @@
-namespace Irc.Interfaces
+namespace Irc.Interfaces;
+
+public interface IApolloChannelModes : IChannelModes
 {
-    public interface IApolloChannelModes : IChannelModes
-    {
-        bool OnStage { get; set; }
-        bool Subscriber { get; set; }
-    }
+    bool OnStage { get; set; }
+    bool Subscriber { get; set; }
 }

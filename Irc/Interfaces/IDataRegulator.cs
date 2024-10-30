@@ -1,18 +1,17 @@
-﻿namespace Irc.Interfaces
+﻿namespace Irc.Interfaces;
+
+public interface IDataRegulator
 {
-    public interface IDataRegulator
-    {
-        bool IsIncomingThresholdExceeded();
-        bool IsOutgoingThresholdExceeded();
-        int GeIncomingQueueLength();
-        int GetOutgoingQueueLength();
-        int GetIncomingBytes();
-        int GetOutgoingBytes();
-        int PushIncoming(Message message);
-        int PushOutgoing(string message);
-        Message PopIncoming();
-        Message PeekIncoming();
-        string PopOutgoing();
-        void Purge();
-    }
+    bool IsIncomingThresholdExceeded();
+    bool IsOutgoingThresholdExceeded();
+    int GeIncomingQueueLength();
+    int GetOutgoingQueueLength();
+    int GetIncomingBytes();
+    int GetOutgoingBytes();
+    int PushIncoming(Message message);
+    int PushOutgoing(string message);
+    Message PopIncoming();
+    Message PeekIncoming();
+    string PopOutgoing();
+    void Purge();
 }

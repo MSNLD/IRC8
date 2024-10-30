@@ -1,9 +1,8 @@
 ﻿using Irc.Interfaces;
 using Irc.Objects.Collections;
 
-namespace Irc.Objects.Server
+namespace Irc.Objects.Server;
+
+public class ServerModes : ModeCollection, IModeCollection
 {
-    public class ServerModes : ModeCollection, IModeCollection
-    {
-    }
 }

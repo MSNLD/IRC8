@@ -3,108 +3,106 @@ using Irc.Helpers;
 using Irc.Interfaces;
 using Irc.Security.Packages.NTLM;
 
-namespace Irc.Security.Packages
-{
-    // NTLM Implementation by Sky
+namespace Irc.Security.Packages;
+// NTLM Implementation by Sky
 // Created: Long time ago...
 // NTLM is required for the CAC to work
 
-    public class Ntlm : SupportPackage, ISupportPackage
+public class Ntlm : SupportPackage, ISupportPackage
+{
+    private readonly ICredentialProvider? _credentialProvider;
+    private readonly NTLMShared.TargetInformation _targetInformation = new();
+    private ICredential? _credential;
+    private NtlmType1Message _message1;
+    private NtlmType2Message _message2;
+    private NtlmType3Message _message3;
+
+    public Ntlm(ICredentialProvider? credentialProvider)
     {
-        private readonly ICredentialProvider? _credentialProvider;
-        private readonly NTLMShared.TargetInformation _targetInformation = new();
-        private ICredential? _credential;
-        private NtlmType1Message _message1;
-        private NtlmType2Message _message2;
-        private NtlmType3Message _message3;
+        Listed = true;
+        _credentialProvider = credentialProvider;
+    }
 
-        public Ntlm(ICredentialProvider? credentialProvider)
+    public string ServerDomain { get; set; } = "cg";
+
+    public override SupportPackage CreateInstance(ICredentialProvider? credentialProvider)
+    {
+        return new Ntlm(credentialProvider ?? _credentialProvider);
+    }
+
+    public ICredential GetCredentials()
+    {
+        return _credential;
+    }
+
+    public override EnumSupportPackageSequence InitializeSecurityContext(string data, string ip)
+    {
+        try
         {
-            Listed = true;
-            _credentialProvider = credentialProvider;
+            _message1 = new NtlmType1Message(data);
+
+            var isOEM = !_message1.EnumeratedFlags[NtlmFlag.NTLMSSP_NEGOTIATE_UNICODE];
+
+            _targetInformation.DomainName = isOEM ? "DOMAIN" : "DOMAIN".ToUnicodeString();
+            _targetInformation.ServerName = isOEM ? "TK2CHATCHATA01" : "TK2CHATCHATA01".ToUnicodeString();
+            _targetInformation.DNSDomainName =
+                isOEM ? "TK2CHATCHATA01.Microsoft.Com" : "TK2CHATCHATA01.Microsoft.Com".ToUnicodeString();
+            _targetInformation.DNSServerName =
+                isOEM ? "TK2CHATCHATA01.Microsoft.Com" : "TK2CHATCHATA01.Microsoft.Com".ToUnicodeString();
+
+            return EnumSupportPackageSequence.SSP_OK;
         }
-
-        public string ServerDomain { get; set; } = "cg";
-
-        public override SupportPackage CreateInstance(ICredentialProvider? credentialProvider)
+        catch (Exception)
         {
-            return new Ntlm(credentialProvider ?? _credentialProvider);
+            return EnumSupportPackageSequence.SSP_FAILED;
         }
+    }
 
-        public ICredential GetCredentials()
+    public override string? CreateSecurityChallenge()
+    {
+        try
         {
-            return _credential;
+            _message2 = new NtlmType2Message(_message1.Flags, _targetInformation.DomainName, _targetInformation);
+            return _message2.ToString();
         }
-
-        public override EnumSupportPackageSequence InitializeSecurityContext(string data, string ip)
+        catch (Exception)
         {
-            try
-            {
-                _message1 = new NtlmType1Message(data);
-
-                var isOEM = !_message1.EnumeratedFlags[NtlmFlag.NTLMSSP_NEGOTIATE_UNICODE];
-
-                _targetInformation.DomainName = isOEM ? "DOMAIN" : "DOMAIN".ToUnicodeString();
-                _targetInformation.ServerName = isOEM ? "TK2CHATCHATA01" : "TK2CHATCHATA01".ToUnicodeString();
-                _targetInformation.DNSDomainName =
-                    isOEM ? "TK2CHATCHATA01.Microsoft.Com" : "TK2CHATCHATA01.Microsoft.Com".ToUnicodeString();
-                _targetInformation.DNSServerName =
-                    isOEM ? "TK2CHATCHATA01.Microsoft.Com" : "TK2CHATCHATA01.Microsoft.Com".ToUnicodeString();
-
-                return EnumSupportPackageSequence.SSP_OK;
-            }
-            catch (Exception)
-            {
-                return EnumSupportPackageSequence.SSP_FAILED;
-            }
+            return null;
         }
+    }
 
-        public override string? CreateSecurityChallenge()
+    public override EnumSupportPackageSequence AcceptSecurityContext(string data, string ip)
+    {
+        if (_credentialProvider == null) return EnumSupportPackageSequence.SSP_FAILED;
+
+        try
         {
-            try
-            {
-                _message2 = new NtlmType2Message(_message1.Flags, _targetInformation.DomainName, _targetInformation);
-                return _message2.ToString();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+            _message3 = new NtlmType3Message(data);
 
-        public override EnumSupportPackageSequence AcceptSecurityContext(string data, string ip)
+            _credential = _credentialProvider.GetUserCredentials(_message3.TargetName, _message3.UserName);
+
+            if (_credential != null)
+                if (_message3.VerifySecurityContext(_message2.Challenge.ToAsciiString(), _credential.GetPassword()))
+                {
+                    Authenticated = true;
+                    return EnumSupportPackageSequence.SSP_OK;
+                }
+
+            return EnumSupportPackageSequence.SSP_FAILED;
+        }
+        catch (Exception)
         {
-            if (_credentialProvider == null) return EnumSupportPackageSequence.SSP_FAILED;
-
-            try
-            {
-                _message3 = new NtlmType3Message(data);
-
-                _credential = _credentialProvider.GetUserCredentials(_message3.TargetName, _message3.UserName);
-
-                if (_credential != null)
-                    if (_message3.VerifySecurityContext(ByteExtensions.ToAsciiString(_message2.Challenge), _credential.GetPassword()))
-                    {
-                        Authenticated = true;
-                        return EnumSupportPackageSequence.SSP_OK;
-                    }
-
-                return EnumSupportPackageSequence.SSP_FAILED;
-            }
-            catch (Exception)
-            {
-                return EnumSupportPackageSequence.SSP_FAILED;
-            }
+            return EnumSupportPackageSequence.SSP_FAILED;
         }
+    }
 
-        public override string GetDomain()
-        {
-            return ServerDomain;
-        }
+    public override string GetDomain()
+    {
+        return ServerDomain;
+    }
 
-        public override string GetPackageName()
-        {
-            return nameof(Ntlm);
-        }
+    public override string GetPackageName()
+    {
+        return nameof(Ntlm);
     }
 }

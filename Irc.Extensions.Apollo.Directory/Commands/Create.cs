@@ -1,26 +1,24 @@
 ﻿using Irc.Commands;
 using Irc.Enumerations;
 using Irc.Interfaces;
-using ICommand = Irc.Interfaces.ICommand;
 using Interfaces_ICommand = Irc.Interfaces.ICommand;
 
-namespace Irc.Extensions.Apollo.Directory.Commands
+namespace Irc.Extensions.Apollo.Directory.Commands;
+
+internal class Create : Command, Interfaces_ICommand
 {
-    internal class Create : Command, Interfaces_ICommand
+    public Create()
     {
-        public Create()
-        {
-            _requiredMinimumParameters = 1;
-        }
+        _requiredMinimumParameters = 1;
+    }
 
-        public EnumCommandDataType GetDataType()
-        {
-            return EnumCommandDataType.None;
-        }
+    public EnumCommandDataType GetDataType()
+    {
+        return EnumCommandDataType.None;
+    }
 
-        public void Execute(IChatFrame chatFrame)
-        {
-            chatFrame.User.Send(Raw.IRCX_RPL_FINDS_613(chatFrame.Server, chatFrame.User));
-        }
+    public void Execute(IChatFrame chatFrame)
+    {
+        chatFrame.User.Send(Raw.IRCX_RPL_FINDS_613(chatFrame.Server, chatFrame.User));
     }
 }

@@ -1,16 +1,15 @@
 ﻿using Irc.Enumerations;
 
-namespace Irc.Access
+namespace Irc.Access;
+
+public class UserAccess : AccessList
 {
-    public class UserAccess : AccessList
+    public UserAccess()
     {
-        public UserAccess()
+        accessEntries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
         {
-            accessEntries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
-            {
-                { EnumAccessLevel.VOICE, new List<AccessEntry>() },
-                { EnumAccessLevel.DENY, new List<AccessEntry>() }
-            };
-        }
+            { EnumAccessLevel.VOICE, new List<AccessEntry>() },
+            { EnumAccessLevel.DENY, new List<AccessEntry>() }
+        };
     }
 }

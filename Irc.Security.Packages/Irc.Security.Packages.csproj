@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="GKSSP\" />
+        <Folder Include="GKSSP\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Irc.ClassExtensions\Irc.Helpers.csproj" />
+        <ProjectReference Include="..\Irc.ClassExtensions\Irc.Helpers.csproj"/>
     </ItemGroup>
 
 </Project>

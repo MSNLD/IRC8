@@ -3,86 +3,79 @@ using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
 
-namespace Irc.Props
+namespace Irc.Props;
+
+public class PropRule : IPropRule
 {
-    public class PropRule : IPropRule
+    public string ValidationMask;
+
+    public PropRule()
     {
-        private readonly string validationMask;
+    }
 
-        public PropRule(string name, EnumChannelAccessLevel readAccessLevel, EnumChannelAccessLevel writeAccessLevel,
-            string validationMask, string initialValue, bool readOnly = false)
+    public PropRule(string name, EnumChannelAccessLevel readAccessLevel, EnumChannelAccessLevel writeAccessLevel,
+        string validationMask, string initialValue, bool readOnly = false)
+    {
+        Name = name;
+        ReadAccessLevel = readAccessLevel;
+        WriteAccessLevel = writeAccessLevel;
+        ValidationMask = validationMask;
+        Value = initialValue;
+        ReadOnly = readOnly;
+    }
+
+    public Action<ChatObject, string> PostRule { get; set; } = null;
+    public string Value { get; set; }
+
+    public string Name { set; get; }
+
+    public EnumChannelAccessLevel ReadAccessLevel { get; set; }
+    public EnumChannelAccessLevel WriteAccessLevel { get; set; }
+    public bool ReadOnly { get; set; }
+
+    public virtual EnumIrcError EvaluateSet(IChatObject source, IChatObject target, string propValue)
+    {
+        if (target is IChannel)
         {
-            Name = name;
-            ReadAccessLevel = readAccessLevel;
-            WriteAccessLevel = writeAccessLevel;
-            this.validationMask = validationMask;
-            _value = initialValue;
-            ReadOnly = readOnly;
+            var channel = (IChannel)target;
+            var member = channel.GetMember((IUser)source);
+
+            if (member == null) return EnumIrcError.ERR_NOPERMS;
+
+            if (member.GetLevel() < WriteAccessLevel) return EnumIrcError.ERR_NOPERMS;
+        }
+        else if (WriteAccessLevel == EnumChannelAccessLevel.None || (target is IUser && source != target))
+        {
+            return EnumIrcError.ERR_NOPERMS;
         }
 
-        private string _value { get; set; }
+        // Otherwise perms are OK, it is the same user, or is a server
+        var regEx = new Regex(ValidationMask);
+        var match = regEx.Match(propValue);
+        if (!match.Success || match.Value.Length != propValue.Length) return EnumIrcError.ERR_BADVALUE;
 
-        public string Name { get; }
+        if (PostRule != null) PostRule((ChatObject)target, propValue);
 
-        // TODO: Figure out how to refactor to also accommodate User props access levels
-        public EnumChannelAccessLevel ReadAccessLevel { get; }
-        public EnumChannelAccessLevel WriteAccessLevel { get; }
-        public bool ReadOnly { get; }
+        return EnumIrcError.OK;
+    }
 
-        public virtual EnumIrcError EvaluateSet(IChatObject source, IChatObject target, string propValue)
+    public virtual EnumIrcError EvaluateGet(IChatObject source, IChatObject target)
+    {
+        if (target is IChannel)
         {
-            if (target is IChannel)
-            {
-                var channel = (IChannel)target;
-                var member = channel.GetMember((IUser)source);
+            var channel = (IChannel)target;
+            var member = channel.GetMember((IUser)source);
 
-                if (member == null) return EnumIrcError.ERR_NOPERMS;
+            if (member == null) return EnumIrcError.ERR_NOPERMS;
 
-                if (member.GetLevel() < WriteAccessLevel) return EnumIrcError.ERR_NOPERMS;
-            }
-            else if (WriteAccessLevel == EnumChannelAccessLevel.None || (target is IUser && source != target))
-            {
-                return EnumIrcError.ERR_NOPERMS;
-            }
-
-            // Otherwise perms are OK, it is the same user, or is a server
-            var regEx = new Regex(validationMask);
-            var match = regEx.Match(propValue);
-            if (!match.Success || match.Value.Length != propValue.Length) return EnumIrcError.ERR_BADVALUE;
-
-        
-        
-            return EnumIrcError.OK;
+            if (member.GetLevel() < ReadAccessLevel) return EnumIrcError.ERR_NOPERMS;
+        }
+        else if (ReadAccessLevel == EnumChannelAccessLevel.None || (target is IUser && source != target))
+        {
+            return EnumIrcError.ERR_NOPERMS;
         }
 
-        public virtual EnumIrcError EvaluateGet(IChatObject source, IChatObject target)
-        {
-            if (target is IChannel)
-            {
-                var channel = (IChannel)target;
-                var member = channel.GetMember((IUser)source);
-
-                if (member == null) return EnumIrcError.ERR_NOPERMS;
-
-                if (member.GetLevel() < ReadAccessLevel) return EnumIrcError.ERR_NOPERMS;
-            }
-            else if (ReadAccessLevel == EnumChannelAccessLevel.None || (target is IUser && source != target))
-            {
-                return EnumIrcError.ERR_NOPERMS;
-            }
-
-            // Otherwise perms are OK, it is the same user, or is a server
-            return EnumIrcError.OK;
-        }
-
-        public virtual void SetValue(string value)
-        {
-            _value = value;
-        }
-
-        public virtual string GetValue(IChatObject target)
-        {
-            return _value;
-        }
+        // Otherwise perms are OK, it is the same user, or is a server
+        return EnumIrcError.OK;
     }
 }

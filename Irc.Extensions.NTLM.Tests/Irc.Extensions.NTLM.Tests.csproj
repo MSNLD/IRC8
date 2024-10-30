@@ -16,13 +16,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Irc.Security.NTLM">
-        <HintPath>..\Irc7d\bin\Debug\net6.0\Irc.Security.NTLM.dll</HintPath>
-      </Reference>
+        <Reference Include="Irc.Security.NTLM">
+            <HintPath>..\Irc7d\bin\Debug\net6.0\Irc.Security.NTLM.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Irc.ClassExtensions\Irc.Helpers.csproj" />
+        <ProjectReference Include="..\Irc.ClassExtensions\Irc.Helpers.csproj"/>
     </ItemGroup>
 
 </Project>

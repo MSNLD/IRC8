@@ -1,7 +1,6 @@
-﻿namespace Irc.Security.Credentials
+﻿namespace Irc.Security.Credentials;
+
+public class Profile
 {
-    public class Profile
-    {
-        public string Id;
-    }
+    public string Id;
 }
