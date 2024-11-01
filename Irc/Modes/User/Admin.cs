@@ -15,7 +15,7 @@ public class Admin : ModeRule, IModeRule
         // :sky-8a15b323126 908 Sky :No permissions to perform command
         if (source is IUser && ((IUser)source).IsAdministrator() && flag == false)
         {
-            target.Modes[IrcStrings.UserModeAdmin].Set(flag);
+            target.Modes[IrcStrings.UserModeAdmin] = Convert.ToInt32(flag);
             DispatchModeChange(source, target, flag, parameter);
             return EnumIrcError.OK;
         }

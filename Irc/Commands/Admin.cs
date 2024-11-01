@@ -20,9 +20,9 @@ public class Admin : Command, ICommand
          <- :sky-8a15b323126 259 Sky :
         */
         var hasAdminInfo = false;
-        var adminInfo1 = chatFrame.Server.GetDataStore().Get(IrcStrings.ConfigAdminInfo1);
-        var adminInfo2 = chatFrame.Server.GetDataStore().Get(IrcStrings.ConfigAdminInfo2);
-        var adminInfo3 = chatFrame.Server.GetDataStore().Get(IrcStrings.ConfigAdminInfo3);
+        var adminInfo1 = chatFrame.Server.ServerSettings.AdminInfo1;
+        var adminInfo2 = chatFrame.Server.ServerSettings.AdminInfo2;
+        var adminInfo3 = chatFrame.Server.ServerSettings.AdminInfo3;
 
         if (!string.IsNullOrWhiteSpace(adminInfo1))
         {

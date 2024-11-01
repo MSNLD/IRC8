@@ -1,5 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -16,14 +17,14 @@ internal class List : Command, ICommand
         var user = chatFrame.User;
         var parameters = chatFrame.Message.Parameters;
 
-        var channels = server.GetChannels().Where(c => !c.Modes.Secret).ToList();
+        var channels = server.GetChannels().Where(c => c.Modes[IrcStrings.ChannelModeSecret] != 1).ToList();
         if (parameters.Count > 0)
         {
             var channelNames = parameters.First().Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
 
             channels = server
                 .GetChannels()
-                .Where(c => !c.Modes.Secret
+                .Where(c => c.Modes[IrcStrings.ChannelModeSecret] != 1
                             && channelNames.Contains(c.GetName(), StringComparer.InvariantCultureIgnoreCase)).ToList();
         }
 

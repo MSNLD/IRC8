@@ -1,5 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Objects;
+using Irc.Objects.Server;
 
 namespace Irc.Interfaces;
 
@@ -29,7 +30,7 @@ public interface IServer
     string SecurityPackages { get; }
     int SysopCount { get; }
     int UnknownConnectionCount { get; }
-    string RemoteIP { set; get; }
+    string? RemoteIP { set; get; }
     bool DisableGuestMode { set; get; }
     bool DisableUserRegistration { get; set; }
     Guid Id { get; }
@@ -52,7 +53,6 @@ public interface IServer
     string GetSupportedChannelModes();
     string GetSupportedUserModes();
     IDictionary<EnumProtocolType, IProtocol> GetProtocols();
-    IDataStore GetDataStore();
     IChannel GetChannelByName(string name);
     ChatObject GetChatObject(string name);
     IProtocol GetProtocol(EnumProtocolType protocolType);
@@ -63,4 +63,5 @@ public interface IServer
     string[] GetMOTD();
     void SetMOTD(string motd);
     void ProcessCookie(IUser user, string name, string value);
+    Settings ServerSettings { get; set; }
 }

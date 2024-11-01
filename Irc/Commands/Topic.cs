@@ -60,10 +60,10 @@ internal class Topic : Command, ICommand
 
         var sourceMember = channel.GetMember(source);
 
-        if (sourceMember.GetLevel() < EnumChannelAccessLevel.ChatHost && channel.Modes.TopicOp)
+        if (sourceMember.GetLevel() < EnumChannelAccessLevel.ChatHost && channel.TopicOp)
             return EnumIrcError.ERR_NOCHANOP;
 
-        channel.ChannelStore.Set("topic", topic);
+        channel.Props[Resources.IrcStrings.ChannelPropTopic] = topic;
         return EnumIrcError.OK;
     }
 }

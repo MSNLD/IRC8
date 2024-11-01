@@ -84,7 +84,19 @@ internal class ChannelPropCollection : PropCollection
         ValidationMask = IrcStrings.GenericProps,
         Value = string.Empty,
         ReadOnly = false,
-        PostRule = (chatObject, propValue) => { ((Channel)chatObject).Modes.Key = propValue; }
+        PostRule = (chatObject, propValue) =>
+        {
+            if (!string.IsNullOrWhiteSpace(propValue))
+            {
+                ((Channel)chatObject).Key = true;
+                ((Channel)chatObject).Props[Resources.IrcStrings.ChannelPropMemberkey] = propValue;
+            }
+            else
+            {
+                ((Channel)chatObject).Key = false;
+                ((Channel)chatObject).Props[Resources.IrcStrings.ChannelPropMemberkey] = null;
+            }
+        }
     };
 
     public static PropRule Name = new()
@@ -175,7 +187,10 @@ internal class ChannelPropCollection : PropCollection
         ValidationMask = IrcStrings.ChannelPropTopicRegex,
         Value = string.Empty,
         ReadOnly = false,
-        PostRule = (chatObject, propValue) => { ((Channel)chatObject).ChannelStore.Set("topic", propValue); }
+        PostRule = (chatObject, propValue) =>
+        {
+            ((Channel)chatObject).Props[Resources.IrcStrings.ChannelPropTopic] = propValue;
+        }
     };
 
     public static Dictionary<string, PropRule> PropRules = new()

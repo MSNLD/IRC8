@@ -29,7 +29,7 @@ public class Gag : ModeRule, IModeRule
         {
             if (source.Level < target.Level) return EnumIrcError.ERR_NOPERMS;
 
-            target.Modes[IrcStrings.UserModeGag].Set(flag);
+            target.Modes[IrcStrings.UserModeGag] = Convert.ToInt32(flag);
             DispatchModeChange(source, target, flag, parameter);
             return EnumIrcError.OK;
         }

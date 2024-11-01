@@ -29,7 +29,7 @@ public class Member : MemberModes, IChannelMember
 
     public void SetOwner(bool flag)
     {
-        modes[IrcStrings.MemberModeOwner].Set(flag ? 1 : 0);
+        Modes[IrcStrings.MemberModeOwner].Set(flag ? 1 : 0);
     }
 
     public EnumIrcError CanModify(IChannelMember target, EnumChannelAccessLevel requiredLevel, bool operCheck = true)

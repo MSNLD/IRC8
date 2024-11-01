@@ -1,17 +1,20 @@
 ﻿using Irc.Interfaces;
 using Irc.Objects;
+using Irc.Objects.Channel;
+using Irc.Objects.Server;
+using Irc.Objects.User;
 using Irc.Resources;
 
 namespace Irc.Modes;
 
 public class ModeEngine
 {
-    private readonly IModeCollection modeCollection;
+    private readonly IModeRules _modeRules;
     private readonly Dictionary<char, ModeRule> modeRules = new();
 
-    public ModeEngine(IModeCollection modeCollection)
+    public ModeEngine(IModeRules modeRules)
     {
-        this.modeCollection = modeCollection;
+        this._modeRules = modeRules;
     }
 
     public void AddModeRule(char modeChar, ModeRule modeRule)
@@ -36,11 +39,9 @@ public class ModeEngine
                 }
                 default:
                 {
-                    var modeCollection = target.Modes;
-                    var exists = modeCollection.HasMode(c);
-                    var modeValue = exists ? modeCollection.GetModeChar(c) : -1;
-
-                    var modeRule = modeCollection.GetMode(c);
+                    var modeRules = ModeRules.GetRules(target);
+                    var modeRule = modeRules.ContainsKey(c) ? modeRules[c] : null;
+                    
                     if (modeRule == null)
                     {
                         // Unknown mode char
@@ -48,8 +49,13 @@ public class ModeEngine
                         source.Send(Raw.IRCX_ERR_UNKNOWNMODE_472(source.Server, source, c));
                         continue;
                     }
+                    
+                    var modeCollection = target.Modes;
+                    var exists = modeCollection.ContainsKey(c);
+                    var modeValue = exists ? modeCollection[c] : -1;
 
                     string parameter = null;
+                    // TODO: Here need to get all mode rules depending on object type
                     if (modeRule.RequiresParameter)
                     {
                         if (modeParameters != null && modeParameters.Count > 0)

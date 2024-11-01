@@ -1,4 +1,5 @@
-﻿using Irc.Enumerations;
+﻿using Irc.Access;
+using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Resources;
 
@@ -6,31 +7,19 @@ namespace Irc.Objects;
 
 public class ChatObject : IChatObject
 {
-    protected readonly IModeCollection _modes;
-    public readonly IDataStore DataStore;
-
-    public ChatObject(IModeCollection modes, IDataStore dataStore)
+    public Dictionary<char, int> Modes { get; set; } = new()
     {
-        _modes = modes;
-        DataStore = dataStore;
-        DataStore.SetId(Id.ToString());
-    }
+    };
 
     public Dictionary<string, string?> Props { get; set; } = new()
     {
         { "NAME", null }
     };
 
+    public IAccessList AccessList { get; set; } = new AccessList();
+
+
     public virtual EnumUserAccessLevel Level => EnumUserAccessLevel.None;
-
-    public virtual IModeCollection Modes => _modes;
-
-    public IAccessList AccessList { get; }
-
-    public IModeCollection GetModes()
-    {
-        return _modes;
-    }
 
     public Guid Id { get; } = Guid.NewGuid();
 
@@ -42,28 +31,13 @@ public class ChatObject : IChatObject
         set => Props["NAME"] = value;
     }
 
-    public virtual void Send(string message)
-    {
-        throw new NotImplementedException();
-    }
-
-    public virtual void Send(string message, ChatObject except = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public virtual void Send(string message, EnumChannelAccessLevel accessLevel)
-    {
-        throw new NotImplementedException();
-    }
-
+    public virtual void Send(string message) => throw new NotImplementedException();
+    public virtual void Send(string message, ChatObject except = null) => throw new NotImplementedException();
+    public virtual void Send(string message, EnumChannelAccessLevel accessLevel) => throw new NotImplementedException();
+    public bool CanBeModifiedBy(IChatObject source) => throw new NotImplementedException();
+    
     public override string ToString()
     {
         return Name;
-    }
-
-    public bool CanBeModifiedBy(IChatObject source)
-    {
-        throw new NotImplementedException();
     }
 }

@@ -36,7 +36,7 @@ public class GateKeeper : SupportPackage, ISupportPackage
         return new GateKeeper();
     }
 
-    public override EnumSupportPackageSequence InitializeSecurityContext(string token, string ip)
+    public override EnumSupportPackageSequence InitializeSecurityContext(string token, string? ip)
     {
         // <byte(6) signature><byte(2)??><int(4) version><int(4) stage>
         if (token.Length >= 0x10)
@@ -49,13 +49,13 @@ public class GateKeeper : SupportPackage, ISupportPackage
                     ServerSequence = EnumSupportPackageSequence.SSP_EXT;
                     ServerVersion = clientToken.Version;
                     return EnumSupportPackageSequence.SSP_OK;
-                }
+                } 
             }
 
         return EnumSupportPackageSequence.SSP_FAILED;
     }
 
-    public override EnumSupportPackageSequence AcceptSecurityContext(string token, string ip)
+    public override EnumSupportPackageSequence AcceptSecurityContext(string token, string? ip)
     {
         // <byte(6) signature><byte(2)??><int(4) version><int(4) stage><byte(16) challenge response><byte(16) guid>
         if (token.Length >= 0x20)
@@ -133,7 +133,7 @@ public class GateKeeper : SupportPackage, ISupportPackage
         return message.ToString();
     }
 
-    private bool VerifySecurityContext(string challenge, byte[] context, string ip, uint version)
+    private bool VerifySecurityContext(string challenge, byte[] context, string? ip, uint version)
     {
         ip = version == 3 && ip != null ? ip : "";
 

@@ -1,10 +1,10 @@
 ﻿namespace Irc.Interfaces;
 
-public interface IChannelModes : IModeCollection
+public interface IChannelModes
 {
     // IRC
     public bool InviteOnly { get; set; }
-    public string Key { get; set; }
+    public bool Key { get; set; }
     public bool Moderated { get; set; }
     public bool NoExtern { get; set; }
     public bool Private { get; set; }

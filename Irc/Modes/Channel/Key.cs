@@ -18,9 +18,9 @@ internal class Key : ModeRuleChannel, IModeRule
         if (member.GetLevel() >= EnumChannelAccessLevel.ChatHost)
         {
             // Unset key
-            if (!flag && parameter == channel.Modes.Key)
+            if (!flag && parameter == channel.Props[IrcStrings.ChannelPropMemberkey])
             {
-                channel.Modes.Key = null;
+                channel.Props[IrcStrings.ChannelPropMemberkey] = null;
                 DispatchModeChange(source, (ChatObject)target, flag, parameter);
                 return EnumIrcError.OK;
             }
@@ -28,9 +28,9 @@ internal class Key : ModeRuleChannel, IModeRule
             // Set key
             if (flag)
             {
-                if (!string.IsNullOrWhiteSpace(channel.Modes.Key)) return EnumIrcError.ERR_KEYSET;
+                if (!string.IsNullOrWhiteSpace(channel.Props[IrcStrings.ChannelPropMemberkey])) return EnumIrcError.ERR_KEYSET;
 
-                channel.Modes.Key = flag ? parameter : null;
+                channel.Props[IrcStrings.ChannelPropMemberkey] = flag ? parameter : null;
                 DispatchModeChange(source, (ChatObject)target, flag, parameter);
             }
 

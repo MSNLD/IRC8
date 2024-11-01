@@ -61,8 +61,7 @@ public class Whois : Command, ICommand
 
         if (user.GetLevel() >= EnumUserAccessLevel.Guide) user.Send(Raw.IRCX_RPL_WHOISIP_320(server, user, targetUser));
 
-        var userModes = (UserModes)user.Modes;
-        if (userModes.Secure)
+        if (user.Secure)
             user.Send(Raw.IRC2_RPL_WHOISSECURE_671(server, user, targetUser));
 
         var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

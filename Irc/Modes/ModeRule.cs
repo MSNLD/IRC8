@@ -12,6 +12,8 @@ public class ModeRule : IModeRule
         ModeValue = initialValue;
         RequiresParameter = requiresParameter;
     }
+    
+    public Action<ChatObject, bool, string>? PostRule { get; set; } = null;
 
     protected char ModeChar { get; }
     private int ModeValue { get; set; }

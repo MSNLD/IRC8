@@ -33,7 +33,7 @@ public class WebIrc : Command, ICommand
             return;
         }
 
-        var whitelistedIp = chatFrame.Server.GetDataStore().Get(IrcStrings.ConfigWebircWhitelist);
+        var whitelistedIp = chatFrame.Server.ServerSettings.WebIrcIp;
         if (remoteAddress != whitelistedIp || chatFrame.Message.Parameters.Count() < 4)
         {
             Reject(chatFrame, remoteAddress);
@@ -46,8 +46,8 @@ public class WebIrc : Command, ICommand
         var hostname = parameters[2];
         var ip = parameters[3];
 
-        var expectedUser = chatFrame.Server.GetDataStore().Get(IrcStrings.ConfigWebircUser);
-        var expectedPassword = chatFrame.Server.GetDataStore().Get(IrcStrings.ConfigWebircPass);
+        var expectedUser = chatFrame.Server.ServerSettings.WebIrcUser;
+        var expectedPassword = chatFrame.Server.ServerSettings.WebIrcPassword;
         if (expectedUser != gateway || expectedPassword != password)
         {
             Reject(chatFrame, remoteAddress);
@@ -80,8 +80,7 @@ public class WebIrc : Command, ICommand
             foreach (var option in options)
                 if (option.Key.ToLowerInvariant() == IrcStrings.webirc_option_secure)
                 {
-                    var userModes = (UserModes)chatFrame.User.Modes;
-                    userModes.Secure = true;
+                    chatFrame.User.Secure = true;
                 }
         }
     }

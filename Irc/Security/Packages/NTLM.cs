@@ -35,7 +35,7 @@ public class Ntlm : SupportPackage, ISupportPackage
         return _credential;
     }
 
-    public override EnumSupportPackageSequence InitializeSecurityContext(string data, string ip)
+    public override EnumSupportPackageSequence InitializeSecurityContext(string data, string? ip)
     {
         try
         {
@@ -71,7 +71,7 @@ public class Ntlm : SupportPackage, ISupportPackage
         }
     }
 
-    public override EnumSupportPackageSequence AcceptSecurityContext(string data, string ip)
+    public override EnumSupportPackageSequence AcceptSecurityContext(string data, string? ip)
     {
         if (_credentialProvider == null) return EnumSupportPackageSequence.SSP_FAILED;
 

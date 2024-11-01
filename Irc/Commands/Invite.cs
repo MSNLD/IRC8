@@ -70,7 +70,7 @@ internal class Invite : Command, ICommand
     public static void ProcessInvite(IChatFrame chatFrame, IChannelMember member, IChannel targetChannel,
         IUser targetUser)
     {
-        if (targetChannel.Modes.InviteOnly && member.GetLevel() < EnumChannelAccessLevel.ChatHost)
+        if (targetChannel.InviteOnly && member.GetLevel() < EnumChannelAccessLevel.ChatHost)
         {
             chatFrame.User.Send(Raw.IRCX_ERR_CHANOPRIVSNEEDED_482(chatFrame.Server, chatFrame.User, targetChannel));
             return;

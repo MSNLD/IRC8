@@ -12,12 +12,12 @@ internal class Create : Command, Interfaces_ICommand
         _requiredMinimumParameters = 1;
     }
 
-    public EnumCommandDataType GetDataType()
+    public new EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public void Execute(IChatFrame chatFrame)
+    public new void Execute(IChatFrame chatFrame)
     {
         chatFrame.User.Send(Raw.IRCX_RPL_FINDS_613(chatFrame.Server, chatFrame.User));
     }

@@ -77,6 +77,6 @@ internal class Mode : Command, ICommand
                 ((IChannel)chatObject).Modes.ToString()));
         else if (chatObject is IUser)
             chatFrame.User.Send(Raw.IRCX_RPL_UMODEIS_221(chatFrame.Server, chatFrame.User,
-                chatObject.Modes.ToString()));
+                string.Join(string.Empty, chatObject.Modes.Keys)));
     }
 }

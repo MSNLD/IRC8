@@ -23,12 +23,12 @@ public class SupportPackage : ISupportPackage
         throw new NotImplementedException();
     }
 
-    public virtual EnumSupportPackageSequence InitializeSecurityContext(string token, string ip)
+    public virtual EnumSupportPackageSequence InitializeSecurityContext(string token, string? ip)
     {
         throw new NotImplementedException();
     }
 
-    public virtual EnumSupportPackageSequence AcceptSecurityContext(string token, string ip)
+    public virtual EnumSupportPackageSequence AcceptSecurityContext(string token, string? ip)
     {
         throw new NotImplementedException();
     }

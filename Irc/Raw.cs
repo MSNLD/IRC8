@@ -149,7 +149,7 @@ public static class Raw
         return $":{user.GetAddress()} PRIVMSG {channel} :{message}";
     }
 
-    public static string RPL_INVITE(IServer server, IUser user, IUser targetUser, string host, IChannel channel)
+    public static string RPL_INVITE(IServer server, IUser user, IUser targetUser, string? host, IChannel channel)
     {
         return $":{user.GetAddress()} INVITE {targetUser} {host} {channel}";
     }
@@ -345,7 +345,7 @@ public static class Raw
 
     public static string IRCX_RPL_MODE_322(IServer server, IUser user, IChannel channel)
     {
-        return $":{server} 322 {user} {channel} {channel.GetMembers().Count} :{channel.ChannelStore.Get("topic")}";
+        return $":{server} 322 {user} {channel} {channel.GetMembers().Count} :{channel.Props[Resources.IrcStrings.ChannelPropTopic] ?? string.Empty}";
     }
 
     public static string IRCX_RPL_MODE_323(IServer server, IUser user)

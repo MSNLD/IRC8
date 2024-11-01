@@ -19,7 +19,7 @@ public class Pass : Command, ICommand
     {
         if (!chatFrame.User.IsRegistered())
             // TODO: Encrypt below pass
-            chatFrame.User.GetDataStore().Set("pass", chatFrame.Message.Parameters.First());
+            chatFrame.User.Pass = chatFrame.Message.Parameters.First();
         else
             chatFrame.User.Send(IrcRaws.IRC_RAW_462(chatFrame.Server, chatFrame.User));
     }

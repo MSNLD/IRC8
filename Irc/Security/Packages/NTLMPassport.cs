@@ -23,7 +23,7 @@ public class NTLMPassport : Ntlm
         return new GateKeeperPassport(_credentialProvider);
     }
 
-    public override EnumSupportPackageSequence AcceptSecurityContext(string data, string ip)
+    public override EnumSupportPackageSequence AcceptSecurityContext(string data, string? ip)
     {
         if (ServerSequence == EnumSupportPackageSequence.SSP_EXT)
         {

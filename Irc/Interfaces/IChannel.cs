@@ -3,13 +3,11 @@ using Irc.Objects;
 
 namespace Irc.Interfaces;
 
-public interface IChannel : IChatObject
+public interface IChannel : IChatObject, IChannelModes
 {
-    IDataStore ChannelStore { get; }
-    IChannelModes Modes { get; }
     string GetName();
-    IChannelMember GetMember(IUser User);
-    IChannelMember GetMemberByNickname(string nickname);
+    IChannelMember? GetMember(IUser? user);
+    IChannelMember? GetMemberByNickname(string nickname);
     bool HasUser(IUser user);
     void Send(string message, ChatObject u = null);
     void Send(string message);
@@ -20,9 +18,9 @@ public interface IChannel : IChatObject
     IChannel Kick(IUser source, IUser target, string reason);
     void SendMessage(IUser user, string message);
     void SendNotice(IUser user, string message);
-    IList<IChannelMember> GetMembers();
+    IList<IChannelMember?> GetMembers();
     bool CanBeModifiedBy(IChatObject source);
-    EnumIrcError CanModifyMember(IChannelMember source, IChannelMember target, EnumChannelAccessLevel requiredLevel);
+    EnumIrcError CanModifyMember(IChannelMember? source, IChannelMember target, EnumChannelAccessLevel requiredLevel);
 
     void ProcessChannelError(EnumIrcError error, IServer server, IUser source, ChatObject target = null,
         string data = null);
@@ -31,7 +29,6 @@ public interface IChannel : IChatObject
     IChannel SendTopic();
     IChannel SendNames(IUser user);
     bool Allows(IUser user);
-    IChannelModes GetModes();
     EnumChannelAccessResult GetAccess(IUser user, string key, bool IsGoto = false);
     bool InviteMember(IUser user);
 }

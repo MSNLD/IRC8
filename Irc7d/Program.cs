@@ -18,8 +18,8 @@ internal class Program
 {
     public static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    private static IServer server;
-    private static CancellationTokenSource cancellationTokenSource;
+    private static IServer? server;
+    private static CancellationTokenSource? cancellationTokenSource;
 
     private static void Main(string[] args)
     {
@@ -60,7 +60,7 @@ internal class Program
 
             if (versionOption.HasValue())
             {
-                Log.Info(Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                Log.Info(Assembly.GetExecutingAssembly().GetName().Version?.ToString());
                 return 0;
             }
 
@@ -101,8 +101,15 @@ internal class Program
                     JsonSerializer.Deserialize<Dictionary<string, Credential>>(
                         await File.ReadAllTextAsync("DefaultCredentials.json"));
 
+            if (credentials == null)
+            {
+                Log.Info("No credentials found.");
+                return 0;
+            }
+            
             var credentialProvider = new NTLMCredentials(credentials);
-
+            var settings = JsonSerializer.Deserialize<Settings>(File.ReadAllText("DefaultServer.json")) ?? new Settings();
+            
             switch (type)
             {
                 case IrcType.Dir:
@@ -110,7 +117,7 @@ internal class Program
                     server = new DirectoryServer(socketServer,
                         new SecurityManager(),
                         new FloodProtectionManager(),
-                        new DataStore("DefaultServer.json"),
+                        settings,
                         new List<IChannel>(),
                         credentialProvider);
 
@@ -125,31 +132,32 @@ internal class Program
                     server = new Server(socketServer,
                         new SecurityManager(),
                         new FloodProtectionManager(),
-                        new DataStore("DefaultServer.json"),
+                        settings,
                         new List<IChannel>(),
                         credentialProvider);
                     break;
                 }
             }
 
-            server.ServerVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            server.ServerVersion = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(1, 0, 0);
             server.RemoteIP = fqdn;
 
             var defaultChannels =
                 JsonSerializer.Deserialize<List<DefaultChannel>>(File.ReadAllText("DefaultChannels.json"));
-            foreach (var defaultChannel in defaultChannels)
-            {
-                var name = $"%#{defaultChannel.Name}";
-                var channel = server.CreateChannel(name);
-                channel.ChannelStore.Set("topic", defaultChannel.Topic);
-                foreach (var keyValuePair in defaultChannel.Modes)
-                    channel.Modes.SetModeChar(keyValuePair.Key, keyValuePair.Value);
+            if (defaultChannels != null)
+                foreach (var defaultChannel in defaultChannels)
+                {
+                    var name = $"%#{defaultChannel.Name}";
+                    var channel = server.CreateChannel(name);
+                    channel.Props["TOPIC"] = defaultChannel.Topic;
+                    foreach (var keyValuePair in defaultChannel.Modes)
+                        channel.Modes[keyValuePair.Key] = keyValuePair.Value;
 
-                foreach (var keyValuePair in defaultChannel.Props)
-                    ((Channel)channel).Props[keyValuePair.Key] = keyValuePair.Value;
+                    foreach (var keyValuePair in defaultChannel.Props)
+                        ((Channel)channel).Props[keyValuePair.Key] = keyValuePair.Value;
 
-                server.AddChannel(channel);
-            }
+                    server.AddChannel(channel);
+                }
 
             cancellationTokenSource = new CancellationTokenSource();
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
@@ -165,8 +173,8 @@ internal class Program
     private static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
     {
         Log.Info("Shutting down...");
-        server.Shutdown();
-        cancellationTokenSource.Cancel();
+        server?.Shutdown();
+        cancellationTokenSource?.Cancel();
     }
 
     private enum IrcType

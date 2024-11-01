@@ -25,6 +25,11 @@ public class ModeRuleChannel : ModeRule, IModeRule
 
         if (member.GetLevel() < accessLevel) return EnumIrcError.ERR_NOCHANOP;
 
+        if (PostRule != null)
+        {
+            PostRule((ChatObject)target, flag, parameter);
+        }
+        
         return EnumIrcError.OK;
     }
 
@@ -46,7 +51,7 @@ public class ModeRuleChannel : ModeRule, IModeRule
 
     public void SetChannelMode(IChatObject source, IChannel target, bool flag, string parameter)
     {
-        target.Modes.GetMode(ModeChar).Set(flag ? 1 : 0);
+        target.Modes[ModeChar] = flag ? 1 : 0;
         DispatchModeChange(source, (ChatObject)target, flag, parameter);
     }
 

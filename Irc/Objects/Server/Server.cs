@@ -25,45 +25,44 @@ public class Server : ChatObject, IServer
     public static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-    protected readonly IDataStore _dataStore;
     private readonly IFloodProtectionManager _floodProtectionManager;
     private readonly Task _processingTask;
     private readonly ISecurityManager _securityManager;
     private readonly ISocketServer _socketServer;
-    public readonly ICommandCollection Commands;
     private readonly ConcurrentQueue<IUser> PendingNewUserQueue = new();
     private readonly ConcurrentQueue<IUser> PendingRemoveUserQueue = new();
     private readonly PassportV4 _passport;
     public IDictionary<EnumProtocolType, IProtocol> _protocols = new Dictionary<EnumProtocolType, IProtocol>();
 
+    public Settings ServerSettings { get; set; }
     public IList<IChannel> Channels;
-
     public IList<IUser> Users = new List<IUser>();
+    public new static Dictionary<char, IModeRule> ModeRules = ServerModeRules.ModeRules;
 
     public Server(ISocketServer socketServer,
         ISecurityManager securityManager,
         IFloodProtectionManager floodProtectionManager,
-        IDataStore dataStore,
+        Settings serverSettings,
         IList<IChannel> channels,
-        ICredentialProvider? ntlmCredentialProvider = null) : base(new ModeCollection(), dataStore)
+        ICredentialProvider? ntlmCredentialProvider = null)
     {
-        Name = dataStore.Get("Name");
+        Name = serverSettings.Name;
         Title = Name;
         _socketServer = socketServer;
         _securityManager = securityManager;
         _floodProtectionManager = floodProtectionManager;
-        _dataStore = dataStore;
+        ServerSettings = serverSettings;
         Channels = channels;
         _processingTask = new Task(Process);
         _processingTask.Start();
 
         LoadSettingsFromDataStore();
 
-        _dataStore.SetAs("creation", DateTime.UtcNow);
-        _dataStore.Set("supported.channel.modes",
-            new ChannelModes().GetSupportedModes());
-        _dataStore.Set("supported.user.modes", new UserModes().GetSupportedModes());
-        SupportPackages = _dataStore.GetAs<string[]>(IrcStrings.ConfigSaslPackages) ?? Array.Empty<string>();
+        // TODO: Fix below
+        // _dataStore.Set("supported.channel.modes",
+        //     ChannelModes.Modes.Select(mode => mode.ToString()));
+        // _dataStore.Set("supported.user.modes", UserModes.Modes.Select(mode => mode.ToString()));
+        SupportPackages = ServerSettings.Packages;
 
         if (MaxAnonymousConnections > 0) _securityManager.AddSupportPackage(new ANON());
         if (SupportPackages.Contains("NTLM"))
@@ -71,7 +70,7 @@ public class Server : ChatObject, IServer
                 .AddSupportPackage(new Ntlm(new NtlmProvider()));
         if (SupportPackages.Contains("GateKeeper"))
         {
-            _passport = new PassportV4(dataStore.Get("Passport.V4.AppID"), dataStore.Get("Passport.V4.Secret"));
+            _passport = new PassportV4(serverSettings.PassportAppId, serverSettings.PassportAppSecret);
             securityManager.AddSupportPackage(new GateKeeper());
             securityManager.AddSupportPackage(new GateKeeperPassport(new PassportProvider(_passport)));
         }
@@ -108,7 +107,7 @@ public class Server : ChatObject, IServer
 
     public string[] SupportPackages { get; }
 
-    public DateTime CreationDate => _dataStore.GetAs<DateTime>("creation");
+    public DateTime CreationDate => ServerSettings.Creation;
 
     // Server Properties To be moved to another class later
     public string Title { get; private set; }
@@ -134,19 +133,19 @@ public class Server : ChatObject, IServer
     public string SecurityPackages => _securityManager.GetSupportedPackages();
     public int SysopCount { get; }
     public int UnknownConnectionCount => _socketServer.CurrentConnections - NetUserCount;
-    public string RemoteIP { set; get; }
+    public string? RemoteIP { set; get; }
     public bool DisableGuestMode { set; get; }
     public bool DisableUserRegistration { get; set; }
 
     public void SetMOTD(string motd)
     {
         var lines = motd.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-        _dataStore.SetAs(IrcStrings.ConfigMotd, lines);
+        ServerSettings.Motd = lines;
     }
 
     public string[] GetMOTD()
     {
-        return _dataStore.GetAs<string[]>(IrcStrings.ConfigMotd);
+        return ServerSettings.Motd;
     }
 
     public void AddUser(IUser user)
@@ -171,23 +170,23 @@ public class Server : ChatObject, IServer
 
     public virtual IChannel CreateChannel(string name)
     {
-        var channel = new Channel.Channel(name, new ChannelModes(), new DataStore(name, "store"));
+        var channel = new Channel.Channel(name);
         return channel;
     }
 
     public virtual IChannel CreateChannel(IUser creator, string name, string key)
     {
         var channel = CreateChannel(name);
-        channel.ChannelStore.Set("topic", name);
+        channel.Props[Resources.IrcStrings.ChannelPropTopic] = name;
         // if (!string.IsNullOrEmpty(key))
         // {
         //     channel.Modes.Key = key;
         //     channel.ChannelStore.Set("key", key);
         // }
         channel.Props[IrcStrings.ChannelPropOwnerkey] = key;
-        channel.Modes.NoExtern = true;
-        channel.Modes.TopicOp = true;
-        channel.Modes.UserLimit = 50;
+        channel.NoExtern = true;
+        channel.TopicOp = true;
+        channel.UserLimit = 50;
         AddChannel(channel);
         return channel;
     }
@@ -196,8 +195,7 @@ public class Server : ChatObject, IServer
     {
         return new User.User(connection, GetProtocol(EnumProtocolType.IRC),
             new DataRegulator(MaxInputBytes, MaxOutputBytes),
-            new FloodProtectionProfile(), new DataStore(connection.GetId().ToString(), "store"), new UserModes(),
-            this);
+            new FloodProtectionProfile(), this);
     }
 
     public IList<IUser> GetUsers()
@@ -238,12 +236,15 @@ public class Server : ChatObject, IServer
 
     public string GetSupportedChannelModes()
     {
-        return _dataStore.Get("supported.channel.modes");
+        // TODO: Fix below
+        // return ServerSettings.Get("supported.channel.modes");
+        return "";
     }
 
     public string GetSupportedUserModes()
     {
-        return _dataStore.Get("supported.user.modes");
+        // return ServerSettings.Get("supported.user.modes");
+        return "";
     }
 
     public IDictionary<EnumProtocolType, IProtocol> GetProtocols()
@@ -252,11 +253,6 @@ public class Server : ChatObject, IServer
     }
 
     public Version ServerVersion { get; set; } = Assembly.GetExecutingAssembly().GetName().Version;
-
-    public IDataStore GetDataStore()
-    {
-        return _dataStore;
-    }
 
     public IChannel GetChannelByName(string name)
     {
@@ -349,9 +345,10 @@ public class Server : ChatObject, IServer
                 var modes = dict["umode"];
                 foreach (var mode in modes)
                 {
-                    var modeRule = user.GetModes().GetMode(mode);
-                    modeRule?.Set(1);
-                    modeRule?.DispatchModeChange((ChatObject)user, (ChatObject)user, true);
+                    // TODO: Make this work
+                    // var modeRule = user.GetModes().GetMode(mode);
+                    // modeRule?.Set(1);
+                    // modeRule?.DispatchModeChange((ChatObject)user, (ChatObject)user, true);
                 }
             }
 
@@ -386,17 +383,17 @@ public class Server : ChatObject, IServer
 
     public void LoadSettingsFromDataStore()
     {
-        var title = _dataStore.Get(IrcStrings.ConfigServerTitle);
-        var maxInputBytes = _dataStore.GetAs<int>(IrcStrings.ConfigMaxInputBytes);
-        var maxOutputBytes = _dataStore.GetAs<int>(IrcStrings.ConfigMaxOutputBytes);
-        var pingInterval = _dataStore.GetAs<int>(IrcStrings.ConfigPingInterval);
-        var pingAttempts = _dataStore.GetAs<int>(IrcStrings.ConfigPingAttempts);
-        var maxChannels = _dataStore.GetAs<int>(IrcStrings.ConfigMaxChannels);
-        var maxConnections = _dataStore.GetAs<int>(IrcStrings.ConfigMaxConnections);
-        var maxAuthenticatedConnections = _dataStore.GetAs<int>(IrcStrings.ConfigMaxAuthenticatedConnections);
-        var maxAnonymousConnections = _dataStore.GetAs<int>(IrcStrings.ConfigMaxAnonymousConnections);
-        var basicAuthentication = _dataStore.GetAs<bool>(IrcStrings.ConfigBasicAuthentication);
-        var anonymousConnections = _dataStore.GetAs<bool>(IrcStrings.ConfigAnonymousConnections);
+        var title = ServerSettings.Title;
+        var maxInputBytes = ServerSettings.MaxInputBytes;
+        var maxOutputBytes = ServerSettings.MaxOutputBytes;
+        var pingInterval = ServerSettings.PingInterval;
+        var pingAttempts = ServerSettings.PingAttempts;
+        var maxChannels = ServerSettings.MaxChannels;
+        var maxConnections = ServerSettings.MaxConnections;
+        var maxAuthenticatedConnections = ServerSettings.MaxAuthenticatedConnections;
+        var maxAnonymousConnections = ServerSettings.MaxAnonymousConnections;
+        var basicAuthentication = ServerSettings.BasicAuthentication;
+        var anonymousConnections = ServerSettings.AnonymousConnections;
 
         if (!string.IsNullOrWhiteSpace(title)) Title = title;
         if (maxInputBytes > 0) MaxInputBytes = maxInputBytes;
@@ -455,7 +452,7 @@ public class Server : ChatObject, IServer
             // add new pending users
             foreach (var user in PendingNewUserQueue)
             {
-                user.GetDataStore().Set(IrcStrings.UserPropOid, "0");
+                user.Props[IrcStrings.UserPropOid] = "0";
                 Users.Add(user);
             }
 
@@ -519,7 +516,7 @@ public class Server : ChatObject, IServer
     // Ircx
     protected EnumChannelAccessResult CheckAuthOnly()
     {
-        if (Modes.GetModeChar(IrcStrings.ChannelModeAuthOnly) == 1)
+        if (Modes[IrcStrings.ChannelModeAuthOnly] == 1)
             return EnumChannelAccessResult.ERR_AUTHONLYCHAN;
         return EnumChannelAccessResult.NONE;
     }

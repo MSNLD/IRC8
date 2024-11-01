@@ -1,5 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel.Member;
@@ -29,11 +30,13 @@ public class Host : ModeRuleChannel, IModeRule
                 if (member.IsOwner())
                 {
                     member.SetOwner(false);
-                    channel.Modes.GetMode('q').DispatchModeChange(source, channel, false, target.ToString());
+                    ModeRule.DispatchModeChange((ChatObject)channel, IrcStrings.MemberModeOwner, (ChatObject)source, (ChatObject)target, false, target.ToString());
+                    //channel.Modes.GetMode('q').DispatchModeChange(source, channel, false, target.ToString());
                 }
 
                 member.SetHost(true);
-                channel.Modes.GetMode('o').DispatchModeChange(source, channel, true, target.ToString());
+                ModeRule.DispatchModeChange((ChatObject)channel, IrcStrings.MemberModeHost, (ChatObject)source, (ChatObject)target, true, target.ToString());
+                // channel.Modes.GetMode('o').DispatchModeChange(source, channel, true, target.ToString());
             }
 
             return EnumIrcError.OK;

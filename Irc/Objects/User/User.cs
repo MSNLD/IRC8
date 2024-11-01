@@ -18,8 +18,8 @@ public class User : ChatObject, IUser
     //public Access Access;
     private readonly IConnection _connection;
     private readonly IDataRegulator _dataRegulator;
-    private readonly IDataStore _dataStore;
     private readonly IFloodProtectionProfile _floodProtectionProfile;
+    public new static Dictionary<char, IModeRule> ModeRules = UserModeRules.ModeRules;
     private readonly Queue<ModeOperation> _modeOperations = new();
     private bool _authenticated;
 
@@ -35,15 +35,14 @@ public class User : ChatObject, IUser
     public long PingCount;
 
     public User(IConnection connection, IProtocol protocol, IDataRegulator dataRegulator,
-        IFloodProtectionProfile floodProtectionProfile, IDataStore dataStore, IModeCollection modes,
-        IServer server) : base(modes, dataStore)
+        IFloodProtectionProfile floodProtectionProfile,
+        IServer server)
     {
         Server = server;
         _connection = connection;
         _protocol = protocol;
         _dataRegulator = dataRegulator;
         _floodProtectionProfile = floodProtectionProfile;
-        _dataStore = dataStore;
         _supportPackage = new ANON();
         Channels = new ConcurrentDictionary<IChannel, IChannelMember>();
 
@@ -61,7 +60,83 @@ public class User : ChatObject, IUser
         Props.Add(IrcStrings.UserPropSubscriberInfo, "");
         Props.Add(IrcStrings.UserPropMsnProfile, "");
         Props.Add(IrcStrings.UserPropRole, "");
+        
+        // TODO: Add Modes
+        Modes.Add(IrcStrings.UserModeOper, 0);
+        Modes.Add(IrcStrings.UserModeInvisible, 0);
+        Modes.Add(IrcStrings.UserModeSecure, 0);
+        Modes.Add(IrcStrings.UserModeServerNotice, 0);
+        Modes.Add(IrcStrings.UserModeWallops, 0);
+
+        //IRCX
+        Modes.Add(IrcStrings.UserModeAdmin, 0);
+        Modes.Add(IrcStrings.UserModeIrcx, 0);
+        Modes.Add(IrcStrings.UserModeGag, 0);
+
+        //Apollo
+        Modes.Add(IrcStrings.UserModeHost, 0);
     }
+    
+    #region Modes
+    
+    public bool Oper
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeOper]);
+        set => Modes[IrcStrings.UserModeOper] = Convert.ToInt32(value);
+    }
+
+    public bool Invisible
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeInvisible]);
+        set => Modes[IrcStrings.UserModeOper] = Convert.ToInt32(value);
+    }
+
+    public bool Secure
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeSecure]);
+        set => Modes[IrcStrings.UserModeSecure] = Convert.ToInt32(value);
+    }
+    
+    public bool ServerNotice
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeServerNotice]);
+        set => Modes[IrcStrings.UserModeServerNotice] = Convert.ToInt32(value);
+    }
+    
+    public bool Wallops
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeWallops]);
+        set => Modes[IrcStrings.UserModeWallops] = Convert.ToInt32(value);
+    }
+    
+    public bool Admin
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeAdmin]);
+        set => Modes[IrcStrings.UserModeAdmin] = Convert.ToInt32(value);
+    }
+    
+    
+    public bool Ircx
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeIrcx]);
+        set => Modes[IrcStrings.UserModeIrcx] = Convert.ToInt32(value);
+    }
+    
+    
+    public bool Gag
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeGag]);
+        set => Modes[IrcStrings.UserModeGag] = Convert.ToInt32(value);
+    }
+    
+    
+    public bool Host
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeHost]);
+        set => Modes[IrcStrings.UserModeHost] = Convert.ToInt32(value);
+    }
+    
+    #endregion
 
     public override EnumUserAccessLevel Level => GetLevel();
 
@@ -70,6 +145,8 @@ public class User : ChatObject, IUser
 
     public IAccessList AccessList => _accessList;
     public bool Utf8 { get; set; }
+    public string Client { get; set; }
+    public string Pass { get; set; }
     public DateTime LastIdle { get; set; } = DateTime.UtcNow;
     public DateTime LoggedOn { get; private set; } = DateTime.UtcNow;
 
@@ -253,12 +330,12 @@ public class User : ChatObject, IUser
 
     public bool IsSysop()
     {
-        return Modes.GetModeChar(IrcStrings.UserModeOper) == 1;
+        return Oper;
     }
 
     public bool IsAdministrator()
     {
-        return Modes.HasMode('a') && Modes.GetModeChar(IrcStrings.UserModeAdmin) == 1;
+        return Admin;
     }
 
     public virtual void SetAway(IServer server, IUser user, string message)
@@ -290,9 +367,8 @@ public class User : ChatObject, IUser
     public virtual void PromoteToAdministrator()
     {
         Profile.Level = EnumUserAccessLevel.Administrator;
-        var mode = Modes[IrcStrings.UserModeAdmin];
-        mode.Set(true);
-        mode.DispatchModeChange(this, this, true);
+        Admin = true;
+        ModeRule.DispatchModeChange(IrcStrings.UserModeAdmin, this, this, true, this.ToString());
         _level = EnumUserAccessLevel.Administrator;
         Send(Raw.IRCX_RPL_YOUREADMIN_386(Server, this));
     }
@@ -300,9 +376,8 @@ public class User : ChatObject, IUser
     public virtual void PromoteToSysop()
     {
         Profile.Level = EnumUserAccessLevel.Sysop;
-        var mode = Modes[IrcStrings.UserModeOper];
-        mode.Set(true);
-        mode.DispatchModeChange(this, this, true);
+        Oper = true;
+        ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, this.ToString());
         _level = EnumUserAccessLevel.Sysop;
         Send(Raw.IRCX_RPL_YOUREOPER_381(Server, this));
     }
@@ -310,9 +385,8 @@ public class User : ChatObject, IUser
     public virtual void PromoteToGuide()
     {
         Profile.Level = EnumUserAccessLevel.Guide;
-        var mode = Modes[IrcStrings.UserModeOper];
-        mode.Set(true);
-        mode.DispatchModeChange(this, this, true);
+        Oper = true;
+        ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, this.ToString());
         _level = EnumUserAccessLevel.Guide;
         Send(Raw.IRCX_RPL_YOUREGUIDE_629(Server, this));
     }
@@ -379,12 +453,7 @@ public class User : ChatObject, IUser
     {
         _authenticated = true;
     }
-
-    public IDataStore GetDataStore()
-    {
-        return _dataStore;
-    }
-
+    
     public Queue<ModeOperation> GetModeOperations()
     {
         return _modeOperations;

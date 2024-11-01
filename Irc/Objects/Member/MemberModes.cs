@@ -9,9 +9,9 @@ public class MemberModes : ModeCollection, IMemberModes
 {
     public MemberModes()
     {
-        modes.Add(IrcStrings.MemberModeHost, new Operator());
-        modes.Add(IrcStrings.MemberModeVoice, new Voice());
-        modes.Add(IrcStrings.MemberModeOwner, new Owner());
+        Modes.Add(IrcStrings.MemberModeHost, new Operator());
+        Modes.Add(IrcStrings.MemberModeVoice, new Voice());
+        Modes.Add(IrcStrings.MemberModeOwner, new Owner());
     }
 
     public string GetListedMode()
@@ -35,7 +35,7 @@ public class MemberModes : ModeCollection, IMemberModes
     public bool IsOwner()
     {
         // TODO: Need to think about a better way of handling the below
-        return modes.ContainsKey(IrcStrings.MemberModeOwner) && GetModeChar(IrcStrings.MemberModeOwner) > 0;
+        return Modes.ContainsKey(IrcStrings.MemberModeOwner) && GetModeChar(IrcStrings.MemberModeOwner) > 0;
     }
 
     public bool IsHost()
@@ -55,12 +55,12 @@ public class MemberModes : ModeCollection, IMemberModes
 
     public void SetHost(bool flag)
     {
-        modes[IrcStrings.MemberModeHost].Set(flag ? 1 : 0);
+        Modes[IrcStrings.MemberModeHost].Set(flag ? 1 : 0);
     }
 
     public void SetVoice(bool flag)
     {
-        modes[IrcStrings.MemberModeVoice].Set(flag ? 1 : 0);
+        Modes[IrcStrings.MemberModeVoice].Set(flag ? 1 : 0);
     }
 
     public void SetNormal()
@@ -72,6 +72,6 @@ public class MemberModes : ModeCollection, IMemberModes
 
     public void SetOwner(bool flag)
     {
-        modes[IrcStrings.MemberModeOwner].Set(flag ? 1 : 0);
+        Modes[IrcStrings.MemberModeOwner].Set(flag ? 1 : 0);
     }
 }

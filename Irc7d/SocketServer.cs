@@ -14,31 +14,31 @@ public class SocketServer : Socket, ISocketServer
     public ConcurrentDictionary<BigInteger, ConcurrentBag<IConnection>> Sockets = new();
 
 
-    public SocketServer(IPAddress ip, int port, int backlog, int maxConnectionsPerIP, int buffSize) : base(
+    public SocketServer(IPAddress ipAddress, int port, int backlog, int maxConnectionsPerIp, int buffSize) : base(
         SocketType.Stream, ProtocolType.Tcp)
     {
-        IP = ip;
+        IpAddress = ipAddress;
         Port = port;
         Backlog = backlog;
-        MaxConnectionsPerIp = maxConnectionsPerIP;
+        MaxConnectionsPerIp = maxConnectionsPerIp;
         BuffSize = buffSize;
         BuffSize = buffSize;
     }
 
-    public IPAddress IP { get; }
-    public EventHandler<IConnection> OnClientConnecting { get; set; }
-    public EventHandler<IConnection> OnClientConnected { get; set; }
-    public EventHandler<IConnection> OnClientDisconnected { get; set; }
-    public EventHandler<ISocketServer> OnListen { get; set; }
+    public IPAddress IpAddress { get; }
+    public EventHandler<IConnection>? OnClientConnecting { get; set; }
+    public EventHandler<IConnection>? OnClientConnected { get; set; }
+    public EventHandler<IConnection>? OnClientDisconnected { get; set; }
+    public EventHandler<ISocketServer>? OnListen { get; set; }
     public int Port { get; }
     public int Backlog { get; }
     public int MaxConnectionsPerIp { get; }
     public int BuffSize { get; }
-    public int CurrentConnections { get; }
+    public int CurrentConnections { get; } = 0;
 
-    public void Listen()
+    public new void Listen()
     {
-        Bind(new IPEndPoint(IP, Port));
+        Bind(new IPEndPoint(IpAddress, Port));
         Listen(Backlog);
 
         // Callback for OnListen
@@ -51,7 +51,7 @@ public class SocketServer : Socket, ISocketServer
         AcceptAsync(acceptAsync);
     }
 
-    public void Close()
+    public new void Close()
     {
         Close();
     }
@@ -67,7 +67,7 @@ public class SocketServer : Socket, ISocketServer
     {
         do
         {
-            AcceptConnection(args.AcceptSocket);
+            if (args.AcceptSocket != null) AcceptConnection(args.AcceptSocket);
             // Get next socket
             // Reset AcceptSocket for next accept
             args.AcceptSocket = null;
@@ -97,18 +97,20 @@ public class SocketServer : Socket, ISocketServer
 
     private void ClientDisconnected(object? sender, BigInteger bigIP)
     {
-        IConnection connection = null;
+        IConnection? connection = null;
 
-        if (Sockets.ContainsKey(bigIP))
+        if (Sockets.TryGetValue(bigIP, out var bag))
         {
-            var bag = Sockets[bigIP];
             bag.TryTake(out connection);
         }
 
         if (connection == null)
             Log.Info(
-                $"{connection.GetIpAndPort()} has disconnected but failed to TryTake / total: {Sockets.Count} ");
+                $"{connection?.GetIpAndPort()} has disconnected but failed to TryTake / total: {Sockets.Count} ");
 
-        OnClientDisconnected?.Invoke(this, connection);
+        if (connection != null)
+        {
+            OnClientDisconnected?.Invoke(this, connection);
+        }
     }
 }

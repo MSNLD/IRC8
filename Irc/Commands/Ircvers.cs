@@ -10,12 +10,12 @@ internal class Ircvers : Command, ICommand
     {
     }
 
-    public EnumCommandDataType GetDataType()
+    public new EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.Standard;
     }
 
-    public void Execute(IChatFrame chatFrame)
+    public new void Execute(IChatFrame chatFrame)
     {
         //return;
         if (chatFrame.User.IsRegistered())
@@ -33,7 +33,7 @@ internal class Ircvers : Command, ICommand
                     if (chatFrame.Server.GetProtocols().TryGetValue(enumProtocolType, out var protocol))
                     {
                         chatFrame.User.SetProtocol(protocol);
-                        chatFrame.User.GetDataStore().Set("client", chatFrame.Message.Parameters[1]);
+                        chatFrame.User.Client = chatFrame.Message.Parameters[1];
 
                         var isircx = protocol.GetProtocolType() > EnumProtocolType.IRC;
                         chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,

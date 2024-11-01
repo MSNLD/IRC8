@@ -47,8 +47,8 @@ public class Privmsg : Command, ICommand
                 var channel = (IChannel)chatObject;
                 var channelMember = channel.GetMember(chatFrame.User);
                 var isOnChannel = channelMember != null;
-                var noExtern = channel.Modes.NoExtern;
-                var moderated = channel.Modes.Moderated;
+                var noExtern = channel.NoExtern;
+                var moderated = channel.Moderated;
 
                 if (
                     // No External Messages

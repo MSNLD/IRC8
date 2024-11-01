@@ -448,7 +448,7 @@ public class IrcxRaws
     }
 
     // Apollo
-    public static string RPL_JOIN_MSN(IChannelMember channelMember, IChannel channel, IChannelMember joinMember)
+    public static string RPL_JOIN_MSN(IChannelMember? channelMember, IChannel channel, IChannelMember joinMember)
     {
         var listedMode = joinMember.GetListedMode();
         var listedModeString = !string.IsNullOrWhiteSpace(listedMode) ? $",{listedMode}" : "";

@@ -14,7 +14,7 @@ public class Invisible : ModeRule, IModeRule
     {
         if (source == target)
         {
-            target.Modes[IrcStrings.UserModeInvisible].Set(flag);
+            target.Modes[IrcStrings.UserModeInvisible] = Convert.ToInt32(flag);
             DispatchModeChange(source, target, flag, parameter);
             return EnumIrcError.OK;
         }
