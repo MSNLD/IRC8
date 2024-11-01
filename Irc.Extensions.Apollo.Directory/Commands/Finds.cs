@@ -18,6 +18,6 @@ internal class Finds : Command, ICommand
 
     public new void Execute(IChatFrame chatFrame)
     {
-        chatFrame.User.Send(ApolloDirectoryRaws.RPL_FINDS_MSN((DirectoryServer)chatFrame.Server, chatFrame.User));
+        chatFrame.User?.Send(ApolloDirectoryRaws.RPL_FINDS_MSN((DirectoryServer)chatFrame.Server, chatFrame.User));
     }
 }

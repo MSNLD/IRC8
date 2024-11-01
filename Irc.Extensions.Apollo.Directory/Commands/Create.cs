@@ -19,6 +19,6 @@ internal class Create : Command, Interfaces_ICommand
 
     public new void Execute(IChatFrame chatFrame)
     {
-        chatFrame.User.Send(Raw.IRCX_RPL_FINDS_613(chatFrame.Server, chatFrame.User));
+        chatFrame.User?.Send(Raw.IRCX_RPL_FINDS_613(chatFrame.Server, chatFrame.User));
     }
 }

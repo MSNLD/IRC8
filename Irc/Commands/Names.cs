@@ -17,7 +17,7 @@ internal class Names : Command, ICommand
     public new void Execute(IChatFrame chatFrame)
     {
         var user = chatFrame.User;
-        var channelNames = chatFrame.Message.Parameters.First()
+        string?[] channelNames = chatFrame.Message.Parameters.First()
             .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
         foreach (var channelName in channelNames)
@@ -36,7 +36,7 @@ internal class Names : Command, ICommand
         }
     }
 
-    public static void ProcessNamesReply(IUser user, IChannel channel)
+    public static void ProcessNamesReply(IUser? user, IChannel channel)
     {
         // RFC 2812 "=" for others(public channels).
         var channelType = '=';
@@ -52,7 +52,7 @@ internal class Names : Command, ICommand
             Raw.IRCX_RPL_NAMEREPLY_353(user.Server, user, channel, channelType,
                 string.Join(' ',
                     channel.GetMembers().Select(m =>
-                        $"{user.GetProtocol().FormattedUser(m)}"
+                        $"{user.Protocol.FormattedUser(m)}"
                     )
                 )
             )

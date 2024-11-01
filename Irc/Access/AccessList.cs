@@ -5,7 +5,7 @@ namespace Irc.Access;
 
 public class AccessList : IAccessList
 {
-    protected Dictionary<EnumAccessLevel, List<AccessEntry>> accessEntries = new();
+    protected Dictionary<EnumAccessLevel, List<AccessEntry>> AccessEntries = new();
 
     public EnumAccessError Add(AccessEntry accessEntry)
     {
@@ -31,9 +31,9 @@ public class AccessList : IAccessList
         return EnumAccessError.SUCCESS;
     }
 
-    public List<AccessEntry> Get(EnumAccessLevel accessLevel)
+    public List<AccessEntry>? Get(EnumAccessLevel accessLevel)
     {
-        accessEntries.TryGetValue(accessLevel, out var list);
+        AccessEntries.TryGetValue(accessLevel, out var list);
         return list;
     }
 
@@ -47,21 +47,21 @@ public class AccessList : IAccessList
 
     public Dictionary<EnumAccessLevel, List<AccessEntry>> GetEntries()
     {
-        return accessEntries;
+        return AccessEntries;
     }
 
     public EnumAccessError Clear(EnumUserAccessLevel userAccessLevel, EnumAccessLevel accessLevel)
     {
         var hasRemaining = false;
-        accessEntries
+        AccessEntries
             .Where(kvp => accessLevel == EnumAccessLevel.All || kvp.Key == accessLevel)
             .ToList()
             .ForEach(
                 kvp =>
                 {
-                    accessEntries[kvp.Key] = kvp.Value.Where(accessEntry => accessEntry.EntryLevel > userAccessLevel)
+                    AccessEntries[kvp.Key] = kvp.Value.Where(accessEntry => accessEntry.EntryLevel > userAccessLevel)
                         .ToList();
-                    if (accessEntries[kvp.Key].Count > 0) hasRemaining = true;
+                    if (AccessEntries[kvp.Key].Count > 0) hasRemaining = true;
                 }
             );
 

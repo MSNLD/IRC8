@@ -7,11 +7,11 @@ namespace Irc.Modes;
 
 public class ModeOperation
 {
-    public IModeRule Mode { get; set; }
-    public IUser Source { get; set; }
-    public ChatObject Target { get; set; }
+    public IModeRule? Mode { get; set; }
+    public IUser? Source { get; set; }
+    public ChatObject? Target { get; set; }
     public bool ModeFlag { get; set; }
-    public string ModeParameter { get; set; }
+    public string? ModeParameter { get; set; }
 
     public void Execute()
     {
@@ -52,12 +52,12 @@ public class ModeOperation
             // TODO: The below should not happen
             case EnumIrcError.ERR_NOSUCHNICK:
             {
-                Source.Send(Raw.IRCX_ERR_NOSUCHNICK_401(Source.Server, Source, Target.Name));
+                Source.Send(Raw.IRCX_ERR_NOSUCHNICK_401(Source.Server, Source, Target?.Name));
                 break;
             }
             case EnumIrcError.ERR_NOSUCHCHANNEL:
             {
-                Source.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(Source.Server, Source, Target.Name));
+                Source.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(Source.Server, Source, Target?.Name));
                 break;
             }
             case EnumIrcError.ERR_CANNOTSETFOROTHER:

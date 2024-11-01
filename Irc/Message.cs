@@ -5,8 +5,8 @@ namespace Irc;
 public class Message
 {
     private readonly IProtocol _protocol;
-    private ICommand _command;
-    private string _commandName;
+    private ICommand? _command;
+    private string? _commandName;
 
     /*
        <message>  ::= [':' <prefix> <SPACE> ] <command> <params> <crlf>
@@ -34,30 +34,30 @@ public class Message
         parse();
     }
 
-    public List<string> Parameters { get; } = new();
+    public List<string?> Parameters { get; } = new();
 
     public string OriginalText { get; }
 
-    public string GetPrefix { get; private set; }
+    public string? GetPrefix { get; private set; }
 
     public bool HasCommand { get; private set; }
 
-    public ICommand GetCommand()
+    public ICommand? GetCommand()
     {
         return _command;
     }
 
-    public string GetCommandName()
+    public string? GetCommandName()
     {
         return _commandName;
     }
 
-    public List<string> GetParameters()
+    public List<string?> GetParameters()
     {
         return Parameters;
     }
 
-    private bool getPrefix(string prefix)
+    private bool getPrefix(string? prefix)
     {
         if (prefix.StartsWith(':'))
         {
@@ -68,7 +68,7 @@ public class Message
         return false;
     }
 
-    private bool getCommand(string command)
+    private bool getCommand(string? command)
     {
         if (!string.IsNullOrWhiteSpace(command))
         {
@@ -86,7 +86,7 @@ public class Message
         var trimmedText = OriginalText.TrimStart();
         if (string.IsNullOrWhiteSpace(trimmedText)) return;
 
-        var parts = trimmedText.Split(' ');
+        string?[] parts = trimmedText.Split(' ');
 
         if (parts.Length > 0)
         {

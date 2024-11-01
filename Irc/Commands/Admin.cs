@@ -19,7 +19,6 @@ public class Admin : Command, ICommand
          <- :sky-8a15b323126 258 Sky :This is the second line about Admin
          <- :sky-8a15b323126 259 Sky :
         */
-        var hasAdminInfo = false;
         var adminInfo1 = chatFrame.Server.ServerSettings.AdminInfo1;
         var adminInfo2 = chatFrame.Server.ServerSettings.AdminInfo2;
         var adminInfo3 = chatFrame.Server.ServerSettings.AdminInfo3;

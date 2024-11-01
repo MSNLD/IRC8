@@ -22,7 +22,7 @@ public class Esubmit : Command, ICommand
         var targetName = chatFrame.Message.Parameters.First();
         var message = chatFrame.Message.Parameters[1];
 
-        var targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        string?[] targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
         foreach (var target in targets)
         {
             if (!Channel.ValidName(target))
@@ -56,7 +56,7 @@ public class Esubmit : Command, ICommand
 
     // TODO: Instead of EQUESTION this needs to be something else such as a EVENT etc
 
-    public static void SubmitQuestion(IUser user, IChannel channel, string message)
+    public static void SubmitQuestion(IUser? user, IChannel? channel, string? message)
     {
         channel.Send(IrcxRaws.RPL_EQUESTION(user, channel, user.ToString(), message));
     }

@@ -54,7 +54,7 @@ internal class Kick : Command, ICommand
     }
 
     public static EnumIrcError ProcessKick(IChannel channel, IChannelMember? source, IChannelMember target,
-        string reason)
+        string? reason)
     {
         var result = channel.CanModifyMember(source, target, EnumChannelAccessLevel.ChatHost);
         if (result != EnumIrcError.OK) return result;

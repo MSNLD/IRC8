@@ -30,7 +30,7 @@ public class Ntlm : SupportPackage, ISupportPackage
         return new Ntlm(credentialProvider ?? _credentialProvider);
     }
 
-    public ICredential GetCredentials()
+    public override ICredential GetCredentials()
     {
         return _credential;
     }

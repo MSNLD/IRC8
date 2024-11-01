@@ -13,7 +13,7 @@ public class PropRule : IPropRule
     {
     }
 
-    public PropRule(string name, EnumChannelAccessLevel readAccessLevel, EnumChannelAccessLevel writeAccessLevel,
+    public PropRule(string? name, EnumChannelAccessLevel readAccessLevel, EnumChannelAccessLevel writeAccessLevel,
         string validationMask, string initialValue, bool readOnly = false)
     {
         Name = name;
@@ -27,13 +27,13 @@ public class PropRule : IPropRule
     public Action<ChatObject, string> PostRule { get; set; } = null;
     public string Value { get; set; }
 
-    public string Name { set; get; }
+    public string? Name { set; get; }
 
     public EnumChannelAccessLevel ReadAccessLevel { get; set; }
     public EnumChannelAccessLevel WriteAccessLevel { get; set; }
     public bool ReadOnly { get; set; }
 
-    public virtual EnumIrcError EvaluateSet(IChatObject source, IChatObject target, string propValue)
+    public virtual EnumIrcError EvaluateSet(IChatObject source, IChatObject target, string? propValue)
     {
         if (target is IChannel)
         {

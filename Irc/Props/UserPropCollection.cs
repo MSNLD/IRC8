@@ -90,7 +90,7 @@ public class UserPropCollection : PropCollection
         ReadOnly = true
     };
 
-    public static Dictionary<string, PropRule> PropRules = new()
+    public static Dictionary<string?, PropRule> PropRules = new()
     {
         { IrcStrings.UserPropOid, Oid },
         { IrcStrings.UserPropNickname, Nick },

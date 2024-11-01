@@ -11,7 +11,7 @@ internal class Key : ModeRuleChannel, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
     {
         var channel = (IChannel)target;
         var member = channel.GetMember((IUser)source);

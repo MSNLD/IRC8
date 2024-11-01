@@ -118,12 +118,12 @@ internal class Program
                         new SecurityManager(),
                         new FloodProtectionManager(),
                         settings,
-                        new List<IChannel>(),
+                        new List<IChannel?>(),
                         credentialProvider);
 
-                    var parts = forwardServer.Split(':');
-                    if (parts.Length > 0) ((DirectoryServer)server).ChatServerIP = parts[0];
-                    if (parts.Length > 1) ((DirectoryServer)server).ChatServerPORT = parts[1];
+                    string?[] parts = forwardServer.Split(':');
+                    if (parts.Length > 0) ((DirectoryServer)server).ChatServerIp = parts[0];
+                    if (parts.Length > 1) ((DirectoryServer)server).ChatServerPort = parts[1];
 
                     break;
                 }
@@ -133,7 +133,7 @@ internal class Program
                         new SecurityManager(),
                         new FloodProtectionManager(),
                         settings,
-                        new List<IChannel>(),
+                        new List<IChannel?>(),
                         credentialProvider);
                     break;
                 }

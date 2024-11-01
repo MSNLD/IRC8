@@ -30,7 +30,7 @@ public static class IrcStrings
     public static string CommandQuit = "QUIT";
     public static string CommandTime = "TIME";
     public static string CommandTopic = "TOPIC";
-    public static string CommandUser = "USER";
+    public static string? CommandUser = "USER";
     public static string CommandUserhost = "USERHOST";
     public static string CommandVersion = "VERSION";
     public static string CommandWho = "WHO";
@@ -43,7 +43,7 @@ public static class IrcStrings
     public static string PROP_LAG = "LAG";
     public static string S_OK = "OK";
     public static string IRC = "IRC";
-    public static string Wildcard = "*";
+    public static string? Wildcard = "*";
     public static string Self = "$";
     public static string Home = "H";
     public static string Gone = "G";
@@ -51,7 +51,7 @@ public static class IrcStrings
     public static string ISIRCX = "ISIRCX";
     public static string PRIVMSG = "PRIVMSG";
     public static string NOTICE = "NOTICE";
-    public static string CONNRESETBYPEER = "Connection reset by peer";
+    public static string? CONNRESETBYPEER = "Connection reset by peer";
     public static string INPUTFLOODING = "Input flooding";
     public static string OUTPUTSATURATION = "Output Saturation";
     public static string PINGTIMEOUT = "Ping Timeout";
@@ -200,11 +200,11 @@ public static class IrcStrings
 
     #region User Properties
 
-    public static string UserPropOid = "OID";
+    public static string? UserPropOid = "OID";
     public static string UserPropName = "NAME";
-    public static string UserPropRole = "ROLE";
-    public static string UserPropSubscriberInfo = "SUBSCRIBERINFO";
-    public static string UserPropMsnProfile = "MSNPROFILE"; //
+    public static string? UserPropRole = "ROLE";
+    public static string? UserPropSubscriberInfo = "SUBSCRIBERINFO";
+    public static string? UserPropMsnProfile = "MSNPROFILE"; //
     public static string UserPropMsnRegCookie = "MSNREGCOOKIE";
     public static string UserPropNickname = "NICK";
     public static string UserPropPuid = "PUID";
@@ -216,19 +216,19 @@ public static class IrcStrings
     #region Channel Properties
 
     public static string ChannelPropName = "NAME";
-    public static string ChannelPropTopic = "TOPIC";
-    public static string ChannelPropLag = "LAG";
-    public static string ChannelPropLanguage = "LANGUAGE";
-    public static string ChannelPropSubject = "SUBJECT";
-    public static string ChannelPropMemberkey = "MEMBERKEY";
-    public static string ChannelPropOwnerkey = "OWNERKEY";
-    public static string ChannelPropHostkey = "HOSTKEY";
-    public static string ChannelPropCreation = "CREATION";
-    public static string ChannelPropOID = "OID";
-    public static string ChannelPropPICS = "PICS";
-    public static string ChannelPropOnJoin = "ONJOIN";
-    public static string ChannelPropOnPart = "ONPART";
-    public static string ChannelPropClientGuid = "CLIENTGUID";
+    public static string? ChannelPropTopic = "TOPIC";
+    public static string? ChannelPropLag = "LAG";
+    public static string? ChannelPropLanguage = "LANGUAGE";
+    public static string? ChannelPropSubject = "SUBJECT";
+    public static string? ChannelPropMemberkey = "MEMBERKEY";
+    public static string? ChannelPropOwnerkey = "OWNERKEY";
+    public static string? ChannelPropHostkey = "HOSTKEY";
+    public static string? ChannelPropCreation = "CREATION";
+    public static string? ChannelPropOID = "OID";
+    public static string? ChannelPropPICS = "PICS";
+    public static string? ChannelPropOnJoin = "ONJOIN";
+    public static string? ChannelPropOnPart = "ONPART";
+    public static string? ChannelPropClientGuid = "CLIENTGUID";
 
     public static string ChannelPropNameRegex = @"^%?[#&][^ \07,]{1,200}$";
     public static string ChannelPropOIDRegex = @"/0(?:[a-fA-F0-9]{8})?/";
@@ -327,8 +327,8 @@ public static class IrcStrings
     #region Channel Properties
 
     public static string ChannelPropAccount = "ACCOUNT";
-    public static string ChannelPropServicePath = "SERVICEPATH";
-    public static string ChannelPropClient = "CLIENT";
+    public static string? ChannelPropServicePath = "SERVICEPATH";
+    public static string? ChannelPropClient = "CLIENT";
 
     #endregion
 }

@@ -26,7 +26,7 @@ public class Privmsg : Command, ICommand
         var targetName = chatFrame.Message.Parameters.First();
         var message = chatFrame.Message.Parameters[1];
 
-        var targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        string?[] targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
         foreach (var target in targets)
         {
             IChatObject chatObject = null;

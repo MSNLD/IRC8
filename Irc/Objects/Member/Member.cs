@@ -6,9 +6,9 @@ namespace Irc.Objects.Member;
 
 public class Member : MemberModes, IChannelMember
 {
-    protected readonly IUser _user;
+    protected readonly IUser? _user;
 
-    public Member(IUser User)
+    public Member(IUser? User)
     {
         _user = User;
     }
@@ -27,7 +27,7 @@ public class Member : MemberModes, IChannelMember
         return EnumChannelAccessLevel.ChatMember;
     }
 
-    public void SetOwner(bool flag)
+    public new void SetOwner(bool flag)
     {
         Modes[IrcStrings.MemberModeOwner].Set(flag ? 1 : 0);
     }
@@ -52,7 +52,7 @@ public class Member : MemberModes, IChannelMember
         return EnumIrcError.OK;
     }
 
-    public IUser GetUser()
+    public IUser? GetUser()
     {
         return _user;
     }

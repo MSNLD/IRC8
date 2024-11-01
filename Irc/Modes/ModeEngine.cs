@@ -22,7 +22,7 @@ public class ModeEngine
         modeRules[modeChar] = modeRule;
     }
 
-    public static void Breakdown(IUser source, ChatObject target, string modeString,
+    public static void Breakdown(IUser? source, ChatObject target, string? modeString,
         Queue<string> modeParameters)
     {
         var modeOperations = source.GetModeOperations();

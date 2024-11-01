@@ -6,7 +6,7 @@ namespace Irc.Interfaces;
 
 public interface IServer
 {
-    string Title { get; }
+    string? Title { get; }
     DateTime CreationDate { get; }
     bool AnnonymousAllowed { get; }
     int ChannelCount { get; }
@@ -35,33 +35,26 @@ public interface IServer
     bool DisableUserRegistration { get; set; }
     Guid Id { get; }
     string ShortId { get; }
-    string Name { get; set; }
+    string? Name { get; set; }
     Version ServerVersion { set; get; }
-    void AddUser(IUser user);
-    void RemoveUser(IUser user);
     void AddChannel(IChannel channel);
-    void RemoveChannel(IChannel channel);
-    IChannel CreateChannel(string name);
-    IChannel CreateChannel(IUser creator, string name, string key);
-    IUser CreateUser(IConnection connection);
-    IList<IUser> GetUsers();
-    IUser GetUserByNickname(string nickname);
-    IUser GetUserByNickname(string nickname, IUser currentUser);
-    IList<IUser> GetUsersByList(string nicknames, char separator);
-    IList<IUser> GetUsersByList(List<string> nicknames, char separator);
-    IList<IChannel> GetChannels();
+    IChannel CreateChannel(string? name);
+    IChannel CreateChannel(IUser? creator, string? name, string? key);
+    IList<IUser?> GetUsers();
+    IUser? GetUserByNickname(string? nickname);
+    IUser? GetUserByNickname(string? nickname, IUser? currentUser);
+    IList<IUser?> GetUsersByList(List<string?> nicknames, char separator);
+    IList<IChannel?> GetChannels();
     string GetSupportedChannelModes();
     string GetSupportedUserModes();
-    IDictionary<EnumProtocolType, IProtocol> GetProtocols();
-    IChannel GetChannelByName(string name);
-    ChatObject GetChatObject(string name);
-    IProtocol GetProtocol(EnumProtocolType protocolType);
+    IChannel GetChannelByName(string? name);
+    ChatObject GetChatObject(string? name);
     ISecurityManager GetSecurityManager();
     ICredentialProvider? GetCredentialManager();
     void Shutdown();
-    string ToString();
+    string? ToString();
     string[] GetMOTD();
     void SetMOTD(string motd);
-    void ProcessCookie(IUser user, string name, string value);
+    void ProcessCookie(IUser user, string? name, string value);
     Settings ServerSettings { get; set; }
 }

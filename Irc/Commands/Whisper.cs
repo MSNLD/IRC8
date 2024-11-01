@@ -73,7 +73,7 @@ internal class Whisper : Command, ICommand
 
         var message = chatFrame.Message.Parameters[2];
 
-        if (target.GetUser().GetProtocol().GetProtocolType() < EnumProtocolType.IRCX)
+        if (target.GetUser().Protocol.Ircvers < EnumProtocolType.IRCX)
             // PRIVMSG
             target.GetUser().Send(
                 Raw.RPL_PRIVMSG_USER(chatFrame.Server, chatFrame.User, (ChatObject)target.GetUser(), message)

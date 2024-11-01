@@ -21,7 +21,7 @@ public class Owner : ModeRule, IModeRule
     {
     }
 
-    public EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
     {
         var channel = (IChannel)target;
         if (!channel.CanBeModifiedBy(source)) return EnumIrcError.ERR_NOTONCHANNEL;
@@ -37,7 +37,7 @@ public class Owner : ModeRule, IModeRule
         return result;
     }
 
-    public static void ExecuteOwner(IChatObject sourceMember, IChatObject channel, bool flag,
+    public static void ExecuteOwner(IChatObject sourceMember, IChatObject? channel, bool flag,
         IChannelMember targetMember)
     {
         if (flag && targetMember.IsHost())

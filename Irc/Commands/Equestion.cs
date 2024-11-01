@@ -23,7 +23,7 @@ public class Equestion : Command, ICommand
         var nickname = chatFrame.Message.Parameters[1];
         var message = chatFrame.Message.Parameters[2];
 
-        var targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        string?[] targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
         foreach (var target in targets)
         {
             if (!Channel.ValidName(target))
@@ -55,7 +55,7 @@ public class Equestion : Command, ICommand
         }
     }
 
-    public static void SubmitQuestion(IUser user, IChannel channel, string nickname, string message)
+    public static void SubmitQuestion(IUser? user, IChannel? channel, string? nickname, string? message)
     {
         channel.Send(IrcxRaws.RPL_EQUESTION(user, channel, nickname, message));
     }

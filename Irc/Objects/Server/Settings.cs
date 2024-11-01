@@ -5,8 +5,8 @@ namespace Irc.Objects.Server;
 public class Settings
 {
     public string Id { get; set; } = "DefaultServerId";
-    public string Name { get; set; } = "DefaultServerName";
-    public string Title { get; set; } = "Default Chat Service";
+    public string? Name { get; set; } = "DefaultServerName";
+    public string? Title { get; set; } = "Default Chat Service";
     public DateTime Creation = DateTime.Now;
     public string[] Motd { get; set; } = new string[] { "*** Welcome to the Server ***" };
     public string[] Packages { get; set; } = new string[] { "ANON", "GateKeeper", "NTLM" };

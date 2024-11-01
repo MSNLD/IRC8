@@ -34,7 +34,7 @@ public static class StringExtensions
         return Encoding.Unicode.GetString(data);
     }
 
-    public static string ToLiteral(this string data)
+    public static string ToLiteral(this string? data)
     {
         var literal = new StringBuilder(data.Length);
 

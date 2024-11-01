@@ -15,7 +15,7 @@ public class UserCommand : Command, ICommand
         return EnumCommandDataType.None;
     }
 
-    public new string GetName()
+    public new string? GetName()
     {
         return IrcStrings.CommandUser;
     }

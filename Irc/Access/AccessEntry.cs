@@ -4,8 +4,8 @@ namespace Irc.Access;
 
 public class AccessEntry
 {
-    public AccessEntry(string entryAddress, EnumUserAccessLevel entryLevel, EnumAccessLevel accessLevel, string mask,
-        int timeout, string reason)
+    public AccessEntry(string? entryAddress, EnumUserAccessLevel entryLevel, EnumAccessLevel accessLevel, string? mask,
+        int timeout, string? reason)
     {
         EntryAddress = entryAddress;
         EntryLevel = entryLevel;
@@ -18,11 +18,11 @@ public class AccessEntry
 
     public TimeSpan Ttl => Expiry - DateTime.UtcNow;
     public DateTime Creation { get; } = DateTime.UtcNow;
-    public string EntryAddress { get; }
+    public string? EntryAddress { get; }
     public EnumUserAccessLevel EntryLevel { get; }
     public EnumAccessLevel AccessLevel { get; }
-    public string Mask { get; }
+    public string? Mask { get; }
     public int Timeout { get; }
     public DateTime Expiry { get; }
-    public string Reason { get; }
+    public string? Reason { get; }
 }

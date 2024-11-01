@@ -10,7 +10,7 @@ public class Auditorium : ModeRuleChannel, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
     {
         return EvaluateAndSet(source, target, flag, parameter);
     }

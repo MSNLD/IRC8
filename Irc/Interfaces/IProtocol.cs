@@ -1,15 +1,16 @@
-﻿using Irc.Enumerations;
+﻿using Irc.Commands;
+using Irc.Enumerations;
 
 namespace Irc.Interfaces;
 
 public interface IProtocol
 {
-    ICommand GetCommand(string name);
-    Dictionary<string, ICommand> GetCommands();
-    void AddCommand(ICommand command, string name = null);
+    EnumProtocolType Ircvers { get; set; }
+    ICommand? GetCommand(string? name);
+    Dictionary<string?, ICommand> GetCommands();
+    void AddCommand(ICommand command, string? name = null);
+    void SetVers(EnumProtocolType ircvers);
     void FlushCommands();
-    EnumProtocolType GetProtocolType();
     string FormattedUser(IChannelMember user);
-    string GetFormat(IUser user);
-    void UpdateCommand(ICommand command, string name = null);
+    string GetFormat(IUser? user);
 }

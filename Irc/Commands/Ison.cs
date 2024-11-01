@@ -22,7 +22,7 @@ internal class Ison : Command, ICommand
         var parameters = chatFrame.Message.Parameters;
 
         var nicknames = parameters.Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
-        var foundNicknames = new List<string>();
+        var foundNicknames = new List<string?>();
 
         foreach (var nickname in nicknames)
         {

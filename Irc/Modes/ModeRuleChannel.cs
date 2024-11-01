@@ -15,7 +15,7 @@ public class ModeRuleChannel : ModeRule, IModeRule
         this.accessLevel = accessLevel;
     }
 
-    public EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+    public EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
     {
         var user = (IUser)source;
         var channel = (IChannel)target;
@@ -42,14 +42,14 @@ public class ModeRuleChannel : ModeRule, IModeRule
         return result;
     }
 
-    public EnumIrcError EvaluateAndSet(IChatObject source, IChatObject target, bool flag, string parameter)
+    public EnumIrcError EvaluateAndSet(IChatObject source, IChatObject? target, bool flag, string? parameter)
     {
         var result = Evaluate(source, target, flag, parameter);
         if (result == EnumIrcError.OK) SetChannelMode(source, (IChannel)target, flag, parameter);
         return result;
     }
 
-    public void SetChannelMode(IChatObject source, IChannel target, bool flag, string parameter)
+    public void SetChannelMode(IChatObject source, IChannel target, bool flag, string? parameter)
     {
         target.Modes[ModeChar] = flag ? 1 : 0;
         DispatchModeChange(source, (ChatObject)target, flag, parameter);
@@ -58,8 +58,8 @@ public class ModeRuleChannel : ModeRule, IModeRule
     public interface IModeRuleCallback
     {
         IChatObject source { get; set; }
-        IChatObject target { get; set; }
+        IChatObject? target { get; set; }
         bool flag { get; set; }
-        string parameter { get; set; }
+        string? parameter { get; set; }
     }
 }

@@ -30,19 +30,15 @@ internal class Ircvers : Command, ICommand
             {
                 if (Enum.TryParse<EnumProtocolType>(ircvers, true, out var enumProtocolType))
                 {
-                    if (chatFrame.Server.GetProtocols().TryGetValue(enumProtocolType, out var protocol))
-                    {
-                        chatFrame.User.SetProtocol(protocol);
-                        chatFrame.User.Client = chatFrame.Message.Parameters[1];
+                    chatFrame.User.Protocol.Ircvers = enumProtocolType;
+                    chatFrame.User.Client = chatFrame.Message.Parameters[1];
+                    
+                    var isircx = enumProtocolType > EnumProtocolType.IRC;
+                    chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
+                        chatFrame.Server.MaxInputBytes, IrcStrings.IRCXOptions));
 
-                        var isircx = protocol.GetProtocolType() > EnumProtocolType.IRC;
-                        chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
-                            chatFrame.Server.MaxInputBytes, IrcStrings.IRCXOptions));
-                    }
-                    else
-                    {
-                        chatFrame.User.Send(Raw.IRCX_ERR_BADVALUE_906(chatFrame.Server, chatFrame.User, ircvers));
-                    }
+                    // TODO: Fix below
+                    // chatFrame.User.Send(Raw.IRCX_ERR_BADVALUE_906(chatFrame.Server, chatFrame.User, ircvers));
                 }
 
                 return;

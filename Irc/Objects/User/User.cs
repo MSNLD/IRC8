@@ -4,6 +4,7 @@ using Irc.Access;
 using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Modes;
+using Irc.Protocols;
 using Irc.Resources;
 using Irc.Security.Packages;
 using NLog;
@@ -19,38 +20,36 @@ public class User : ChatObject, IUser
     private readonly IConnection _connection;
     private readonly IDataRegulator _dataRegulator;
     private readonly IFloodProtectionProfile _floodProtectionProfile;
-    public new static Dictionary<char, IModeRule> ModeRules = UserModeRules.ModeRules;
     private readonly Queue<ModeOperation> _modeOperations = new();
     private bool _authenticated;
 
     private long _commandSequence;
     private bool _guest;
     private EnumUserAccessLevel _level;
-    private IProtocol _protocol;
+    public IProtocol Protocol { get; set; } = new Protocol();
     private bool _registered;
     private ISupportPackage _supportPackage;
-    public IDictionary<IChannel, IChannelMember> Channels;
+    public IDictionary<IChannel?, IChannelMember> Channels;
 
     public DateTime LastPing = DateTime.UtcNow;
     public long PingCount;
 
-    public User(IConnection connection, IProtocol protocol, IDataRegulator dataRegulator,
+    public User(IConnection connection, IDataRegulator dataRegulator,
         IFloodProtectionProfile floodProtectionProfile,
         IServer server)
     {
         Server = server;
         _connection = connection;
-        _protocol = protocol;
         _dataRegulator = dataRegulator;
         _floodProtectionProfile = floodProtectionProfile;
         _supportPackage = new ANON();
-        Channels = new ConcurrentDictionary<IChannel, IChannelMember>();
+        Channels = new ConcurrentDictionary<IChannel?, IChannelMember>();
 
         _connection.OnReceive += (sender, s) =>
         {
             LastPing = DateTime.UtcNow;
             PingCount = 0;
-            var message = new Message(_protocol, s);
+            var message = new Message(Protocol, s);
             if (message.HasCommand) _dataRegulator.PushIncoming(message);
         };
 
@@ -145,25 +144,25 @@ public class User : ChatObject, IUser
 
     public IAccessList AccessList => _accessList;
     public bool Utf8 { get; set; }
-    public string Client { get; set; }
-    public string Pass { get; set; }
+    public string? Client { get; set; }
+    public string? Pass { get; set; }
     public DateTime LastIdle { get; set; } = DateTime.UtcNow;
     public DateTime LoggedOn { get; private set; } = DateTime.UtcNow;
 
     public IServer Server { get; }
     public event EventHandler<string> OnSend;
 
-    public void BroadcastToChannels(string data, bool ExcludeUser)
+    public void BroadcastToChannels(string data, bool excludeUser)
     {
-        foreach (var channel in Channels.Keys) channel.Send(data, this);
+        foreach (var channel in Channels.Keys) channel?.Send(data, this);
     }
 
-    public void AddChannel(IChannel channel, IChannelMember member)
+    public void AddChannel(IChannel? channel, IChannelMember member)
     {
         Channels.Add(channel, member);
     }
 
-    public void RemoveChannel(IChannel channel)
+    public void RemoveChannel(IChannel? channel)
     {
         Channels.Remove(channel);
     }
@@ -178,7 +177,7 @@ public class User : ChatObject, IUser
         return Channels.FirstOrDefault(c => c.Key.GetName() == Name);
     }
 
-    public IDictionary<IChannel, IChannelMember> GetChannels()
+    public IDictionary<IChannel?, IChannelMember> GetChannels()
     {
         return Channels;
     }
@@ -210,7 +209,7 @@ public class User : ChatObject, IUser
                 stringBuilder.Append("\r\n");
             }
 
-            Log.Info($"Sending[{_protocol.GetType().Name}/{Name}]: {stringBuilder}");
+            Log.Info($"Sending[{Protocol.GetType().Name}/{Name}]: {stringBuilder}");
             _connection?.Send(stringBuilder.ToString());
         }
     }
@@ -220,7 +219,7 @@ public class User : ChatObject, IUser
         // Clean modes
         _modeOperations.Clear();
 
-        Log.Info($"Disconnecting[{_protocol.GetType().Name}/{Name}]: {message}");
+        Log.Info($"Disconnecting[{Protocol.GetType().Name}/{Name}]: {message}");
         _connection?.Disconnect($"{message}\r\n");
     }
 
@@ -246,12 +245,7 @@ public class User : ChatObject, IUser
 
     public void SetProtocol(IProtocol protocol)
     {
-        _protocol = protocol;
-    }
-
-    public IProtocol GetProtocol()
-    {
-        return _protocol;
+        Protocol = protocol;
     }
 
     public IConnection GetConnection()
@@ -264,7 +258,7 @@ public class User : ChatObject, IUser
         return _level;
     }
 
-    public string Nickname
+    public string? Nickname
     {
         get => Name;
         set
@@ -274,7 +268,7 @@ public class User : ChatObject, IUser
         }
     }
 
-    public void ChangeNickname(string newNick, bool utf8Prefix)
+    public void ChangeNickname(string? newNick, bool utf8Prefix)
     {
         var nickname = utf8Prefix ? $"'{newNick}" : newNick;
         var rawNicknameChange = Raw.RPL_NICK(Server, this, nickname);
@@ -318,7 +312,7 @@ public class User : ChatObject, IUser
         return _authenticated;
     }
 
-    public bool IsOn(IChannel channel)
+    public bool IsOn(IChannel? channel)
     {
         return Channels.ContainsKey(channel);
     }
@@ -338,7 +332,7 @@ public class User : ChatObject, IUser
         return Admin;
     }
 
-    public virtual void SetAway(IServer server, IUser user, string message)
+    public virtual void SetAway(IServer server, IUser? user, string? message)
     {
         Profile.Away = true;
         user.Away = true;
@@ -351,7 +345,7 @@ public class User : ChatObject, IUser
         user.Send(Raw.IRCX_RPL_NOWAWAY_306(server, user));
     }
 
-    public virtual void SetBack(IServer server, IUser user)
+    public virtual void SetBack(IServer server, IUser? user)
     {
         Profile.Away = false;
         user.Away = false;

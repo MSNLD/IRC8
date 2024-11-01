@@ -67,7 +67,7 @@ internal class Invite : Command, ICommand
         ProcessInvite(chatFrame, member, targetChannel, targetUser);
     }
 
-    public static void ProcessInvite(IChatFrame chatFrame, IChannelMember member, IChannel targetChannel,
+    public static void ProcessInvite(IChatFrame chatFrame, IChannelMember member, IChannel? targetChannel,
         IUser targetUser)
     {
         if (targetChannel.InviteOnly && member.GetLevel() < EnumChannelAccessLevel.ChatHost)

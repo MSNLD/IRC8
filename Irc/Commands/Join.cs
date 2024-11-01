@@ -28,9 +28,9 @@ public class Join : Command, ICommand
         JoinChannels(server, user, channelNames, key);
     }
 
-    public static List<string> ValidateChannels(IServer server, IUser user, string channels)
+    public static List<string?> ValidateChannels(IServer server, IUser? user, string? channels)
     {
-        var channelNames = channels.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+        List<string?> channelNames = channels.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
 
         if (channelNames.Count == 0)
         {
@@ -49,7 +49,7 @@ public class Join : Command, ICommand
         return channelNames;
     }
 
-    public static void JoinChannels(IServer server, IUser user, List<string> channelNames, string key)
+    public static void JoinChannels(IServer server, IUser? user, List<string?> channelNames, string? key)
     {
         // TODO: Optimize the below code
         foreach (var channelName in channelNames)
@@ -82,7 +82,7 @@ public class Join : Command, ICommand
         }
     }
 
-    public static void SendJoinError(IServer server, IChannel channel, IUser user, EnumChannelAccessResult result)
+    public static void SendJoinError(IServer server, IChannel channel, IUser? user, EnumChannelAccessResult result)
     {
         switch (result)
         {

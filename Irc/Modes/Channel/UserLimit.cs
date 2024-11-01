@@ -10,7 +10,7 @@ public class UserLimit : ModeRuleChannel, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
     {
         var result = base.Evaluate(source, target, flag, parameter);
         if (result != EnumIrcError.OK) return result;

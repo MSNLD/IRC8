@@ -23,7 +23,7 @@ public class Gag : ModeRule, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
     {
         if (source.Level >= EnumUserAccessLevel.Sysop)
         {

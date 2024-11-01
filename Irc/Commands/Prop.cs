@@ -153,7 +153,7 @@ public class Prop : Command, ICommand
                 else
                 {
                     // Getter
-                    var props = new Dictionary<string, string?>();
+                    var props = new Dictionary<string?, string?>();
                     if (chatFrame.Message.Parameters[1] == "*")
                     {
                         props = chatObject.Props;
@@ -176,7 +176,7 @@ public class Prop : Command, ICommand
     }
 
     // TODO: Rewrite this code
-    public void SendProps(IServer server, IUser user, IChatObject targetObject, Dictionary<string, string?> props)
+    public void SendProps(IServer server, IUser? user, IChatObject targetObject, Dictionary<string?, string?> props)
     {
         var propsSent = 0;
         foreach (var prop in props)
@@ -214,8 +214,8 @@ public class Prop : Command, ICommand
         if (propsSent > 0) user.Send(IrcxRaws.IRCX_RPL_PROPEND_819(server, user, targetObject));
     }
 
-    public void SendProp(IServer server, IUser user, IChatObject targetObject, string propName,
-        string propValue)
+    public void SendProp(IServer server, IUser? user, IChatObject targetObject, string? propName,
+        string? propValue)
     {
         user.Send(IrcxRaws.IRCX_RPL_PROPLIST_818(server, user, targetObject, propName, propValue));
     }

@@ -193,7 +193,7 @@ internal class ChannelPropCollection : PropCollection
         }
     };
 
-    public static Dictionary<string, PropRule> PropRules = new()
+    public static Dictionary<string?, PropRule> PropRules = new()
     {
         { IrcStrings.ChannelPropAccount, Account },
         { IrcStrings.ChannelPropClient, Client },

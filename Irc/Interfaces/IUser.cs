@@ -10,37 +10,36 @@ public interface IUser: IChatObject
     IServer Server { get; }
     Guid Id { get; }
     string ShortId { get; }
-    string Name { get; set; }
-    string Nickname { get; set; }
+    string? Name { get; set; }
+    string? Nickname { get; set; }
     bool Away { get; set; }
-    string Client { get; set; }
-    string Pass { get; set; }
+    string? Client { get; set; }
+    string? Pass { get; set; }
     DateTime LastIdle { get; set; }
     DateTime LoggedOn { get; }
     bool Utf8 { get; set; }
+    IProtocol Protocol { get; set; }
     IChatFrame GetNextFrame();
-    void ChangeNickname(string newNick, bool utf8Prefix);
+    void ChangeNickname(string? newNick, bool utf8Prefix);
     void SetGuest(bool guest);
-    void SetAway(IServer server, IUser user, string message);
-    void SetBack(IServer server, IUser user);
+    void SetAway(IServer server, IUser? user, string? message);
+    void SetBack(IServer server, IUser? user);
     void SetLevel(EnumUserAccessLevel level);
     event EventHandler<string> OnSend;
     void BroadcastToChannels(string data, bool ExcludeUser);
-    void AddChannel(IChannel channel, IChannelMember member);
-    void RemoveChannel(IChannel channel);
+    void AddChannel(IChannel? channel, IChannelMember member);
+    void RemoveChannel(IChannel? channel);
     KeyValuePair<IChannel, IChannelMember> GetChannelMemberInfo(IChannel channel);
-    KeyValuePair<IChannel, IChannelMember> GetChannelInfo(string Name);
-    IDictionary<IChannel, IChannelMember> GetChannels();
-    void Send(string message);
-    void Send(string message, EnumChannelAccessLevel accessLevel);
+    KeyValuePair<IChannel, IChannelMember> GetChannelInfo(string name);
+    IDictionary<IChannel?, IChannelMember> GetChannels();
+    new void Send(string message);
+    new void Send(string message, EnumChannelAccessLevel accessLevel);
     void Flush();
     void Disconnect(string message);
     IDataRegulator GetDataRegulator();
     IFloodProtectionProfile GetFloodProtectionProfile();
     ISupportPackage GetSupportPackage();
     void SetSupportPackage(ISupportPackage supportPackage);
-    void SetProtocol(IProtocol protocol);
-    IProtocol GetProtocol();
     IConnection GetConnection();
     EnumUserAccessLevel GetLevel();
     Address GetAddress();
@@ -50,13 +49,13 @@ public interface IUser: IChatObject
     bool IsAnon();
     bool IsSysop();
     bool IsAdministrator();
-    bool IsOn(IChannel channel);
+    bool IsOn(IChannel? channel);
     void PromoteToAdministrator();
     void PromoteToSysop();
     void PromoteToGuide();
     bool DisconnectIfOutgoingThresholdExceeded();
     bool DisconnectIfIncomingThresholdExceeded();
-    string ToString();
+    string? ToString();
     void Register();
     void Authenticate();
     void DisconnectIfInactive();

@@ -17,7 +17,7 @@ public class Command : ICommand
         _requiredMaximumParameters = requiredMaximumParameters;
     }
 
-    public string GetName()
+    public string? GetName()
     {
         return GetType().Name;
     }

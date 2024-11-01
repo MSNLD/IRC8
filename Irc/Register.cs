@@ -66,7 +66,7 @@ public static class Register
         }
     }
 
-    public static bool ConnectionIsPermitted(IServer server, IUser user)
+    public static bool ConnectionIsPermitted(IServer server, IUser? user)
     {
         // TODO: Add check for anonymous connection count
         if (!server.AnonymousConnections && user.IsAnon())

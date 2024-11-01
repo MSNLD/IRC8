@@ -28,7 +28,7 @@ internal class Listx : Command, ICommand
 
         if (firstParam != null && Channel.ValidName(firstParam))
         {
-            channels = new List<IChannel>();
+            channels = new List<IChannel?>();
             var channelNames = Tools.CSVToArray(firstParam);
             foreach (var channelName in channelNames)
                 if (Channel.ValidName(channelName))
@@ -48,7 +48,7 @@ internal class Listx : Command, ICommand
         ListChannels(server, user, channels);
     }
 
-    public static void ListChannels(IServer server, IUser user, IList<IChannel> channels)
+    public static void ListChannels(IServer server, IUser? user, IList<IChannel?> channels)
     {
         // Case "811"      ' Start of LISTX
         user.Send(Raw.IRCX_RPL_LISTXSTART_811(server, user));

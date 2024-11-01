@@ -11,7 +11,7 @@ public class RegularExpressions
         regex = new Regex(pattern, ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None);
     }
 
-    public static bool Match(string pattern, string text, bool ignoreCase)
+    public static bool Match(string pattern, string? text, bool ignoreCase)
     {
         var regex = new Regex(pattern, ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None);
         var match = regex.Match(text);

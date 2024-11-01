@@ -26,7 +26,7 @@ internal class Part : Command, ICommand
         PartChannels(server, user, channelNames);
     }
 
-    public void PartChannels(IServer server, IUser user, List<string> channelNames)
+    public void PartChannels(IServer server, IUser? user, List<string?> channelNames)
     {
         server
             .GetChannels()

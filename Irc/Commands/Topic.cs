@@ -54,7 +54,7 @@ internal class Topic : Command, ICommand
         }
     }
 
-    public static EnumIrcError ProcessTopic(IChatFrame chatFrame, IChannel channel, IUser source, string topic)
+    public static EnumIrcError ProcessTopic(IChatFrame chatFrame, IChannel channel, IUser? source, string? topic)
     {
         if (!channel.CanBeModifiedBy((ChatObject)source)) return EnumIrcError.ERR_NOTONCHANNEL;
 

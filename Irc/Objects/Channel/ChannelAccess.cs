@@ -2,17 +2,16 @@
 
 namespace Irc.Access;
 
-public class ServerAccess : AccessList
+public class ChannelAccess : AccessList
 {
-    public ServerAccess()
+    public ChannelAccess()
     {
-        accessEntries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
+        AccessEntries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
         {
             { EnumAccessLevel.OWNER, new List<AccessEntry>() },
             { EnumAccessLevel.HOST, new List<AccessEntry>() },
             { EnumAccessLevel.VOICE, new List<AccessEntry>() },
-            { EnumAccessLevel.DENY, new List<AccessEntry>() },
-            { EnumAccessLevel.GRANT, new List<AccessEntry>() }
+            { EnumAccessLevel.DENY, new List<AccessEntry>() }
         };
     }
 }

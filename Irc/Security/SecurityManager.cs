@@ -4,7 +4,7 @@ namespace Irc.Security;
 
 public class SecurityManager : ISecurityManager
 {
-    private readonly Dictionary<string, SupportPackage> _supportProviders =
+    private readonly Dictionary<string?, SupportPackage> _supportProviders =
         new(StringComparer.InvariantCultureIgnoreCase);
 
     private string _supportedPackages = string.Empty;
@@ -15,7 +15,7 @@ public class SecurityManager : ISecurityManager
         UpdateSupportPackages();
     }
 
-    public SupportPackage CreatePackageInstance(string name, ICredentialProvider? credentialProvider)
+    public SupportPackage CreatePackageInstance(string? name, ICredentialProvider? credentialProvider)
     {
         try
         {

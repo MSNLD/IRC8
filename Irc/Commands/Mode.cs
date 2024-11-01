@@ -24,7 +24,7 @@ internal class Mode : Command, ICommand
         {
             if (chatFrame.Message.Parameters.First().ToUpper() == IrcStrings.ISIRCX)
             {
-                var protocol = chatFrame.User.GetProtocol().GetProtocolType();
+                var protocol = chatFrame.User.Protocol.Ircvers;
                 var isircx = protocol > EnumProtocolType.IRC;
                 chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
                     chatFrame.Server.MaxInputBytes, IrcStrings.IRCXOptions));
@@ -72,9 +72,12 @@ internal class Mode : Command, ICommand
         <- :sky-8a15b323126 221 Sky +ix
         -> sky-8a15b323126 MODE #test
         <- :sky-8a15b323126 324 Sky #test +tnl 50*/
+
+        var modes = string.Join("", ((Channel)chatObject).Modes.Select(m => (m.Value > 0 ? m.Key.ToString() : "")));
+        
         if (chatObject is IChannel)
-            chatFrame.User.Send(Raw.IRCX_RPL_MODE_324(chatFrame.Server, chatFrame.User, (IChannel)chatObject,
-                ((IChannel)chatObject).Modes.ToString()));
+            // TODO: Fix below when UserLimit is 0
+            chatFrame.User.Send(Raw.IRCX_RPL_MODE_324(chatFrame.Server, chatFrame.User, (IChannel)chatObject, $"{modes} {((Channel)chatObject).UserLimit}"));
         else if (chatObject is IUser)
             chatFrame.User.Send(Raw.IRCX_RPL_UMODEIS_221(chatFrame.Server, chatFrame.User,
                 string.Join(string.Empty, chatObject.Modes.Keys)));

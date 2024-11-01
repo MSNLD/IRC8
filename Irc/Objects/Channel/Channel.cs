@@ -16,7 +16,7 @@ public class Channel : ChatObject, IChannel
     public HashSet<string> InviteList = new();
     public new static Dictionary<char, IModeRule> ModeRules = ChannelModeRules.ModeRules;
 
-    public Channel(string name)
+    public Channel(string? name)
     {
         SetName(name);
         Props["NAME"] = name;
@@ -168,7 +168,7 @@ public class Channel : ChatObject, IChannel
     }
     #endregion
 
-    public string GetName()
+    public string? GetName()
     {
         return Name;
     }
@@ -182,25 +182,25 @@ public class Channel : ChatObject, IChannel
         return null;
     }
 
-    public IChannelMember? GetMemberByNickname(string nickname)
+    public IChannelMember? GetMemberByNickname(string? nickname)
     {
         return _members.FirstOrDefault(member =>
             String.Compare(member?.GetUser().GetAddress().Nickname, nickname, StringComparison.OrdinalIgnoreCase) == 0);
     }
 
-    public bool Allows(IUser user)
+    public bool Allows(IUser? user)
     {
         if (HasUser(user)) return false;
         return true;
     }
 
-    public virtual IChannel Join(IUser user, EnumChannelAccessResult accessResult = EnumChannelAccessResult.NONE)
+    public virtual IChannel Join(IUser? user, EnumChannelAccessResult accessResult = EnumChannelAccessResult.NONE)
     {
         var joinMember = AddMember(user, accessResult);
         foreach (var channelMember in GetMembers())
         {
             var channelUser = channelMember.GetUser();
-            if (channelUser.GetProtocol().GetProtocolType() <= EnumProtocolType.IRC3)
+            if (channelUser.Protocol.Ircvers <= EnumProtocolType.IRC3)
             {
                 channelMember.GetUser().Send(IrcRaws.RPL_JOIN(user, this));
 
@@ -221,7 +221,7 @@ public class Channel : ChatObject, IChannel
     }
 
 
-    public IChannel SendTopic(IUser user)
+    public IChannel SendTopic(IUser? user)
     {
         user.Send(Raw.IRCX_RPL_TOPIC_332(user.Server, user, this, Props[Resources.IrcStrings.ChannelPropTopic] ?? string.Empty));
         return this;
@@ -233,38 +233,38 @@ public class Channel : ChatObject, IChannel
         return this;
     }
 
-    public IChannel SendNames(IUser user)
+    public IChannel SendNames(IUser? user)
     {
         Names.ProcessNamesReply(user, this);
         return this;
     }
 
-    public IChannel Part(IUser user)
+    public IChannel Part(IUser? user)
     {
         Send(IrcRaws.RPL_PART(user, this));
         RemoveMember(user);
         return this;
     }
 
-    public IChannel Quit(IUser user)
+    public IChannel Quit(IUser? user)
     {
         RemoveMember(user);
         return this;
     }
 
-    public IChannel Kick(IUser source, IUser target, string reason)
+    public IChannel Kick(IUser? source, IUser? target, string? reason)
     {
         Send(Raw.RPL_KICK_IRC(source, this, target, reason));
         RemoveMember(target);
         return this;
     }
 
-    public void SendMessage(IUser user, string message)
+    public void SendMessage(IUser? user, string? message)
     {
         Send(IrcRaws.RPL_PRIVMSG(user, this, message), (ChatObject)user);
     }
 
-    public void SendNotice(IUser user, string message)
+    public void SendNotice(IUser? user, string? message)
     {
         Send(IrcRaws.RPL_NOTICE(user, this, message), (ChatObject)user);
     }
@@ -274,7 +274,7 @@ public class Channel : ChatObject, IChannel
         return _members;
     }
 
-    public bool HasUser(IUser user)
+    public bool HasUser(IUser? user)
     {
         foreach (var member in _members)
             // TODO: Re-enable below
@@ -312,8 +312,8 @@ public class Channel : ChatObject, IChannel
         return EnumIrcError.ERR_NOCHANOP;
     }
 
-    public void ProcessChannelError(EnumIrcError error, IServer server, IUser source, ChatObject target = null,
-        string data = null)
+    public void ProcessChannelError(EnumIrcError error, IServer server, IUser? source, ChatObject? target = null,
+        string? data = null)
     {
         switch (error)
         {
@@ -380,7 +380,7 @@ public class Channel : ChatObject, IChannel
         Send(message, null);
     }
 
-    public override void Send(string message, ChatObject u = null)
+    public override void Send(string message, ChatObject? u = null)
     {
         foreach (var channelMember in _members)
             if (channelMember.GetUser() != u)
@@ -394,7 +394,7 @@ public class Channel : ChatObject, IChannel
                 channelMember.GetUser().Send(message);
     }
 
-    public virtual EnumChannelAccessResult GetAccess(IUser user, string key, bool IsGoto = false)
+    public virtual EnumChannelAccessResult GetAccess(IUser? user, string? key, bool IsGoto = false)
     {
         var hostKeyCheck = CheckHostKey(user, key);
 
@@ -460,7 +460,7 @@ public class Channel : ChatObject, IChannel
         return BanList.Remove(formattedAddress);
     }
 
-    protected virtual IChannelMember AddMember(IUser user,
+    protected virtual IChannelMember AddMember(IUser? user,
         EnumChannelAccessResult accessResult = EnumChannelAccessResult.NONE)
     {
         var member = new Member.Member(user);
@@ -474,36 +474,36 @@ public class Channel : ChatObject, IChannel
         return member;
     }
 
-    private void RemoveMember(IUser user)
+    private void RemoveMember(IUser? user)
     {
         var member = _members.Where(m => m.GetUser() == user).FirstOrDefault();
         _members.Remove(member);
         user.RemoveChannel(this);
     }
 
-    public void SetName(string Name)
+    public void SetName(string? Name)
     {
         this.Name = Name;
     }
 
-    private static bool CompareUserAddress(IUser user, IUser otherUser)
+    private static bool CompareUserAddress(IUser? user, IUser? otherUser)
     {
         if (otherUser == user || otherUser.GetAddress().UserHost == user.GetAddress().UserHost) return true;
         return false;
     }
 
-    private static bool CompareUserNickname(IUser user, IUser otherUser)
+    private static bool CompareUserNickname(IUser? user, IUser? otherUser)
     {
         return otherUser.GetAddress().Nickname.ToUpper() == user.GetAddress().Nickname.ToUpper();
     }
 
-    public static bool ValidName(string channel)
+    public static bool ValidName(string? channel)
     {
         var regex = new Regex(IrcStrings.IrcxChannelRegex);
         return regex.Match(channel).Success;
     }
 
-    public EnumChannelAccessResult GetAccessEx(IUser user, string key, bool IsGoto = false)
+    public EnumChannelAccessResult GetAccessEx(IUser? user, string? key, bool IsGoto = false)
     {
         var operCheck = CheckOper(user);
         var keyCheck = CheckMemberKey(user, key);
@@ -521,13 +521,13 @@ public class Channel : ChatObject, IChannel
         return accessPermissions;
     }
 
-    protected EnumChannelAccessResult CheckOper(IUser user)
+    protected EnumChannelAccessResult CheckOper(IUser? user)
     {
         if (user.GetLevel() >= EnumUserAccessLevel.Guide) return EnumChannelAccessResult.SUCCESS_OWNER;
         return EnumChannelAccessResult.NONE;
     }
 
-    protected EnumChannelAccessResult CheckMemberKey(IUser user, string key)
+    protected EnumChannelAccessResult CheckMemberKey(IUser? user, string? key)
     {
         if (string.IsNullOrWhiteSpace(key)) return EnumChannelAccessResult.NONE;
 
@@ -541,7 +541,7 @@ public class Channel : ChatObject, IChannel
         return EnumChannelAccessResult.NONE;
     }
 
-    protected EnumChannelAccessResult CheckInviteOnly(IUser user)
+    protected EnumChannelAccessResult CheckInviteOnly(IUser? user)
     {
         if (Modes[IrcStrings.ChannelModeInvite] == 1)
             return InviteList.Contains(user.GetAddress().GetAddress())
@@ -563,7 +563,7 @@ public class Channel : ChatObject, IChannel
         return EnumChannelAccessResult.NONE;
     }
 
-    public EnumAccessLevel GetChannelAccess(IUser user)
+    public EnumAccessLevel GetChannelAccess(IUser? user)
     {
         var userAccessLevel = EnumAccessLevel.NONE;
         var addressString = user.GetAddress().GetFullAddress();
@@ -590,7 +590,7 @@ public class Channel : ChatObject, IChannel
     }
 
 
-    protected EnumChannelAccessResult CheckHostKey(IUser user, string key)
+    protected EnumChannelAccessResult CheckHostKey(IUser? user, string? key)
     {
         if (string.IsNullOrWhiteSpace(key)) return EnumChannelAccessResult.NONE;
 

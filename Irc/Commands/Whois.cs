@@ -27,13 +27,13 @@ public class Whois : Command, ICommand
         var server = chatFrame.Server;
         var user = chatFrame.User;
         var nicknameString = chatFrame.Message.Parameters.First();
-        var nicknames = nicknameString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+        string?[] nicknames = nicknameString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
         foreach (var nickname in nicknames) ProcessWhoisReply(chatFrame.Server, chatFrame.User, nickname);
         user.Send(IrcRaws.IRC_RAW_318(server, user, nicknameString));
     }
 
-    public static void ProcessWhoisReply(IServer server, IUser user, string nickname)
+    public static void ProcessWhoisReply(IServer server, IUser? user, string? nickname)
     {
         var targetUser = server.GetUserByNickname(nickname);
 

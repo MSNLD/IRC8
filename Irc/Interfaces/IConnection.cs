@@ -17,5 +17,5 @@ public interface IConnection
     void Send(string message);
     void Disconnect(string message);
     void Accept();
-    bool TryOverrideRemoteAddress(string ip, string hostname);
+    bool TryOverrideRemoteAddress(string? ip, string? hostname);
 }

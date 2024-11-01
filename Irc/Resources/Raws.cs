@@ -79,32 +79,32 @@ public static class IrcRaws
     public static string IRC_RAW_906 = ":%h 906 %a %s :Cannot make host due to admin restriction";
     public static string IRC_RAW_998 = ":%h 998 %a %s :Already on channel   ";
 
-    public static string IRC_RAW_256(IServer server, IUser user)
+    public static string IRC_RAW_256(IServer server, IUser? user)
     {
         return $":{server} 256 {user} :Administrative info about {server}";
     }
 
-    public static string IRC_RAW_257(IServer server, IUser user, string message)
+    public static string IRC_RAW_257(IServer server, IUser? user, string message)
     {
         return $":{server} 257 {user} :{message}";
     }
 
-    public static string IRC_RAW_258(IServer server, IUser user, string message)
+    public static string IRC_RAW_258(IServer server, IUser? user, string message)
     {
         return $":{server} 258 {user} :{message}";
     }
 
-    public static string IRC_RAW_259(IServer server, IUser user, string email)
+    public static string IRC_RAW_259(IServer server, IUser? user, string email)
     {
         return $":{server} 259 {user} :{email}";
     }
 
-    public static string IRC_RAW_303(IServer server, IUser user, string names)
+    public static string IRC_RAW_303(IServer server, IUser? user, string names)
     {
         return $":{server} 303 {user} :{names}";
     }
 
-    public static string IRC_RAW_311(IServer server, IUser user, IUser targetUser)
+    public static string IRC_RAW_311(IServer server, IUser? user, IUser targetUser)
     {
         return
             $":{server} 311 {user} {targetUser} {targetUser.GetAddress().User} {targetUser.GetAddress().Host} * :{targetUser.GetAddress().RealName}";
@@ -115,22 +115,22 @@ public static class IrcRaws
         return $":{server} 312 {user} {targetUser} {server} :{server.Info}";
     }
 
-    public static string IRC_RAW_313(IServer server, IUser user, IUser targetUser)
+    public static string IRC_RAW_313(IServer server, IUser? user, IUser targetUser)
     {
         return $":{server} 313 {user} {targetUser} :is an IRC operator";
     }
 
-    public static string IRC_RAW_317(IServer server, IUser user, IUser targetUser, long seconds, long epoch)
+    public static string IRC_RAW_317(IServer server, IUser? user, IUser targetUser, long seconds, long epoch)
     {
         return $":{server} 317 {user} {targetUser} {seconds} {epoch} :seconds idle, signon time";
     }
 
-    public static string IRC_RAW_318(IServer server, IUser user, string targetNicknames)
+    public static string IRC_RAW_318(IServer server, IUser? user, string? targetNicknames)
     {
         return $":{server} 318 {user} {targetNicknames} :End of /WHOIS list";
     }
 
-    public static string IRC_RAW_319(IServer server, IUser user, IUser targetUser, string channelList)
+    public static string IRC_RAW_319(IServer server, IUser? user, IUser targetUser, string channelList)
     {
         return $":{server} 319 {user} {targetUser} :{channelList}";
     }
@@ -140,27 +140,27 @@ public static class IrcRaws
         return $":{server} 353 {user} = {channel} :{names}";
     }
 
-    public static string IRC_RAW_364(IServer server, IUser user, string mask, int hopcount)
+    public static string IRC_RAW_364(IServer server, IUser? user, string? mask, int hopcount)
     {
         return $":{server} 364 {user} {mask} {server} :{hopcount} P0 {server.Info}";
     }
 
-    public static string IRC_RAW_365(IServer server, IUser user, string mask)
+    public static string IRC_RAW_365(IServer server, IUser? user, string? mask)
     {
         return $":{server} 365 {user} {mask} :End of /LINKS list.";
     }
 
-    public static string IRC_RAW_423(IServer server, IUser user)
+    public static string IRC_RAW_423(IServer server, IUser? user)
     {
         return $":{server} 423 {user} {server} :No administrative info available ";
     }
 
-    public static string IRC_RAW_446(IServer server, IUser user)
+    public static string IRC_RAW_446(IServer server, IUser? user)
     {
         return $":{server} 446 {user} :USERS has been disabled";
     }
 
-    public static string IRC_RAW_462(IServer server, IUser user)
+    public static string IRC_RAW_462(IServer server, IUser? user)
     {
         return $":{server} 462 {user} :You may not reregister";
     }
@@ -175,7 +175,7 @@ public static class IrcRaws
         return $":{server} 481 {user} :Permission Denied - You're not an IRC operator";
     }
 
-    public static string IRC_RAW_501(IServer server, IUser user)
+    public static string IRC_RAW_501(IServer server, IUser? user)
     {
         return $":{server} 501 {user} :Unknown MODE flag";
     }
@@ -185,32 +185,32 @@ public static class IrcRaws
         return $":{server} 908 {user} :No permissions to perform command";
     }
 
-    public static string IRC_RAW_999(IServer server, IUser user, string message)
+    public static string IRC_RAW_999(IServer server, IUser? user, string message)
     {
         return $":{server} 999 {user} :Oops! We've hit a snag: {message}";
     }
 
-    public static string RPL_JOIN(IUser user, IChannel channel)
+    public static string RPL_JOIN(IUser? user, IChannel channel)
     {
         return $":{user.GetAddress()} JOIN :{channel}";
     }
 
-    public static string RPL_PART(IUser user, IChannel channel)
+    public static string RPL_PART(IUser? user, IChannel channel)
     {
         return $":{user.GetAddress()} PART {channel}";
     }
 
-    public static string RPL_PRIVMSG(IUser user, IChannel channel, string message)
+    public static string RPL_PRIVMSG(IUser? user, IChannel channel, string? message)
     {
         return $":{user.GetAddress()} PRIVMSG {channel} :{message}";
     }
 
-    public static string RPL_NOTICE(IUser user, IChannel channel, string message)
+    public static string RPL_NOTICE(IUser? user, IChannel channel, string? message)
     {
         return $":{user.GetAddress()} NOTICE {channel} :{message}";
     }
 
-    public static string RPL_QUIT(IUser user, string message)
+    public static string RPL_QUIT(IUser? user, string? message)
     {
         return $":{user.GetAddress()} QUIT :{message}";
     }
@@ -436,13 +436,13 @@ public class IrcxRaws
     public static string MSN_INPUTFLOOD = ":%h 708 %n :%s";
     public static string MSN_NOTFOUND_USER = ":%h 709 %n :%s";
 
-    public static string IRCX_RPL_PROPLIST_818(IServer server, IUser user, IChatObject chatObject,
-        string propName, string propValue)
+    public static string IRCX_RPL_PROPLIST_818(IServer server, IUser? user, IChatObject chatObject,
+        string? propName, string? propValue)
     {
         return $":{server} 818 {user} {chatObject} {propName} :{propValue}";
     }
 
-    public static string IRCX_RPL_PROPEND_819(IServer server, IUser user, IChatObject chatObject)
+    public static string IRCX_RPL_PROPEND_819(IServer server, IUser? user, IChatObject chatObject)
     {
         return $":{server} 819 {user} {chatObject} :End of properties";
     }
@@ -450,18 +450,20 @@ public class IrcxRaws
     // Apollo
     public static string RPL_JOIN_MSN(IChannelMember? channelMember, IChannel channel, IChannelMember joinMember)
     {
+        var sourceUser = channelMember.GetUser();
+        var joinUser = joinMember.GetUser();
         var listedMode = joinMember.GetListedMode();
         var listedModeString = !string.IsNullOrWhiteSpace(listedMode) ? $",{listedMode}" : "";
         return
-            $":{joinMember.GetUser().GetAddress()} JOIN {channelMember.GetUser().GetProtocol().GetFormat(joinMember.GetUser())}{listedModeString} :{channel}";
+            $":{joinUser.GetAddress()} JOIN {sourceUser.Protocol.GetFormat(joinUser)}{listedModeString} :{channel}";
     }
 
-    public static string RPL_EPRIVMSG(IUser user, IChannel channel, string message)
+    public static string RPL_EPRIVMSG(IUser? user, IChannel? channel, string? message)
     {
         return $":{user.GetAddress()} EPRIVMSG {channel} :{message}";
     }
 
-    public static string RPL_EQUESTION(IUser user, IChannel channel, string nickname, string message)
+    public static string RPL_EQUESTION(IUser? user, IChannel? channel, string? nickname, string? message)
     {
         return $":{user.GetAddress()} EQUESTION {channel} {nickname} {channel} :{message}";
     }

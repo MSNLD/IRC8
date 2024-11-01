@@ -20,8 +20,8 @@ public class GateKeeper : SupportPackage, ISupportPackage
 
     // Credit to JD for discovering the below key through XOR'ing (Discovered 2017/05/04)
     private static readonly string key = "SRFMKSJANDRESKKC";
-    private char[] challenge;
-    private byte[] challenge_bytes;
+    private char[]? _challenge;
+    private byte[]? _challengeBytes;
     protected GateKeeperToken ServerToken;
 
     public GateKeeper()
@@ -71,14 +71,14 @@ public class GateKeeper : SupportPackage, ISupportPackage
                 if (clientVersion == 1 && token.Length > 0x20) return EnumSupportPackageSequence.SSP_FAILED;
 
                 var context = token.Substring(0x10, 0x10).ToByteArray();
-                if (!VerifySecurityContext(new string(challenge), context, ip, ServerVersion))
+                if (!VerifySecurityContext(new string(_challenge), context, ip, ServerVersion))
                 {
                     using (var writer = new StreamWriter("gkp_failed.txt", true))
                     {
                         writer.WriteLine();
                         writer.WriteLine(DateTime.UtcNow);
                         writer.WriteLine("Challenge");
-                        writer.WriteLine(JsonSerializer.Serialize(challenge_bytes.Select(b => (int)b).ToArray()));
+                        writer.WriteLine(JsonSerializer.Serialize(_challengeBytes.Select(b => (int)b).ToArray()));
                         writer.WriteLine("Response");
                         writer.WriteLine(JsonSerializer.Serialize(context.Select(b => (int)b).ToArray()));
                     }
@@ -110,15 +110,15 @@ public class GateKeeper : SupportPackage, ISupportPackage
         return EnumSupportPackageSequence.SSP_FAILED;
     }
 
-    public void SetChallenge(byte[] new_challenge)
+    public new void SetChallenge(byte[] newChallenge)
     {
-        if (challenge_bytes == null || challenge == null)
+        if (_challengeBytes == null || _challenge == null)
         {
-            challenge_bytes = new byte[8];
-            challenge = new char[8];
+            _challengeBytes = new byte[8];
+            _challenge = new char[8];
 
-            Array.Copy(new_challenge, 0, challenge_bytes, 0, 8);
-            Array.Copy(challenge_bytes, 0, challenge, 0, 8);
+            Array.Copy(newChallenge, 0, _challengeBytes, 0, 8);
+            Array.Copy(_challengeBytes, 0, _challenge, 0, 8);
         }
     }
 
@@ -127,9 +127,9 @@ public class GateKeeper : SupportPackage, ISupportPackage
         ServerToken.Sequence = (int)EnumSupportPackageSequence.SSP_SEC;
         ServerToken.Version = ServerVersion;
         SetChallenge(Guid.NewGuid().ToByteArray());
-        var message = new StringBuilder(Marshal.SizeOf(ServerToken) + challenge.Length);
+        var message = new StringBuilder(Marshal.SizeOf(ServerToken) + _challenge.Length);
         message.Append(ServerToken.Serialize<GateKeeperToken>().ToAsciiString());
-        message.Append(challenge);
+        message.Append(_challenge);
         return message.ToString();
     }
 

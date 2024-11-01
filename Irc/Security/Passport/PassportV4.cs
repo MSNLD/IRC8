@@ -143,7 +143,7 @@ public class PassportV4
             return null;
         }
 
-        Rijndael aesAlg = null;
+        Aes aesAlg = null;
         MemoryStream memStream = null;
         CryptoStream cStream = null;
         StreamReader sReader = null;
@@ -151,7 +151,7 @@ public class PassportV4
 
         try
         {
-            aesAlg = new RijndaelManaged();
+            aesAlg = Aes.Create();
             aesAlg.KeySize = 128;
             aesAlg.Key = cryptKey;
             aesAlg.Padding = PaddingMode.PKCS7;

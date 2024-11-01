@@ -11,7 +11,7 @@ public class ChatObject : IChatObject
     {
     };
 
-    public Dictionary<string, string?> Props { get; set; } = new()
+    public Dictionary<string?, string?> Props { get; set; } = new()
     {
         { "NAME", null }
     };
@@ -25,7 +25,7 @@ public class ChatObject : IChatObject
 
     public string ShortId => Id.ToString().Split('-').Last();
 
-    public string Name
+    public string? Name
     {
         get => Props["NAME"] ?? IrcStrings.Wildcard;
         set => Props["NAME"] = value;
@@ -36,7 +36,7 @@ public class ChatObject : IChatObject
     public virtual void Send(string message, EnumChannelAccessLevel accessLevel) => throw new NotImplementedException();
     public bool CanBeModifiedBy(IChatObject source) => throw new NotImplementedException();
     
-    public override string ToString()
+    public override string? ToString()
     {
         return Name;
     }

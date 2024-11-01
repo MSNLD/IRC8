@@ -2,5 +2,5 @@
 
 public interface IExtendedServerObject
 {
-    void ProcessCookie(IUser user, string name, string value);
+    void ProcessCookie(IUser? user, string name, string? value);
 }

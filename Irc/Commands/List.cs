@@ -20,7 +20,7 @@ internal class List : Command, ICommand
         var channels = server.GetChannels().Where(c => c.Modes[IrcStrings.ChannelModeSecret] != 1).ToList();
         if (parameters.Count > 0)
         {
-            var channelNames = parameters.First().Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string?> channelNames = parameters.First().Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
 
             channels = server
                 .GetChannels()
@@ -31,7 +31,7 @@ internal class List : Command, ICommand
         ListChannels(server, user, channels);
     }
 
-    public void ListChannels(IServer server, IUser user, IList<IChannel> channels)
+    public void ListChannels(IServer server, IUser? user, IList<IChannel?> channels)
     {
         user.Send(Raw.IRCX_RPL_MODE_321(server, user));
         foreach (var channel in channels) user.Send(Raw.IRCX_RPL_MODE_322(server, user, channel));

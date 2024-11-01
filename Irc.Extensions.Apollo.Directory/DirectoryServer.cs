@@ -10,14 +10,14 @@ namespace Irc.Extensions.Apollo.Directory;
 
 public class DirectoryServer : Server
 {
-    public string ChatServerIP;
-    public string ChatServerPORT;
+    public string? ChatServerIp;
+    public string? ChatServerPort;
 
     public DirectoryServer(ISocketServer socketServer,
         ISecurityManager securityManager,
         IFloodProtectionManager floodProtectionManager,
         Settings serverSettings,
-        IList<IChannel> channels,
+        IList<IChannel?> channels,
         ICredentialProvider? ntlmCredentialProvider = null)
         : base(socketServer,
             securityManager,

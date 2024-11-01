@@ -27,7 +27,7 @@ public class Nick : Command, ICommand
         HandlePreauthNicknameChange(chatFrame);
     }
 
-    public static bool ValidateNickname(string nickname)
+    public static bool ValidateNickname(string? nickname)
     {
         var mask = IrcStrings.PreAuthNicknameMask;
 
@@ -41,11 +41,11 @@ public class Nick : Command, ICommand
         // UTF8 / Guest / Normal / Admin/Sysop/Guide OK
         if (!ValidateNickname(nickname))
         {
-            chatFrame.User.Send(Raw.IRCX_ERR_ERRONEOUSNICK_432(chatFrame.Server, chatFrame.User, nickname));
+            chatFrame.User?.Send(Raw.IRCX_ERR_ERRONEOUSNICK_432(chatFrame.Server, chatFrame.User, nickname));
             return false;
         }
 
-        chatFrame.User.Nickname = nickname;
+        if (chatFrame.User != null) chatFrame.User.Nickname = nickname;
         return true;
     }
 }

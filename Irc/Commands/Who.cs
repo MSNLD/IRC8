@@ -45,7 +45,7 @@ public class Who : Command, ICommand
             var regExStr = criteria.Replace("*", ".*").Replace("?", ".");
             var regEx = new Regex(regExStr, RegexOptions.IgnoreCase);
 
-            var matchedUsers = new List<IUser>();
+            var matchedUsers = new List<IUser?>();
             foreach (var matchUser in server.GetUsers())
             {
                 var fullAddress = matchUser.GetAddress().GetFullAddress();
@@ -61,7 +61,7 @@ public class Who : Command, ICommand
         user.Send(Raw.IRCX_RPL_ENDOFWHO_315(server, user, criteria));
     }
 
-    public static void SendWho(IServer server, IUser user, IList<IUser> chatUsers, string channelName,
+    public static void SendWho(IServer server, IUser? user, IList<IUser?> chatUsers, string? channelName,
         bool ignoreInvisible)
     {
         foreach (var chatUser in chatUsers)

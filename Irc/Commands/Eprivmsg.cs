@@ -22,7 +22,7 @@ public class Eprivmsg : Command, ICommand
         var targetName = chatFrame.Message.Parameters.First();
         var message = chatFrame.Message.Parameters[1];
 
-        var targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        string?[] targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
         foreach (var target in targets)
         {
             if (!Channel.ValidName(target))
@@ -54,7 +54,7 @@ public class Eprivmsg : Command, ICommand
         }
     }
 
-    public static void SendEprivmsg(IUser user, IChannel channel, string message)
+    public static void SendEprivmsg(IUser? user, IChannel? channel, string? message)
     {
         channel.Send(IrcxRaws.RPL_EPRIVMSG(user, channel, message));
     }

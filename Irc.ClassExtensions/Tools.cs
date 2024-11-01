@@ -23,7 +23,7 @@ public static class Tools
         return Str2Int(nString);
     }
 
-    public static bool StringArrayContains(List<string> StringArray, string Data)
+    public static bool StringArrayContains(List<string?> StringArray, string? Data)
     {
         for (var i = 0; i < StringArray.Count; i++)
             if (StringArray[i] == Data)
@@ -31,9 +31,9 @@ public static class Tools
         return false;
     }
 
-    public static List<string> CSVToArray(string CSV, bool bIgnoreBlanks, int maxFieldLen = 512)
+    public static List<string?> CSVToArray(string CSV, bool bIgnoreBlanks, int maxFieldLen = 512)
     {
-        var Values = new List<string>();
+        var Values = new List<string?>();
         var Value = new StringBuilder(maxFieldLen);
         for (var i = 0; i < CSV.Length; i++)
             if (CSV[i] != 44)
@@ -60,7 +60,7 @@ public static class Tools
         return Values;
     }
 
-    public static List<string> CSVToArray(string CSV)
+    public static List<string?> CSVToArray(string CSV)
     {
         return CSVToArray(CSV, false);
     }

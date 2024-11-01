@@ -10,7 +10,7 @@ public class Voice : ModeRule, IModeRule
     {
     }
 
-    public EnumIrcError Evaluate(IChatObject source, IChatObject target, bool flag, string parameter)
+    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
     {
         var channel = (IChannel)target;
         if (!channel.CanBeModifiedBy(source)) return EnumIrcError.ERR_NOTONCHANNEL;
@@ -20,13 +20,19 @@ public class Voice : ModeRule, IModeRule
 
         var sourceMember = channel.GetMember((IUser)source);
 
-        var result = sourceMember.CanModify(targetMember, EnumChannelAccessLevel.ChatVoice, false);
-        if (result == EnumIrcError.OK)
+        if (sourceMember != null)
         {
-            targetMember.SetVoice(flag);
-            DispatchModeChange(source, target, flag, targetMember.GetUser().ToString());
+            var result = sourceMember.CanModify(targetMember, EnumChannelAccessLevel.ChatVoice, false);
+            if (result == EnumIrcError.OK)
+            {
+                targetMember.SetVoice(flag);
+                DispatchModeChange(source, target, flag, targetMember.GetUser().ToString());
+            }
+
+            return result;
         }
 
-        return result;
+        // TODO: Is this right?
+        return EnumIrcError.ERR_NOTONCHANNEL;
     }
 }
