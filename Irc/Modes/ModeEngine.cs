@@ -1,8 +1,5 @@
 ﻿using Irc.Interfaces;
 using Irc.Objects;
-using Irc.Objects.Channel;
-using Irc.Objects.Server;
-using Irc.Objects.User;
 using Irc.Resources;
 
 namespace Irc.Modes;
@@ -14,7 +11,7 @@ public class ModeEngine
 
     public ModeEngine(IModeRules modeRules)
     {
-        this._modeRules = modeRules;
+        _modeRules = modeRules;
     }
 
     public void AddModeRule(char modeChar, ModeRule modeRule)
@@ -22,7 +19,7 @@ public class ModeEngine
         modeRules[modeChar] = modeRule;
     }
 
-    public static void Breakdown(IUser? source, ChatObject target, string? modeString,
+    public static void Breakdown(Objects.User? source, ChatObject target, string? modeString,
         Queue<string> modeParameters)
     {
         var modeOperations = source.GetModeOperations();
@@ -41,7 +38,7 @@ public class ModeEngine
                 {
                     var modeRules = ModeRules.GetRules(target);
                     var modeRule = modeRules.ContainsKey(c) ? modeRules[c] : null;
-                    
+
                     if (modeRule == null)
                     {
                         // Unknown mode char
@@ -49,7 +46,7 @@ public class ModeEngine
                         source.Send(Raw.IRCX_ERR_UNKNOWNMODE_472(source.Server, source, c));
                         continue;
                     }
-                    
+
                     var modeCollection = target.Modes;
                     var exists = modeCollection.ContainsKey(c);
                     var modeValue = exists ? modeCollection[c] : -1;

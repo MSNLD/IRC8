@@ -1,6 +1,7 @@
 ﻿using Irc.Commands;
 using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Objects;
 
 namespace Irc;
 
@@ -66,7 +67,7 @@ public static class Register
         }
     }
 
-    public static bool ConnectionIsPermitted(IServer server, IUser? user)
+    public static bool ConnectionIsPermitted(Server server, User? user)
     {
         // TODO: Add check for anonymous connection count
         if (!server.AnonymousConnections && user.IsAnon())
@@ -81,7 +82,7 @@ public static class Register
         return true;
     }
 
-    public static bool BasicAuthentication(IServer server, IUser user)
+    public static bool BasicAuthentication(Server server, User user)
     {
         // TODO: Do basic auth
         if (!server.BasicAuthentication) return false;

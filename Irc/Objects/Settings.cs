@@ -1,15 +1,13 @@
-using System.Transactions;
-
-namespace Irc.Objects.Server;
+namespace Irc.Objects;
 
 public class Settings
 {
+    public DateTime Creation = DateTime.Now;
     public string Id { get; set; } = "DefaultServerId";
     public string? Name { get; set; } = "DefaultServerName";
     public string? Title { get; set; } = "Default Chat Service";
-    public DateTime Creation = DateTime.Now;
-    public string[] Motd { get; set; } = new string[] { "*** Welcome to the Server ***" };
-    public string[] Packages { get; set; } = new string[] { "ANON", "GateKeeper", "NTLM" };
+    public string[] Motd { get; set; } = { "*** Welcome to the Server ***" };
+    public string[] Packages { get; set; } = { "ANON", "GateKeeper", "NTLM" };
     public string PassportKey { get; set; } = "mysecret";
     public string PassportAppId { get; set; } = "myappid";
     public string PassportAppSecret { get; set; } = "mysecret";

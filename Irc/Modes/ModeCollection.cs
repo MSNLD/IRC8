@@ -1,6 +1,6 @@
 ﻿using Irc.Interfaces;
 
-namespace Irc.Objects.Collections;
+namespace Irc.Modes;
 
 public class ModeCollection
 {

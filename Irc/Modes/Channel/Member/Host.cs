@@ -11,14 +11,14 @@ public class Host : ModeRuleChannel, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
+    public new EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
         // TODO: Write this better
         if (target == source && flag)
         {
             if (string.IsNullOrWhiteSpace(parameter)) return EnumIrcError.OK;
 
-            var user = (IUser)source;
+            var user = (Objects.User)source;
             var channel = user.GetChannels().LastOrDefault().Key;
             var member = user.GetChannels().LastOrDefault().Value;
             if (channel.Props["OWNERKEY"] == parameter)
@@ -30,12 +30,14 @@ public class Host : ModeRuleChannel, IModeRule
                 if (member.IsOwner())
                 {
                     member.SetOwner(false);
-                    ModeRule.DispatchModeChange((ChatObject)channel, IrcStrings.MemberModeOwner, (ChatObject)source, (ChatObject)target, false, target.ToString());
+                    DispatchModeChange((ChatObject)channel, IrcStrings.MemberModeOwner, (ChatObject)source,
+                        (ChatObject)target, false, target.ToString());
                     //channel.Modes.GetMode('q').DispatchModeChange(source, channel, false, target.ToString());
                 }
 
                 member.SetHost(true);
-                ModeRule.DispatchModeChange((ChatObject)channel, IrcStrings.MemberModeHost, (ChatObject)source, (ChatObject)target, true, target.ToString());
+                DispatchModeChange((ChatObject)channel, IrcStrings.MemberModeHost, (ChatObject)source,
+                    (ChatObject)target, true, target.ToString());
                 // channel.Modes.GetMode('o').DispatchModeChange(source, channel, true, target.ToString());
             }
 

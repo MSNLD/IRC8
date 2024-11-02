@@ -1,10 +1,9 @@
 ﻿using Irc.Interfaces;
 using Irc.Modes.Channel;
 using Irc.Modes.Channel.Member;
-using Irc.Objects.Collections;
 using Irc.Resources;
 
-namespace Irc.Objects.Channel;
+namespace Irc.Objects;
 
 public static class ChannelModeRules
 {
@@ -37,7 +36,7 @@ k - set a channel key (password).
         { IrcStrings.ChannelModeUserLimit, new UserLimit() },
         { IrcStrings.ChannelModeBan, new BanList() },
         { IrcStrings.ChannelModeKey, new Key() },
-        
+
         // IRCX
         { IrcStrings.ChannelModeAuthOnly, new AuthOnly() },
         { IrcStrings.ChannelModeProfanity, new NoFormat() },
@@ -49,11 +48,11 @@ k - set a channel key (password).
         { IrcStrings.ChannelModeClone, new Clone() },
         { IrcStrings.ChannelModeService, new Service() },
         { IrcStrings.MemberModeOwner, new Owner() },
-        
+
         // Apollo
         { IrcStrings.ChannelModeNoGuestWhisper, new NoGuestWhisper() },
         { IrcStrings.ChannelModeOnStage, new OnStage() },
-        { IrcStrings.ChannelModeSubscriber, new Subscriber() },
+        { IrcStrings.ChannelModeSubscriber, new Subscriber() }
     };
 
     // public override string ToString()

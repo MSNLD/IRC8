@@ -1,13 +1,13 @@
 ﻿using Irc.Commands;
 using Irc.Enumerations;
 using Irc.Interfaces;
-using Version = System.Version;
+using Irc.Objects;
+using Version = Irc.Commands.Version;
 
 namespace Irc.Protocols;
 
 public class Protocol : IProtocol
 {
-    public EnumProtocolType Ircvers { get; set; } = EnumProtocolType.IRC;
     protected Dictionary<string?, ICommand> Commands = new(StringComparer.InvariantCultureIgnoreCase);
 
     public Protocol()
@@ -28,7 +28,7 @@ public class Protocol : IProtocol
         AddCommand(new Kill());
         AddCommand(new Names());
         AddCommand(new Userhost());
-        AddCommand(new Commands.Version());
+        AddCommand(new Version());
         AddCommand(new Info());
         AddCommand(new Pong());
         AddCommand(new Pass());
@@ -61,13 +61,15 @@ public class Protocol : IProtocol
         AddCommand(new Ircx());
         AddCommand(new Prop());
         AddCommand(new Listx());
-        
+
         // IRC3
         AddCommand(new Goto());
         AddCommand(new Esubmit());
         AddCommand(new Eprivmsg());
         AddCommand(new Equestion());
     }
+
+    public EnumProtocolType Ircvers { get; set; } = EnumProtocolType.IRC;
 
     public ICommand? GetCommand(string? name)
     {
@@ -96,7 +98,22 @@ public class Protocol : IProtocol
         Commands.Clear();
     }
 
-    public static string GetFormat(EnumProtocolType ircvers, IUser user)
+    public string GetFormat(User user)
+    {
+        return GetFormat(Ircvers, user);
+    }
+
+    public string FormattedUser(Member member)
+    {
+        var modeChar = string.Empty;
+        if (!member.IsNormal()) modeChar += member.IsOwner() ? '.' : member.IsHost() ? '@' : '+';
+
+        var profile = GetFormat(Ircvers, member.GetUser());
+
+        return $"{profile}{modeChar}{member.GetUser().GetAddress().Nickname}";
+    }
+
+    public static string GetFormat(EnumProtocolType ircvers, User user)
     {
         switch ((int)ircvers)
         {
@@ -110,20 +127,6 @@ public class Protocol : IProtocol
             default:
                 return "";
         }
-    }
-
-    public string GetFormat(IUser user)
-    {
-        return GetFormat(Ircvers, user);
-    }
-    public string FormattedUser(IChannelMember member)
-    {
-        var modeChar = string.Empty;
-        if (!member.IsNormal()) modeChar += member.IsOwner() ? '.' : member.IsHost() ? '@' : '+';
-
-        var profile = GetFormat(Ircvers, member.GetUser());
-        
-        return $"{profile}{modeChar}{member.GetUser().GetAddress().Nickname}";
     }
 
     public void UpdateCommand(ICommand command, string? name = null)

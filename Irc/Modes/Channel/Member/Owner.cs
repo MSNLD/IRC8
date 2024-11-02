@@ -1,5 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel.Member;
@@ -21,15 +22,15 @@ public class Owner : ModeRule, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
+    public new EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
-        var channel = (IChannel)target;
+        var channel = (Objects.Channel)target;
         if (!channel.CanBeModifiedBy(source)) return EnumIrcError.ERR_NOTONCHANNEL;
 
         var targetMember = channel.GetMemberByNickname(parameter);
         if (targetMember == null) return EnumIrcError.ERR_NOSUCHNICK;
 
-        var sourceMember = channel.GetMember((IUser)source);
+        var sourceMember = channel.GetMember((Objects.User)source);
 
         var result = sourceMember.CanModify(targetMember, EnumChannelAccessLevel.ChatOwner);
         if (result == EnumIrcError.OK) ExecuteOwner(source, target, flag, targetMember);
@@ -37,8 +38,8 @@ public class Owner : ModeRule, IModeRule
         return result;
     }
 
-    public static void ExecuteOwner(IChatObject sourceMember, IChatObject? channel, bool flag,
-        IChannelMember targetMember)
+    public static void ExecuteOwner(ChatObject sourceMember, ChatObject? channel, bool flag,
+        Objects.Member targetMember)
     {
         if (flag && targetMember.IsHost())
         {

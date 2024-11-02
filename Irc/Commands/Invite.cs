@@ -1,6 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.Channel;
+using Irc.Objects;
 
 namespace Irc.Commands;
 
@@ -35,7 +35,7 @@ internal class Invite : Command, ICommand
     }
 
 
-    public static void InviteNickToCurrentChannel(IChatFrame chatFrame, IUser targetUser)
+    public static void InviteNickToCurrentChannel(IChatFrame chatFrame, User targetUser)
     {
         var targetChannelKvp = chatFrame.User.GetChannels().FirstOrDefault();
         var targetChannel = targetChannelKvp.Key;
@@ -50,7 +50,7 @@ internal class Invite : Command, ICommand
         ProcessInvite(chatFrame, member, targetChannel, targetUser);
     }
 
-    public static void InviteNickToSpecificChannel(IChatFrame chatFrame, IUser targetUser)
+    public static void InviteNickToSpecificChannel(IChatFrame chatFrame, User targetUser)
     {
         var targetChannelName = chatFrame.Message.Parameters[1];
         var targetChannel = chatFrame.Server.GetChannelByName(targetChannelName);
@@ -68,8 +68,8 @@ internal class Invite : Command, ICommand
         ProcessInvite(chatFrame, member, targetChannel, targetUser);
     }
 
-    public static void ProcessInvite(IChatFrame chatFrame, IChannelMember member, IChannel? targetChannel,
-        IUser targetUser)
+    public static void ProcessInvite(IChatFrame chatFrame, Member member, Channel? targetChannel,
+        User targetUser)
     {
         if (((Channel)targetChannel).InviteOnly && member.GetLevel() < EnumChannelAccessLevel.ChatHost)
         {

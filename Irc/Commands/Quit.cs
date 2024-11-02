@@ -1,5 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
@@ -26,9 +27,9 @@ internal class Quit : Command, ICommand
         QuitChannels(user, quitMessage);
     }
 
-    public static void QuitChannels(IUser? user, string? message)
+    public static void QuitChannels(User? user, string? message)
     {
-        var users = new HashSet<IUser?>();
+        var users = new HashSet<User?>();
 
         var channels = user.GetChannels().Keys;
 

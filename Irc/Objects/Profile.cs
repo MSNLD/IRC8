@@ -1,6 +1,6 @@
 ﻿using Irc.Enumerations;
 
-namespace Irc.Objects.User;
+namespace Irc.Objects;
 /*
 // TODO: MSNPROFILE
 (Code) - (MSNPROFILE) - (Description)

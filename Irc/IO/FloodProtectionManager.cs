@@ -1,6 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.User;
+using Irc.Objects;
 
 namespace Irc.IO;
 /*

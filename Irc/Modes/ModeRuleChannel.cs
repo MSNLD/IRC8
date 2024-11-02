@@ -15,21 +15,18 @@ public class ModeRuleChannel : ModeRule, IModeRule
         this.accessLevel = accessLevel;
     }
 
-    public EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
+    public EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
-        var user = (IUser)source;
-        var channel = (IChannel)target;
+        var user = (Objects.User)source;
+        var channel = (Objects.Channel)target;
         var member = channel.GetMember(user);
 
         if (member == null && !user.IsAdministrator()) return EnumIrcError.ERR_NOTONCHANNEL;
 
         if (member.GetLevel() < accessLevel) return EnumIrcError.ERR_NOCHANOP;
 
-        if (PostRule != null)
-        {
-            PostRule((ChatObject)target, flag, parameter);
-        }
-        
+        if (PostRule != null) PostRule((ChatObject)target, flag, parameter);
+
         return EnumIrcError.OK;
     }
 
@@ -42,14 +39,14 @@ public class ModeRuleChannel : ModeRule, IModeRule
         return result;
     }
 
-    public EnumIrcError EvaluateAndSet(IChatObject source, IChatObject? target, bool flag, string? parameter)
+    public EnumIrcError EvaluateAndSet(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
         var result = Evaluate(source, target, flag, parameter);
-        if (result == EnumIrcError.OK) SetChannelMode(source, (IChannel)target, flag, parameter);
+        if (result == EnumIrcError.OK) SetChannelMode(source, (Objects.Channel)target, flag, parameter);
         return result;
     }
 
-    public void SetChannelMode(IChatObject source, IChannel target, bool flag, string? parameter)
+    public void SetChannelMode(ChatObject source, Objects.Channel target, bool flag, string? parameter)
     {
         target.Modes[ModeChar] = flag ? 1 : 0;
         DispatchModeChange(source, (ChatObject)target, flag, parameter);
@@ -57,8 +54,8 @@ public class ModeRuleChannel : ModeRule, IModeRule
 
     public interface IModeRuleCallback
     {
-        IChatObject source { get; set; }
-        IChatObject? target { get; set; }
+        ChatObject source { get; set; }
+        ChatObject? target { get; set; }
         bool flag { get; set; }
         string? parameter { get; set; }
     }

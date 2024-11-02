@@ -49,7 +49,7 @@ public class GateKeeper : SupportPackage, ISupportPackage
                     ServerSequence = EnumSupportPackageSequence.SSP_EXT;
                     ServerVersion = clientToken.Version;
                     return EnumSupportPackageSequence.SSP_OK;
-                } 
+                }
             }
 
         return EnumSupportPackageSequence.SSP_FAILED;

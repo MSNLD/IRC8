@@ -53,7 +53,7 @@ internal class Kick : Command, ICommand
         }
     }
 
-    public static EnumIrcError ProcessKick(IChannel channel, IChannelMember? source, IChannelMember target,
+    public static EnumIrcError ProcessKick(Channel channel, Member? source, Member target,
         string? reason)
     {
         var result = channel.CanModifyMember(source, target, EnumChannelAccessLevel.ChatHost);

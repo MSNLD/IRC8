@@ -1,10 +1,9 @@
 ﻿using Irc.Interfaces;
 using Irc.Modes.Channel.Member;
 using Irc.Modes.User;
-using Irc.Objects.Collections;
 using Irc.Resources;
 
-namespace Irc.Objects.User;
+namespace Irc.Objects;
 
 public static class UserModeRules
 {
@@ -18,6 +17,6 @@ public static class UserModeRules
         { IrcStrings.UserModeAdmin, new Admin() },
         { IrcStrings.UserModeIrcx, new Isircx() },
         { IrcStrings.UserModeGag, new Gag() },
-        { IrcStrings.UserModeHost, new Host() },
+        { IrcStrings.UserModeHost, new Host() }
     };
 }

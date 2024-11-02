@@ -1,8 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.Channel;
-using Irc.Resources;
+using Irc.Objects;
 
 namespace Irc.Commands;
 
@@ -26,7 +25,7 @@ public class Who : Command, ICommand
 
         if (Channel.ValidName(criteria))
         {
-            var channel = (Channel)server.GetChannelByName(criteria);
+            var channel = server.GetChannelByName(criteria);
             if (channel == null)
             {
                 user.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(server, user, criteria));
@@ -45,7 +44,7 @@ public class Who : Command, ICommand
             var regExStr = criteria.Replace("*", ".*").Replace("?", ".");
             var regEx = new Regex(regExStr, RegexOptions.IgnoreCase);
 
-            var matchedUsers = new List<IUser?>();
+            var matchedUsers = new List<User?>();
             foreach (var matchUser in server.GetUsers())
             {
                 var fullAddress = matchUser.GetAddress().GetFullAddress();
@@ -61,7 +60,7 @@ public class Who : Command, ICommand
         user.Send(Raw.IRCX_RPL_ENDOFWHO_315(server, user, criteria));
     }
 
-    public static void SendWho(IServer server, IUser? user, IList<IUser?> chatUsers, string? channelName,
+    public static void SendWho(Server server, User? user, IList<User?> chatUsers, string? channelName,
         bool ignoreInvisible)
     {
         foreach (var chatUser in chatUsers)

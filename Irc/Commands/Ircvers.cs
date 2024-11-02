@@ -32,7 +32,7 @@ internal class Ircvers : Command, ICommand
                 {
                     chatFrame.User.Protocol.Ircvers = enumProtocolType;
                     chatFrame.User.Client = chatFrame.Message.Parameters[1];
-                    
+
                     var isircx = enumProtocolType > EnumProtocolType.IRC;
                     chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
                         chatFrame.Server.MaxInputBytes, IrcStrings.IRCXOptions));

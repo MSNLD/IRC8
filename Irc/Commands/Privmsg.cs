@@ -1,7 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.Channel;
-using Irc.Objects.User;
+using Irc.Objects;
 
 namespace Irc.Commands;
 
@@ -29,11 +28,11 @@ public class Privmsg : Command, ICommand
         string?[] targets = targetName.Split(',', StringSplitOptions.RemoveEmptyEntries);
         foreach (var target in targets)
         {
-            IChatObject chatObject = null;
+            ChatObject chatObject = null;
             if (Channel.ValidName(target))
                 chatObject = chatFrame.Server.GetChannelByName(target);
             else
-                chatObject = (IChatObject)chatFrame.Server.GetUserByNickname(target);
+                chatObject = (ChatObject)chatFrame.Server.GetUserByNickname(target);
 
             if (chatObject == null)
             {
@@ -44,10 +43,10 @@ public class Privmsg : Command, ICommand
 
             if (chatObject is Channel)
             {
-                var channel = (IChannel)chatObject;
+                var channel = (Channel)chatObject;
                 var channelMember = channel.GetMember(chatFrame.User);
                 var isOnChannel = channelMember != null;
-                var noExtern = ((Channel)channel).NoExtern;
+                var noExtern = channel.NoExtern;
                 var moderated = ((Channel)channel).Moderated;
 
                 if (

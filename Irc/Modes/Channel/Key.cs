@@ -11,10 +11,10 @@ internal class Key : ModeRuleChannel, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
+    public new EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
-        var channel = (IChannel)target;
-        var member = channel.GetMember((IUser)source);
+        var channel = (Objects.Channel)target;
+        var member = channel.GetMember((Objects.User)source);
         if (member.GetLevel() >= EnumChannelAccessLevel.ChatHost)
         {
             // Unset key
@@ -28,7 +28,8 @@ internal class Key : ModeRuleChannel, IModeRule
             // Set key
             if (flag)
             {
-                if (!string.IsNullOrWhiteSpace(channel.Props[IrcStrings.ChannelPropMemberkey])) return EnumIrcError.ERR_KEYSET;
+                if (!string.IsNullOrWhiteSpace(channel.Props[IrcStrings.ChannelPropMemberkey]))
+                    return EnumIrcError.ERR_KEYSET;
 
                 channel.Props[IrcStrings.ChannelPropMemberkey] = flag ? parameter : null;
                 DispatchModeChange(source, (ChatObject)target, flag, parameter);

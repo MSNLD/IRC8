@@ -1,6 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.User;
+using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
@@ -33,7 +33,7 @@ public class Whois : Command, ICommand
         user.Send(IrcRaws.IRC_RAW_318(server, user, nicknameString));
     }
 
-    public static void ProcessWhoisReply(IServer server, IUser? user, string? nickname)
+    public static void ProcessWhoisReply(Server server, User? user, string? nickname)
     {
         var targetUser = server.GetUserByNickname(nickname);
 

@@ -1,6 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.Channel;
+using Irc.Objects;
 
 namespace Irc.Commands;
 
@@ -28,7 +28,7 @@ public class Join : Command, ICommand
         JoinChannels(server, user, channelNames, key);
     }
 
-    public static List<string?> ValidateChannels(IServer server, IUser? user, string? channels)
+    public static List<string?> ValidateChannels(Server server, User? user, string? channels)
     {
         List<string?> channelNames = channels.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
 
@@ -49,7 +49,7 @@ public class Join : Command, ICommand
         return channelNames;
     }
 
-    public static void JoinChannels(IServer server, IUser? user, List<string?> channelNames, string? key)
+    public static void JoinChannels(Server server, User? user, List<string?> channelNames, string? key)
     {
         // TODO: Optimize the below code
         foreach (var channelName in channelNames)
@@ -82,7 +82,7 @@ public class Join : Command, ICommand
         }
     }
 
-    public static void SendJoinError(IServer server, IChannel channel, IUser? user, EnumChannelAccessResult result)
+    public static void SendJoinError(Server server, Channel channel, User? user, EnumChannelAccessResult result)
     {
         switch (result)
         {

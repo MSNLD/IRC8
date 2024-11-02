@@ -5,11 +5,9 @@ using Irc.Resources;
 
 namespace Irc.Objects;
 
-public class ChatObject : IChatObject
+public abstract class ChatObject
 {
-    public Dictionary<char, int> Modes { get; set; } = new()
-    {
-    };
+    public Dictionary<char, int> Modes { get; set; } = new();
 
     public Dictionary<string?, string?> Props { get; set; } = new()
     {
@@ -19,7 +17,7 @@ public class ChatObject : IChatObject
     public IAccessList AccessList { get; set; } = new AccessList();
 
 
-    public virtual EnumUserAccessLevel Level => EnumUserAccessLevel.None;
+    public EnumUserAccessLevel Level => EnumUserAccessLevel.None;
 
     public Guid Id { get; } = Guid.NewGuid();
 
@@ -31,11 +29,14 @@ public class ChatObject : IChatObject
         set => Props["NAME"] = value;
     }
 
-    public virtual void Send(string message) => throw new NotImplementedException();
-    public virtual void Send(string message, ChatObject except = null) => throw new NotImplementedException();
-    public virtual void Send(string message, EnumChannelAccessLevel accessLevel) => throw new NotImplementedException();
-    public bool CanBeModifiedBy(IChatObject source) => throw new NotImplementedException();
-    
+    public abstract void Send(string message);
+
+    public abstract void Send(string message, ChatObject except = null);
+
+    public abstract void Send(string message, EnumChannelAccessLevel accessLevel);
+
+    public abstract bool CanBeModifiedBy(ChatObject source);
+
     public override string? ToString()
     {
         return Name;

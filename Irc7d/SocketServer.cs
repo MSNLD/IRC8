@@ -99,18 +99,12 @@ public class SocketServer : Socket, ISocketServer
     {
         IConnection? connection = null;
 
-        if (Sockets.TryGetValue(bigIP, out var bag))
-        {
-            bag.TryTake(out connection);
-        }
+        if (Sockets.TryGetValue(bigIP, out var bag)) bag.TryTake(out connection);
 
         if (connection == null)
             Log.Info(
                 $"{connection?.GetIpAndPort()} has disconnected but failed to TryTake / total: {Sockets.Count} ");
 
-        if (connection != null)
-        {
-            OnClientDisconnected?.Invoke(this, connection);
-        }
+        if (connection != null) OnClientDisconnected?.Invoke(this, connection);
     }
 }

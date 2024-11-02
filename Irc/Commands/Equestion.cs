@@ -1,6 +1,6 @@
 using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.Channel;
+using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
@@ -32,8 +32,8 @@ public class Equestion : Command, ICommand
                 return;
             }
 
-            var chatObject = (IChatObject)chatFrame.Server.GetChannelByName(target);
-            var channel = (IChannel)chatObject;
+            var chatObject = (ChatObject)chatFrame.Server.GetChannelByName(target);
+            var channel = (Channel)chatObject;
             var channelMember = channel.GetMember(chatFrame.User);
             var isOnChannel = channelMember != null;
 
@@ -44,7 +44,7 @@ public class Equestion : Command, ICommand
                 return;
             }
 
-            if (!((Channel)channel).OnStage)
+            if (!channel.OnStage)
             {
                 chatFrame.User.Send(
                     Raw.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));
@@ -55,7 +55,7 @@ public class Equestion : Command, ICommand
         }
     }
 
-    public static void SubmitQuestion(IUser? user, IChannel? channel, string? nickname, string? message)
+    public static void SubmitQuestion(User? user, Channel? channel, string? nickname, string? message)
     {
         channel.Send(IrcxRaws.RPL_EQUESTION(user, channel, nickname, message));
     }

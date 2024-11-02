@@ -2,9 +2,6 @@
 using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
-using Irc.Objects.Channel;
-using Irc.Objects.Server;
-using Irc.Objects.User;
 
 namespace Irc.Commands;
 
@@ -85,7 +82,7 @@ internal class Access : Command, ICommand
 
         if (targetObject is Channel)
         {
-            var channel = (IChannel)targetObject;
+            var channel = (Channel)targetObject;
             var member = channel.GetMember(chatFrame.User);
 
             if (member == null || (!member.IsHost() && !member.IsOwner())) return false;

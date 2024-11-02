@@ -1,7 +1,7 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
-using Irc.Objects.Channel;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -55,16 +55,16 @@ internal class Topic : Command, ICommand
         }
     }
 
-    public static EnumIrcError ProcessTopic(IChatFrame chatFrame, IChannel channel, IUser? source, string? topic)
+    public static EnumIrcError ProcessTopic(IChatFrame chatFrame, Channel channel, User? source, string? topic)
     {
         if (!channel.CanBeModifiedBy((ChatObject)source)) return EnumIrcError.ERR_NOTONCHANNEL;
 
         var sourceMember = channel.GetMember(source);
 
-        if (sourceMember.GetLevel() < EnumChannelAccessLevel.ChatHost && ((Channel)channel).TopicOp)
+        if (sourceMember.GetLevel() < EnumChannelAccessLevel.ChatHost && channel.TopicOp)
             return EnumIrcError.ERR_NOCHANOP;
 
-        channel.Props[Resources.IrcStrings.ChannelPropTopic] = topic;
+        channel.Props[IrcStrings.ChannelPropTopic] = topic;
         return EnumIrcError.OK;
     }
 }

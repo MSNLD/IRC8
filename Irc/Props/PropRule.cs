@@ -33,18 +33,18 @@ public class PropRule : IPropRule
     public EnumChannelAccessLevel WriteAccessLevel { get; set; }
     public bool ReadOnly { get; set; }
 
-    public virtual EnumIrcError EvaluateSet(IChatObject source, IChatObject target, string? propValue)
+    public virtual EnumIrcError EvaluateSet(ChatObject source, ChatObject target, string? propValue)
     {
-        if (target is IChannel)
+        if (target is Channel)
         {
-            var channel = (IChannel)target;
-            var member = channel.GetMember((IUser)source);
+            var channel = (Channel)target;
+            var member = channel.GetMember((User)source);
 
             if (member == null) return EnumIrcError.ERR_NOPERMS;
 
             if (member.GetLevel() < WriteAccessLevel) return EnumIrcError.ERR_NOPERMS;
         }
-        else if (WriteAccessLevel == EnumChannelAccessLevel.None || (target is IUser && source != target))
+        else if (WriteAccessLevel == EnumChannelAccessLevel.None || (target is User && source != target))
         {
             return EnumIrcError.ERR_NOPERMS;
         }
@@ -54,23 +54,23 @@ public class PropRule : IPropRule
         var match = regEx.Match(propValue);
         if (!match.Success || match.Value.Length != propValue.Length) return EnumIrcError.ERR_BADVALUE;
 
-        if (PostRule != null) PostRule((ChatObject)target, propValue);
+        if (PostRule != null) PostRule(target, propValue);
 
         return EnumIrcError.OK;
     }
 
-    public virtual EnumIrcError EvaluateGet(IChatObject source, IChatObject target)
+    public virtual EnumIrcError EvaluateGet(ChatObject source, ChatObject target)
     {
-        if (target is IChannel)
+        if (target is Channel)
         {
-            var channel = (IChannel)target;
-            var member = channel.GetMember((IUser)source);
+            var channel = (Channel)target;
+            var member = channel.GetMember((User)source);
 
             if (member == null) return EnumIrcError.ERR_NOPERMS;
 
             if (member.GetLevel() < ReadAccessLevel) return EnumIrcError.ERR_NOPERMS;
         }
-        else if (ReadAccessLevel == EnumChannelAccessLevel.None || (target is IUser && source != target))
+        else if (ReadAccessLevel == EnumChannelAccessLevel.None || (target is User && source != target))
         {
             return EnumIrcError.ERR_NOPERMS;
         }

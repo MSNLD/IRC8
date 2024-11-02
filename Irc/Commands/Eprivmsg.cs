@@ -1,6 +1,6 @@
 using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.Channel;
+using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
@@ -31,7 +31,7 @@ public class Eprivmsg : Command, ICommand
                 return;
             }
 
-            var chatObject = (IChatObject)chatFrame.Server.GetChannelByName(target);
+            var chatObject = (ChatObject)chatFrame.Server.GetChannelByName(target);
             var channel = (Channel)chatObject;
             var channelMember = channel.GetMember(chatFrame.User);
             var isOnChannel = channelMember != null;
@@ -54,7 +54,7 @@ public class Eprivmsg : Command, ICommand
         }
     }
 
-    public static void SendEprivmsg(IUser? user, IChannel? channel, string? message)
+    public static void SendEprivmsg(User? user, Channel? channel, string? message)
     {
         channel.Send(IrcxRaws.RPL_EPRIVMSG(user, channel, message));
     }

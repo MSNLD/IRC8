@@ -1,6 +1,5 @@
 using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.User;
 using Irc.Resources;
 using NLog;
 
@@ -79,9 +78,7 @@ public class WebIrc : Command, ICommand
 
             foreach (var option in options)
                 if (option.Key.ToLowerInvariant() == IrcStrings.webirc_option_secure)
-                {
                     chatFrame.User.Secure = true;
-                }
         }
     }
 

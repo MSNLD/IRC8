@@ -1,5 +1,5 @@
 ﻿using Irc.Enumerations;
-using Irc.Objects.User;
+using Irc.Objects;
 using NUnit.Framework;
 
 namespace Irc.Extensions.Apollo.Tests;

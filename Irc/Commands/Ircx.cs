@@ -18,10 +18,7 @@ internal class Ircx : Command, ICommand
     public new void Execute(IChatFrame chatFrame)
     {
         var protocol = chatFrame.User.Protocol.Ircvers;
-        if (protocol < EnumProtocolType.IRCX)
-        {
-            protocol = EnumProtocolType.IRCX;
-        }
+        if (protocol < EnumProtocolType.IRCX) protocol = EnumProtocolType.IRCX;
 
         var isircx = protocol > EnumProtocolType.IRC;
         chatFrame.User.Ircx = true;

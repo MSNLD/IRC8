@@ -1,7 +1,8 @@
 ﻿using Irc.Enumerations;
 using Irc.Helpers;
 using Irc.Interfaces;
-using Irc.Objects.Channel;
+using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -28,7 +29,7 @@ internal class Listx : Command, ICommand
 
         if (firstParam != null && Channel.ValidName(firstParam))
         {
-            channels = new List<IChannel?>();
+            channels = new List<Channel?>();
             var channelNames = Tools.CSVToArray(firstParam);
             foreach (var channelName in channelNames)
                 if (Channel.ValidName(channelName))
@@ -48,14 +49,14 @@ internal class Listx : Command, ICommand
         ListChannels(server, user, channels);
     }
 
-    public static void ListChannels(IServer server, IUser? user, IList<IChannel?> channels)
+    public static void ListChannels(Server server, User? user, IList<Channel?> channels)
     {
         // Case "811"      ' Start of LISTX
         user.Send(Raw.IRCX_RPL_LISTXSTART_811(server, user));
         foreach (var channel in channels)
             if (user.IsOn(channel) ||
                 user.GetLevel() >= EnumUserAccessLevel.Guide ||
-                (!((Channel)channel).Secret && !((Channel)channel).Private))
+                (!((Channel)channel).Secret && !channel.Private))
                 //  :TK2CHATCHATA04 812 'Admin_Koach %#Roomname +tnfSl 0 50 :%Chatroom\c\bFor\bBL\bGames\c\bFun\band\bEvents.
                 user.Send(Raw.IRCX_RPL_LISTXLIST_812(
                     server,
@@ -64,7 +65,7 @@ internal class Listx : Command, ICommand
                     string.Join("", channel.Modes.Keys),
                     channel.GetMembers().Count,
                     ((Channel)channel).UserLimit,
-                    channel.Props[Resources.IrcStrings.ChannelPropTopic] ?? string.Empty
+                    channel.Props[IrcStrings.ChannelPropTopic] ?? string.Empty
                 ));
         user.Send(Raw.IRCX_RPL_LISTXEND_817(server, user));
     }

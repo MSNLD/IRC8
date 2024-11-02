@@ -1,5 +1,5 @@
 ﻿using Irc.Enumerations;
-using Irc.Objects.Channel;
+using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Props;
@@ -89,12 +89,12 @@ internal class ChannelPropCollection : PropCollection
             if (!string.IsNullOrWhiteSpace(propValue))
             {
                 ((Channel)chatObject).Key = true;
-                ((Channel)chatObject).Props[Resources.IrcStrings.ChannelPropMemberkey] = propValue;
+                ((Channel)chatObject).Props[IrcStrings.ChannelPropMemberkey] = propValue;
             }
             else
             {
                 ((Channel)chatObject).Key = false;
-                ((Channel)chatObject).Props[Resources.IrcStrings.ChannelPropMemberkey] = null;
+                ((Channel)chatObject).Props[IrcStrings.ChannelPropMemberkey] = null;
             }
         }
     };
@@ -187,10 +187,7 @@ internal class ChannelPropCollection : PropCollection
         ValidationMask = IrcStrings.ChannelPropTopicRegex,
         Value = string.Empty,
         ReadOnly = false,
-        PostRule = (chatObject, propValue) =>
-        {
-            ((Channel)chatObject).Props[Resources.IrcStrings.ChannelPropTopic] = propValue;
-        }
+        PostRule = (chatObject, propValue) => { ((Channel)chatObject).Props[IrcStrings.ChannelPropTopic] = propValue; }
     };
 
     public static Dictionary<string?, PropRule> PropRules = new()

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Text;
-using Irc.Access;
 using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Modes;
@@ -9,9 +8,9 @@ using Irc.Resources;
 using Irc.Security.Packages;
 using NLog;
 
-namespace Irc.Objects.User;
+namespace Irc.Objects;
 
-public class User : ChatObject, IUser
+public class User : ChatObject
 {
     public static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
     private readonly UserAccess _accessList = new();
@@ -26,24 +25,23 @@ public class User : ChatObject, IUser
     private long _commandSequence;
     private bool _guest;
     private EnumUserAccessLevel _level;
-    public IProtocol Protocol { get; set; } = new Protocol();
     private bool _registered;
     private ISupportPackage _supportPackage;
-    public IDictionary<IChannel?, IChannelMember> Channels;
+    public IDictionary<Channel?, Member> Channels;
 
     public DateTime LastPing = DateTime.UtcNow;
     public long PingCount;
 
     public User(IConnection connection, IDataRegulator dataRegulator,
         IFloodProtectionProfile floodProtectionProfile,
-        IServer server)
+        Server server)
     {
         Server = server;
         _connection = connection;
         _dataRegulator = dataRegulator;
         _floodProtectionProfile = floodProtectionProfile;
         _supportPackage = new ANON();
-        Channels = new ConcurrentDictionary<IChannel?, IChannelMember>();
+        Channels = new ConcurrentDictionary<Channel?, Member>();
 
         _connection.OnReceive += (sender, s) =>
         {
@@ -59,7 +57,7 @@ public class User : ChatObject, IUser
         Props.Add(IrcStrings.UserPropSubscriberInfo, "");
         Props.Add(IrcStrings.UserPropMsnProfile, "");
         Props.Add(IrcStrings.UserPropRole, "");
-        
+
         // TODO: Add Modes
         Modes.Add(IrcStrings.UserModeOper, 0);
         Modes.Add(IrcStrings.UserModeInvisible, 0);
@@ -75,69 +73,10 @@ public class User : ChatObject, IUser
         //Apollo
         Modes.Add(IrcStrings.UserModeHost, 0);
     }
-    
-    #region Modes
-    
-    public bool Oper
-    {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeOper]);
-        set => Modes[IrcStrings.UserModeOper] = Convert.ToInt32(value);
-    }
 
-    public bool Invisible
-    {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeInvisible]);
-        set => Modes[IrcStrings.UserModeOper] = Convert.ToInt32(value);
-    }
+    public IProtocol Protocol { get; set; } = new Protocol();
 
-    public bool Secure
-    {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeSecure]);
-        set => Modes[IrcStrings.UserModeSecure] = Convert.ToInt32(value);
-    }
-    
-    public bool ServerNotice
-    {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeServerNotice]);
-        set => Modes[IrcStrings.UserModeServerNotice] = Convert.ToInt32(value);
-    }
-    
-    public bool Wallops
-    {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeWallops]);
-        set => Modes[IrcStrings.UserModeWallops] = Convert.ToInt32(value);
-    }
-    
-    public bool Admin
-    {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeAdmin]);
-        set => Modes[IrcStrings.UserModeAdmin] = Convert.ToInt32(value);
-    }
-    
-    
-    public bool Ircx
-    {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeIrcx]);
-        set => Modes[IrcStrings.UserModeIrcx] = Convert.ToInt32(value);
-    }
-    
-    
-    public bool Gag
-    {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeGag]);
-        set => Modes[IrcStrings.UserModeGag] = Convert.ToInt32(value);
-    }
-    
-    
-    public bool Host
-    {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeHost]);
-        set => Modes[IrcStrings.UserModeHost] = Convert.ToInt32(value);
-    }
-    
-    #endregion
-
-    public override EnumUserAccessLevel Level => GetLevel();
+    public EnumUserAccessLevel Level => GetLevel();
 
     public Address Address { get; set; } = new();
     private Profile Profile { get; } = new();
@@ -149,7 +88,19 @@ public class User : ChatObject, IUser
     public DateTime LastIdle { get; set; } = DateTime.UtcNow;
     public DateTime LoggedOn { get; private set; } = DateTime.UtcNow;
 
-    public IServer Server { get; }
+    public Server Server { get; }
+
+    public string? Nickname
+    {
+        get => Name;
+        set
+        {
+            Name = value;
+            Address.SetNickname(value);
+        }
+    }
+
+    public bool Away { get; set; }
     public event EventHandler<string> OnSend;
 
     public void BroadcastToChannels(string data, bool excludeUser)
@@ -157,27 +108,27 @@ public class User : ChatObject, IUser
         foreach (var channel in Channels.Keys) channel?.Send(data, this);
     }
 
-    public void AddChannel(IChannel? channel, IChannelMember member)
+    public void AddChannel(Channel? channel, Member member)
     {
         Channels.Add(channel, member);
     }
 
-    public void RemoveChannel(IChannel? channel)
+    public void RemoveChannel(Channel? channel)
     {
         Channels.Remove(channel);
     }
 
-    public KeyValuePair<IChannel, IChannelMember> GetChannelMemberInfo(IChannel channel)
+    public KeyValuePair<Channel, Member> GetChannelMemberInfo(Channel channel)
     {
         return Channels.FirstOrDefault(c => c.Key == channel);
     }
 
-    public KeyValuePair<IChannel, IChannelMember> GetChannelInfo(string Name)
+    public KeyValuePair<Channel, Member> GetChannelInfo(string Name)
     {
         return Channels.FirstOrDefault(c => c.Key.GetName() == Name);
     }
 
-    public IDictionary<IChannel?, IChannelMember> GetChannels()
+    public IDictionary<Channel?, Member> GetChannels()
     {
         return Channels;
     }
@@ -185,6 +136,11 @@ public class User : ChatObject, IUser
     public override void Send(string message)
     {
         _dataRegulator.PushOutgoing(message);
+    }
+
+    public override void Send(string message, ChatObject except = null)
+    {
+        throw new NotImplementedException();
     }
 
     public override void Send(string message, EnumChannelAccessLevel accessLevel)
@@ -258,16 +214,6 @@ public class User : ChatObject, IUser
         return _level;
     }
 
-    public string? Nickname
-    {
-        get => Name;
-        set
-        {
-            Name = value;
-            Address.SetNickname(value);
-        }
-    }
-
     public void ChangeNickname(string? newNick, bool utf8Prefix)
     {
         var nickname = utf8Prefix ? $"'{newNick}" : newNick;
@@ -277,8 +223,6 @@ public class User : ChatObject, IUser
 
         foreach (var channel in Channels) channel.Key.Send(rawNicknameChange, this);
     }
-
-    public bool Away { get; set; }
 
     public Address GetAddress()
     {
@@ -312,7 +256,7 @@ public class User : ChatObject, IUser
         return _authenticated;
     }
 
-    public bool IsOn(IChannel? channel)
+    public bool IsOn(Channel? channel)
     {
         return Channels.ContainsKey(channel);
     }
@@ -332,27 +276,27 @@ public class User : ChatObject, IUser
         return Admin;
     }
 
-    public virtual void SetAway(IServer server, IUser? user, string? message)
+    public virtual void SetAway(Server server, User? user, string? message)
     {
         Profile.Away = true;
         user.Away = true;
         foreach (var channelPair in user.GetChannels())
         {
             var channel = channelPair.Key;
-            channel.Send(Raw.IRCX_RPL_USERNOWAWAY_822(server, user, message), (ChatObject)user);
+            channel.Send(Raw.IRCX_RPL_USERNOWAWAY_822(server, user, message), user);
         }
 
         user.Send(Raw.IRCX_RPL_NOWAWAY_306(server, user));
     }
 
-    public virtual void SetBack(IServer server, IUser? user)
+    public virtual void SetBack(Server server, User? user)
     {
         Profile.Away = false;
         user.Away = false;
         foreach (var channelPair in user.GetChannels())
         {
             var channel = channelPair.Key;
-            channel.Send(Raw.IRCX_RPL_USERUNAWAY_821(server, user), (ChatObject)user);
+            channel.Send(Raw.IRCX_RPL_USERUNAWAY_821(server, user), user);
         }
 
         user.Send(Raw.IRCX_RPL_UNAWAY_305(server, user));
@@ -362,7 +306,7 @@ public class User : ChatObject, IUser
     {
         Profile.Level = EnumUserAccessLevel.Administrator;
         Admin = true;
-        ModeRule.DispatchModeChange(IrcStrings.UserModeAdmin, this, this, true, this.ToString());
+        ModeRule.DispatchModeChange(IrcStrings.UserModeAdmin, this, this, true, ToString());
         _level = EnumUserAccessLevel.Administrator;
         Send(Raw.IRCX_RPL_YOUREADMIN_386(Server, this));
     }
@@ -371,7 +315,7 @@ public class User : ChatObject, IUser
     {
         Profile.Level = EnumUserAccessLevel.Sysop;
         Oper = true;
-        ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, this.ToString());
+        ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, ToString());
         _level = EnumUserAccessLevel.Sysop;
         Send(Raw.IRCX_RPL_YOUREOPER_381(Server, this));
     }
@@ -380,7 +324,7 @@ public class User : ChatObject, IUser
     {
         Profile.Level = EnumUserAccessLevel.Guide;
         Oper = true;
-        ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, this.ToString());
+        ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, ToString());
         _level = EnumUserAccessLevel.Guide;
         Send(Raw.IRCX_RPL_YOUREGUIDE_629(Server, this));
     }
@@ -447,7 +391,7 @@ public class User : ChatObject, IUser
     {
         _authenticated = true;
     }
-    
+
     public Queue<ModeOperation> GetModeOperations()
     {
         return _modeOperations;
@@ -471,8 +415,69 @@ public class User : ChatObject, IUser
         return Profile;
     }
 
-    public virtual bool CanBeModifiedBy(ChatObject source)
+    public override bool CanBeModifiedBy(ChatObject source)
     {
         return source == this;
     }
+
+    #region Modes
+
+    public bool Oper
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeOper]);
+        set => Modes[IrcStrings.UserModeOper] = Convert.ToInt32(value);
+    }
+
+    public bool Invisible
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeInvisible]);
+        set => Modes[IrcStrings.UserModeOper] = Convert.ToInt32(value);
+    }
+
+    public bool Secure
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeSecure]);
+        set => Modes[IrcStrings.UserModeSecure] = Convert.ToInt32(value);
+    }
+
+    public bool ServerNotice
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeServerNotice]);
+        set => Modes[IrcStrings.UserModeServerNotice] = Convert.ToInt32(value);
+    }
+
+    public bool Wallops
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeWallops]);
+        set => Modes[IrcStrings.UserModeWallops] = Convert.ToInt32(value);
+    }
+
+    public bool Admin
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeAdmin]);
+        set => Modes[IrcStrings.UserModeAdmin] = Convert.ToInt32(value);
+    }
+
+
+    public bool Ircx
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeIrcx]);
+        set => Modes[IrcStrings.UserModeIrcx] = Convert.ToInt32(value);
+    }
+
+
+    public bool Gag
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeGag]);
+        set => Modes[IrcStrings.UserModeGag] = Convert.ToInt32(value);
+    }
+
+
+    public bool Host
+    {
+        get => Convert.ToBoolean(Modes[IrcStrings.UserModeHost]);
+        set => Modes[IrcStrings.UserModeHost] = Convert.ToInt32(value);
+    }
+
+    #endregion
 }

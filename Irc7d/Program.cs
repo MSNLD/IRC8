@@ -2,11 +2,9 @@
 using System.Reflection;
 using System.Text.Json;
 using Irc.Extensions.Apollo.Directory;
-using Irc.Interfaces;
 using Irc.IO;
 using Irc.Logger;
-using Irc.Objects.Channel;
-using Irc.Objects.Server;
+using Irc.Objects;
 using Irc.Security;
 using Irc.Security.Credentials;
 using Microsoft.Extensions.CommandLineUtils;
@@ -18,7 +16,7 @@ internal class Program
 {
     public static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    private static IServer? server;
+    private static Server? server;
     private static CancellationTokenSource? cancellationTokenSource;
 
     private static void Main(string[] args)
@@ -106,10 +104,11 @@ internal class Program
                 Log.Info("No credentials found.");
                 return 0;
             }
-            
+
             var credentialProvider = new NTLMCredentials(credentials);
-            var settings = JsonSerializer.Deserialize<Settings>(File.ReadAllText("DefaultServer.json")) ?? new Settings();
-            
+            var settings = JsonSerializer.Deserialize<Settings>(File.ReadAllText("DefaultServer.json")) ??
+                           new Settings();
+
             switch (type)
             {
                 case IrcType.Dir:
@@ -118,7 +117,7 @@ internal class Program
                         new SecurityManager(),
                         new FloodProtectionManager(),
                         settings,
-                        new List<IChannel?>(),
+                        new List<Channel?>(),
                         credentialProvider);
 
                     string?[] parts = forwardServer.Split(':');
@@ -133,7 +132,7 @@ internal class Program
                         new SecurityManager(),
                         new FloodProtectionManager(),
                         settings,
-                        new List<IChannel?>(),
+                        new List<Channel?>(),
                         credentialProvider);
                     break;
                 }

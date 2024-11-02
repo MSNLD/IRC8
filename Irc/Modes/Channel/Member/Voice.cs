@@ -1,5 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel.Member;
@@ -10,15 +11,15 @@ public class Voice : ModeRule, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(IChatObject source, IChatObject? target, bool flag, string? parameter)
+    public new EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
-        var channel = (IChannel)target;
+        var channel = (Objects.Channel)target;
         if (!channel.CanBeModifiedBy(source)) return EnumIrcError.ERR_NOTONCHANNEL;
 
         var targetMember = channel.GetMemberByNickname(parameter);
         if (targetMember == null) return EnumIrcError.ERR_NOSUCHNICK;
 
-        var sourceMember = channel.GetMember((IUser)source);
+        var sourceMember = channel.GetMember((Objects.User)source);
 
         if (sourceMember != null)
         {

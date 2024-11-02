@@ -1,5 +1,5 @@
-﻿using Irc.Commands;
-using Irc.Enumerations;
+﻿using Irc.Enumerations;
+using Irc.Objects;
 
 namespace Irc.Interfaces;
 
@@ -11,6 +11,6 @@ public interface IProtocol
     void AddCommand(ICommand command, string? name = null);
     void SetVers(EnumProtocolType ircvers);
     void FlushCommands();
-    string FormattedUser(IChannelMember user);
-    string GetFormat(IUser? user);
+    string FormattedUser(Member user);
+    string GetFormat(User? user);
 }

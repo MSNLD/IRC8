@@ -2,8 +2,14 @@
   "Id": "DefaultServerId",
   "Name": "DefaultServerName",
   "Title": "Default Chat Service",
-  "Motd": ["*** Welcome to the Server ***"],
-  "Packages": ["ANON", "GateKeeper", "NTLM"],
+  "Motd": [
+    "*** Welcome to the Server ***"
+  ],
+  "Packages": [
+    "ANON",
+    "GateKeeper",
+    "NTLM"
+  ],
   "PassportKey": "mysecret",
   "PassportAppId": "myappid",
   "PassportAppSecret": "mysecret",

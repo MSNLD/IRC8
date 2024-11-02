@@ -1,5 +1,5 @@
 ﻿using Irc.Enumerations;
-using Irc.Objects.User;
+using Irc.Objects;
 
 namespace Irc.Interfaces;
 

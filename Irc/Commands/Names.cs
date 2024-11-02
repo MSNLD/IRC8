@@ -1,6 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
-using Irc.Objects.Channel;
+using Irc.Objects;
 
 namespace Irc.Commands;
 
@@ -27,7 +27,7 @@ internal class Names : Command, ICommand
 
             if (channel != null)
             {
-                if (user.IsOn(channel) || ((Channel)channel) is { Private: false, Secret: false })
+                if (user.IsOn(channel) || channel is { Private: false, Secret: false })
                     ProcessNamesReply(user, channel);
             }
             else
@@ -37,15 +37,15 @@ internal class Names : Command, ICommand
         }
     }
 
-    public static void ProcessNamesReply(IUser? user, IChannel channel)
+    public static void ProcessNamesReply(User? user, Channel channel)
     {
         // RFC 2812 "=" for others(public channels).
         var channelType = '=';
 
-        if (((Channel)channel).Secret)
+        if (channel.Secret)
             // RFC 2812 "@" is used for secret channels
             channelType = '@';
-        else if (((Channel)channel).Private)
+        else if (channel.Private)
             // RFC 2812 "*" for private
             channelType = '*';
 

@@ -1,7 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
-using Irc.Objects.Channel;
 using Irc.Props;
 using Irc.Resources;
 
@@ -45,7 +44,7 @@ public class Prop : Command, ICommand
                         if (string.Compare("NICK", chatFrame.Message.Parameters[1], true) == 0)
                         {
                             chatFrame.User.Nickname = chatFrame.User.Name;
-                            SendProp(chatFrame.Server, chatFrame.User, (ChatObject)chatFrame.User, "NICK",
+                            SendProp(chatFrame.Server, chatFrame.User, chatFrame.User, "NICK",
                                 chatFrame.User.Name);
                         }
                         else if (string.Compare("MSNREGCOOKIE", chatFrame.Message.Parameters[1], true) == 0)
@@ -88,11 +87,11 @@ public class Prop : Command, ICommand
         }
         else
         {
-            IChatObject chatObject = null;
+            ChatObject chatObject = null;
 
             // <$> The $ value is used to indicate the user that originated the request.
             if (objectName == "$")
-                chatObject = (IChatObject)chatFrame.User;
+                chatObject = chatFrame.User;
             else
                 chatObject = chatFrame.Server.GetChatObject(objectName);
 
@@ -112,9 +111,9 @@ public class Prop : Command, ICommand
                     var prop = ChannelPropCollection.PropRules[chatFrame.Message.Parameters[1]];
                     if (prop != null)
                     {
-                        if (chatObject.CanBeModifiedBy((ChatObject)chatFrame.User))
+                        if (chatObject.CanBeModifiedBy(chatFrame.User))
                         {
-                            var ircError = prop.EvaluateSet((IChatObject)chatFrame.User, chatObject, propValue);
+                            var ircError = prop.EvaluateSet(chatFrame.User, chatObject, propValue);
                             if (ircError == EnumIrcError.ERR_NOPERMS)
                             {
                                 chatFrame.User.Send(Raw.IRCX_ERR_NOACCESS_913(chatFrame.Server, chatFrame.User,
@@ -176,12 +175,12 @@ public class Prop : Command, ICommand
     }
 
     // TODO: Rewrite this code
-    public void SendProps(IServer server, IUser? user, IChatObject targetObject, Dictionary<string?, string?> props)
+    public void SendProps(Server server, User? user, ChatObject targetObject, Dictionary<string?, string?> props)
     {
         var propsSent = 0;
         foreach (var prop in props)
         {
-            if (ChannelPropCollection.PropRules[prop.Key].EvaluateGet((IChatObject)user, targetObject) ==
+            if (ChannelPropCollection.PropRules[prop.Key].EvaluateGet((ChatObject)user, targetObject) ==
                 EnumIrcError.ERR_NOPERMS)
             {
                 if (props.Count == 1) user.Send(Raw.IRCX_ERR_SECURITY_908(server, user));
@@ -214,7 +213,7 @@ public class Prop : Command, ICommand
         if (propsSent > 0) user.Send(IrcxRaws.IRCX_RPL_PROPEND_819(server, user, targetObject));
     }
 
-    public void SendProp(IServer server, IUser? user, IChatObject targetObject, string? propName,
+    public void SendProp(Server server, User? user, ChatObject targetObject, string? propName,
         string? propValue)
     {
         user.Send(IrcxRaws.IRCX_RPL_PROPLIST_818(server, user, targetObject, propName, propValue));

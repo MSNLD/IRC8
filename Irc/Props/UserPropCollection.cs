@@ -1,9 +1,8 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
-using Irc.Props;
+using Irc.Objects;
 using Irc.Resources;
 
-namespace Irc.Objects.User;
+namespace Irc.Props;
 
 public class UserPropCollection : PropCollection
 {
@@ -21,7 +20,7 @@ public class UserPropCollection : PropCollection
             /*
               if (source != target) return EnumIrcError.ERR_NOPERMS;
 
-               var user = (Objects.User.User)source;
+               var user = (Objects.User)source;
                if (int.TryParse(propValue, out var result))
                {
                    var profile = user.GetProfile();
@@ -60,7 +59,7 @@ public class UserPropCollection : PropCollection
         ReadOnly = true,
         PostRule = (chatObject, propValue) =>
         {
-            ((User)chatObject).Server.ProcessCookie((IUser)chatObject,
+            ((User)chatObject).Server.ProcessCookie((User)chatObject,
                 IrcStrings.UserPropRole, propValue);
         }
     };
@@ -75,7 +74,7 @@ public class UserPropCollection : PropCollection
         ReadOnly = true,
         PostRule = (chatObject, propValue) =>
         {
-            ((User)chatObject).Server.ProcessCookie((IUser)chatObject,
+            ((User)chatObject).Server.ProcessCookie((User)chatObject,
                 IrcStrings.UserPropSubscriberInfo, propValue);
         }
     };

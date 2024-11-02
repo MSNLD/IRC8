@@ -1,7 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Interfaces;
 using Irc.Objects;
-using Irc.Objects.Channel;
 
 namespace Irc.Commands;
 
@@ -36,7 +35,7 @@ internal class Whisper : Command, ICommand
         }
 
         var channelName = chatFrame.Message.Parameters.First();
-        var channel = (Channel)chatFrame.Server.GetChannelByName(channelName);
+        var channel = chatFrame.Server.GetChannelByName(channelName);
         if (channel == null)
         {
             user.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(server, user, channelName));

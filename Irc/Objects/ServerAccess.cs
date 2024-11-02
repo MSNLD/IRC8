@@ -1,6 +1,7 @@
-﻿using Irc.Enumerations;
+﻿using Irc.Access;
+using Irc.Enumerations;
 
-namespace Irc.Access;
+namespace Irc.Objects;
 
 public class ServerAccess : AccessList
 {

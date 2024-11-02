@@ -2,7 +2,6 @@
 using Irc.Interfaces;
 using Irc.Modes;
 using Irc.Objects;
-using Irc.Objects.Channel;
 using Irc.Resources;
 
 namespace Irc.Commands;
@@ -38,7 +37,7 @@ internal class Mode : Command, ICommand
 
             // Lookup object
             if (Channel.ValidName(objectName))
-                chatObject = (ChatObject)chatFrame.Server.GetChannelByName(objectName);
+                chatObject = chatFrame.Server.GetChannelByName(objectName);
             else
                 chatObject = (ChatObject)chatFrame.Server.GetUserByNickname(objectName, chatFrame.User);
 
@@ -73,12 +72,13 @@ internal class Mode : Command, ICommand
         -> sky-8a15b323126 MODE #test
         <- :sky-8a15b323126 324 Sky #test +tnl 50*/
 
-        var modes = string.Join("", ((Channel)chatObject).Modes.Select(m => (m.Value > 0 ? m.Key.ToString() : "")));
-        
-        if (chatObject is IChannel)
+        var modes = string.Join("", ((Channel)chatObject).Modes.Select(m => m.Value > 0 ? m.Key.ToString() : ""));
+
+        if (chatObject is Channel)
             // TODO: Fix below when UserLimit is 0
-            chatFrame.User.Send(Raw.IRCX_RPL_MODE_324(chatFrame.Server, chatFrame.User, (IChannel)chatObject, $"{modes} {((Channel)chatObject).UserLimit}"));
-        else if (chatObject is IUser)
+            chatFrame.User.Send(Raw.IRCX_RPL_MODE_324(chatFrame.Server, chatFrame.User, (Channel)chatObject,
+                $"{modes} {((Channel)chatObject).UserLimit}"));
+        else if (chatObject is User)
             chatFrame.User.Send(Raw.IRCX_RPL_UMODEIS_221(chatFrame.Server, chatFrame.User,
                 string.Join(string.Empty, chatObject.Modes.Keys)));
     }

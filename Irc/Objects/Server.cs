@@ -1,16 +1,11 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text;
-using Irc.Access;
 using Irc.Commands;
 using Irc.Enumerations;
 using Irc.Extensions.Security.Packages;
 using Irc.Interfaces;
 using Irc.IO;
-using Irc.Objects.Channel;
-using Irc.Objects.Collections;
-using Irc.Objects.User;
-using Irc.Protocols;
 using Irc.Resources;
 using Irc.Security.Credentials;
 using Irc.Security.Packages;
@@ -18,32 +13,30 @@ using Irc.Security.Passport;
 using NLog;
 using Version = System.Version;
 
-namespace Irc.Objects.Server;
+namespace Irc.Objects;
 
-public class Server : ChatObject, IServer
+public class Server : ChatObject
 {
     public static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
+    public static Dictionary<char, IModeRule> ModeRules = ServerModeRules.ModeRules;
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly IFloodProtectionManager _floodProtectionManager;
+    private readonly PassportV4 _passport;
     private readonly Task _processingTask;
     private readonly ISecurityManager _securityManager;
     private readonly ISocketServer _socketServer;
-    private readonly ConcurrentQueue<IUser?> PendingNewUserQueue = new();
-    private readonly ConcurrentQueue<IUser?> PendingRemoveUserQueue = new();
-    private readonly PassportV4 _passport;
+    private readonly ConcurrentQueue<User?> PendingNewUserQueue = new();
+    private readonly ConcurrentQueue<User?> PendingRemoveUserQueue = new();
     public IDictionary<EnumProtocolType, IProtocol> _protocols = new Dictionary<EnumProtocolType, IProtocol>();
-
-    public Settings ServerSettings { get; set; }
-    public IList<IChannel?> Channels;
-    public IList<IUser?> Users = new List<IUser?>();
-    public new static Dictionary<char, IModeRule> ModeRules = ServerModeRules.ModeRules;
+    public IList<Channel?> Channels;
+    public IList<User?> Users = new List<User?>();
 
     public Server(ISocketServer socketServer,
         ISecurityManager securityManager,
         IFloodProtectionManager floodProtectionManager,
         Settings serverSettings,
-        IList<IChannel?> channels,
+        IList<Channel?> channels,
         ICredentialProvider? ntlmCredentialProvider = null)
     {
         Name = serverSettings.Name;
@@ -93,6 +86,8 @@ public class Server : ChatObject, IServer
         socketServer.Listen();
     }
 
+    public Settings ServerSettings { get; set; }
+
     public IAccessList AccessList { get; } = new ServerAccess();
 
     public string[] SupportPackages { get; }
@@ -127,6 +122,8 @@ public class Server : ChatObject, IServer
     public bool DisableGuestMode { set; get; }
     public bool DisableUserRegistration { get; set; }
 
+    public Version ServerVersion { get; set; } = Assembly.GetExecutingAssembly().GetName().Version;
+
     public void SetMOTD(string motd)
     {
         var lines = motd.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
@@ -138,40 +135,40 @@ public class Server : ChatObject, IServer
         return ServerSettings.Motd;
     }
 
-    public void AddUser(IUser? user)
+    public void AddUser(User? user)
     {
         PendingNewUserQueue.Enqueue(user);
     }
 
-    public void RemoveUser(IUser? user)
+    public void RemoveUser(User? user)
     {
         PendingRemoveUserQueue.Enqueue(user);
     }
 
-    public void AddChannel(IChannel channel)
+    public void AddChannel(Channel channel)
     {
         Channels.Add(channel);
     }
 
-    public void RemoveChannel(IChannel channel)
+    public void RemoveChannel(Channel channel)
     {
         Channels.Remove(channel);
     }
 
-    public virtual IChannel CreateChannel(string? name)
+    public virtual Channel CreateChannel(string? name)
     {
-        var channel = new Channel.Channel(name);
+        var channel = new Channel(name);
         return channel;
     }
 
-    public virtual IChannel CreateChannel(IUser? creator, string? name, string? key)
+    public virtual Channel CreateChannel(User? creator, string? name, string? key)
     {
-        var channel = (Channel.Channel)CreateChannel(name);
-        channel.Props[Resources.IrcStrings.ChannelPropTopic] = name;
+        var channel = (Channel)CreateChannel(name);
+        channel.Props[IrcStrings.ChannelPropTopic] = name;
         // if (!string.IsNullOrEmpty(key))
         // {
         //     channel.Modes.Key = key;
-        //     channel.ChannelStore.Set("key", key);
+        //     ChannelStore.Set("key", key);
         // }
         channel.Props[IrcStrings.ChannelPropOwnerkey] = key;
         channel.NoExtern = true;
@@ -181,45 +178,45 @@ public class Server : ChatObject, IServer
         return channel;
     }
 
-    public IUser? CreateUser(IConnection connection)
+    public User? CreateUser(IConnection connection)
     {
-        return new User.User(connection,
+        return new User(connection,
             new DataRegulator(MaxInputBytes, MaxOutputBytes),
             new FloodProtectionProfile(), this);
     }
 
-    public IList<IUser?> GetUsers()
+    public IList<User?> GetUsers()
     {
         return Users;
     }
 
 
-    public IUser? GetUserByNickname(string? nickname)
+    public User? GetUserByNickname(string? nickname)
     {
         return Users.FirstOrDefault(user => string.Compare(user.GetAddress().Nickname.Trim(), nickname, true) == 0);
     }
 
-    public IUser? GetUserByNickname(string? nickname, IUser? currentUser)
+    public User? GetUserByNickname(string? nickname, User? currentUser)
     {
         if (nickname.ToUpperInvariant() == currentUser.Name.ToUpperInvariant()) return currentUser;
 
         return GetUserByNickname(nickname);
     }
 
-    public IList<IUser?> GetUsersByList(string nicknames, char separator)
+    public IList<User?> GetUsersByList(string nicknames, char separator)
     {
         List<string?> list = nicknames.Split(separator, StringSplitOptions.RemoveEmptyEntries).ToList();
 
         return GetUsersByList(list, separator);
     }
 
-    public IList<IUser?> GetUsersByList(List<string?> nicknames, char separator)
+    public IList<User?> GetUsersByList(List<string?> nicknames, char separator)
     {
         return Users.Where(user =>
             nicknames.Contains(user.GetAddress().Nickname, StringComparer.InvariantCultureIgnoreCase)).ToList();
     }
 
-    public IList<IChannel?> GetChannels()
+    public IList<Channel?> GetChannels()
     {
         return Channels;
     }
@@ -237,9 +234,7 @@ public class Server : ChatObject, IServer
         return "";
     }
 
-    public Version ServerVersion { get; set; } = Assembly.GetExecutingAssembly().GetName().Version;
-
-    public IChannel GetChannelByName(string? name)
+    public Channel GetChannelByName(string? name)
     {
         return Channels.SingleOrDefault(c =>
             string.Equals(c.GetName(), name, StringComparison.InvariantCultureIgnoreCase));
@@ -259,7 +254,7 @@ public class Server : ChatObject, IServer
             case "%":
             case "#":
             case "&":
-                return (ChatObject)GetChannelByName(name);
+                return GetChannelByName(name);
             default:
             {
                 return (ChatObject)GetUserByNickname(name);
@@ -289,12 +284,32 @@ public class Server : ChatObject, IServer
         _processingTask.Wait();
     }
 
+    public override void Send(string message)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Send(string message, ChatObject except = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Send(string message, EnumChannelAccessLevel accessLevel)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool CanBeModifiedBy(ChatObject source)
+    {
+        throw new NotImplementedException();
+    }
+
     public override string? ToString()
     {
         return Name;
     }
 
-    public void ProcessCookie(IUser user, string? name, string value)
+    public void ProcessCookie(User user, string? name, string value)
     {
         if (name == IrcStrings.UserPropMsnRegCookie && user.IsAuthenticated() && !user.IsRegistered())
         {
@@ -492,7 +507,7 @@ public class Server : ChatObject, IServer
         foreach (var protocol in _protocols) protocol.Value.FlushCommands();
     }
 
-    private void ProcessNextModeOperation(IUser? user)
+    private void ProcessNextModeOperation(User? user)
     {
         var modeOperations = user.GetModeOperations();
         if (modeOperations.Count > 0) modeOperations.Dequeue().Execute();
@@ -512,7 +527,7 @@ public class Server : ChatObject, IServer
         return EnumChannelAccessResult.ERR_SECUREONLYCHAN;
     }
 
-    private void ProcessNextCommand(IUser? user)
+    private void ProcessNextCommand(User? user)
     {
         var message = user.GetDataRegulator().PeekIncoming();
         if (message == null) return;

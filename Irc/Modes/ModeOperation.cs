@@ -8,7 +8,7 @@ namespace Irc.Modes;
 public class ModeOperation
 {
     public IModeRule? Mode { get; set; }
-    public IUser? Source { get; set; }
+    public Objects.User? Source { get; set; }
     public ChatObject? Target { get; set; }
     public bool ModeFlag { get; set; }
     public string? ModeParameter { get; set; }
@@ -30,7 +30,7 @@ public class ModeOperation
             case EnumIrcError.ERR_NOCHANOP:
             {
                 //:sky-8a15b323126 482 Sky3k #test :You're not channel operator
-                Source.Send(Raw.IRCX_ERR_CHANOPRIVSNEEDED_482(Source.Server, Source, (IChannel)Target));
+                Source.Send(Raw.IRCX_ERR_CHANOPRIVSNEEDED_482(Source.Server, Source, (Objects.Channel)Target));
                 break;
             }
             case EnumIrcError.ERR_NOCHANOWNER:
@@ -46,7 +46,7 @@ public class ModeOperation
             }
             case EnumIrcError.ERR_NOTONCHANNEL:
             {
-                Source.Send(Raw.IRCX_ERR_NOTONCHANNEL_442(Source.Server, Source, (IChannel)Target));
+                Source.Send(Raw.IRCX_ERR_NOTONCHANNEL_442(Source.Server, Source, (Objects.Channel)Target));
                 break;
             }
             // TODO: The below should not happen
@@ -77,7 +77,7 @@ public class ModeOperation
             }
             case EnumIrcError.ERR_KEYSET:
             {
-                Source.Send(Raw.IRCX_ERR_KEYSET_467(Source.Server, Source, (IChannel)Target));
+                Source.Send(Raw.IRCX_ERR_KEYSET_467(Source.Server, Source, (Objects.Channel)Target));
                 break;
             }
         }
