@@ -32,7 +32,7 @@ public class Eprivmsg : Command, ICommand
             }
 
             var chatObject = (IChatObject)chatFrame.Server.GetChannelByName(target);
-            var channel = (IChannel)chatObject;
+            var channel = (Channel)chatObject;
             var channelMember = channel.GetMember(chatFrame.User);
             var isOnChannel = channelMember != null;
 
@@ -43,7 +43,7 @@ public class Eprivmsg : Command, ICommand
                 return;
             }
 
-            if (!((IApolloChannelModes)channel.Modes).OnStage)
+            if (!channel.OnStage)
             {
                 chatFrame.User.Send(
                     Raw.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));

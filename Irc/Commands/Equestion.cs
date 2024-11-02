@@ -44,7 +44,7 @@ public class Equestion : Command, ICommand
                 return;
             }
 
-            if (!((IApolloChannelModes)channel.Modes).OnStage)
+            if (!((Channel)channel).OnStage)
             {
                 chatFrame.User.Send(
                     Raw.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));

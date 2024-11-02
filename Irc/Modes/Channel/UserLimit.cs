@@ -16,7 +16,7 @@ public class UserLimit : ModeRuleChannel, IModeRule
         if (result != EnumIrcError.OK) return result;
 
         var user = (IUser)source;
-        var channel = (IChannel)target;
+        var channel = (Objects.Channel.Channel)target;
         var isAdministrator = user.IsAdministrator();
 
         if (flag == false)

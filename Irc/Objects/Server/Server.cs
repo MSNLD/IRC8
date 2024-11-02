@@ -166,7 +166,7 @@ public class Server : ChatObject, IServer
 
     public virtual IChannel CreateChannel(IUser? creator, string? name, string? key)
     {
-        var channel = CreateChannel(name);
+        var channel = (Channel.Channel)CreateChannel(name);
         channel.Props[Resources.IrcStrings.ChannelPropTopic] = name;
         // if (!string.IsNullOrEmpty(key))
         // {

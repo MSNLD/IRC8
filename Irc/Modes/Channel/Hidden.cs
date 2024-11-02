@@ -15,7 +15,7 @@ public class Hidden : ModeRuleChannel, IModeRule
         var result = base.Evaluate(source, target, flag, parameter);
         if (result == EnumIrcError.OK)
         {
-            var channel = (IChannel)target;
+            var channel = (Objects.Channel.Channel)target;
 
             if (flag)
             {

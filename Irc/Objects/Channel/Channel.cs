@@ -23,6 +23,7 @@ public class Channel : ChatObject, IChannel
         Props[IrcStrings.ChannelPropOID] = "";
         Props[IrcStrings.ChannelPropCreation] = "";
         Props[IrcStrings.ChannelPropLanguage] = "";
+        Props[IrcStrings.ChannelPropMemberkey] = "";
         Props[IrcStrings.ChannelPropOwnerkey] = "";
         Props[IrcStrings.ChannelPropHostkey] = "";
         Props[IrcStrings.ChannelPropPICS] = "";
@@ -165,6 +166,14 @@ public class Channel : ChatObject, IChannel
     {
         get => Convert.ToBoolean(Modes[Resources.IrcStrings.ChannelModeService]); 
         set => Modes[Resources.IrcStrings.ChannelModeService] = Convert.ToInt32(value);
+    }
+    
+    // Apollo
+    
+    public bool OnStage
+    {
+        get => Convert.ToBoolean(Modes[Resources.IrcStrings.ChannelModeOnStage]); 
+        set => Modes[Resources.IrcStrings.ChannelModeOnStage] = Convert.ToInt32(value);
     }
     #endregion
 

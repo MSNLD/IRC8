@@ -3,7 +3,7 @@ using Irc.Objects;
 
 namespace Irc.Interfaces;
 
-public interface IChannel : IChatObject, IChannelModes
+public interface IChannel : IChatObject
 {
     string? GetName();
     IChannelMember? GetMember(IUser? user);

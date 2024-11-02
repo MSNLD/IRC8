@@ -26,7 +26,7 @@ public class Who : Command, ICommand
 
         if (Channel.ValidName(criteria))
         {
-            var channel = server.GetChannelByName(criteria);
+            var channel = (Channel)server.GetChannelByName(criteria);
             if (channel == null)
             {
                 user.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(server, user, criteria));

@@ -55,7 +55,7 @@ internal class Listx : Command, ICommand
         foreach (var channel in channels)
             if (user.IsOn(channel) ||
                 user.GetLevel() >= EnumUserAccessLevel.Guide ||
-                (!channel.Secret && !channel.Private))
+                (!((Channel)channel).Secret && !((Channel)channel).Private))
                 //  :TK2CHATCHATA04 812 'Admin_Koach %#Roomname +tnfSl 0 50 :%Chatroom\c\bFor\bBL\bGames\c\bFun\band\bEvents.
                 user.Send(Raw.IRCX_RPL_LISTXLIST_812(
                     server,
@@ -63,7 +63,7 @@ internal class Listx : Command, ICommand
                     channel,
                     string.Join("", channel.Modes.Keys),
                     channel.GetMembers().Count,
-                    channel.UserLimit,
+                    ((Channel)channel).UserLimit,
                     channel.Props[Resources.IrcStrings.ChannelPropTopic] ?? string.Empty
                 ));
         user.Send(Raw.IRCX_RPL_LISTXEND_817(server, user));
