@@ -1,22 +1,21 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-internal class Topic : Command, ICommand
+internal class Topic : Command
 {
     public Topic() : base(2)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.Standard;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var source = chatFrame.User;
         var channelName = chatFrame.Message.Parameters.First();
@@ -55,7 +54,7 @@ internal class Topic : Command, ICommand
         }
     }
 
-    public static EnumIrcError ProcessTopic(IChatFrame chatFrame, Channel channel, User? source, string? topic)
+    public static EnumIrcError ProcessTopic(ChatFrame chatFrame, Channel channel, User? source, string? topic)
     {
         if (!channel.CanBeModifiedBy((ChatObject)source)) return EnumIrcError.ERR_NOTONCHANNEL;
 

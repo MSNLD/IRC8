@@ -1,7 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using System.Text;
+using Irc.Access;
 using Irc.Enumerations;
 using Irc.Interfaces;
+using Irc.IO;
 using Irc.Modes;
 using Irc.Protocols;
 using Irc.Resources;
@@ -17,8 +19,8 @@ public class User : ChatObject
 
     //public Access Access;
     private readonly IConnection _connection;
-    private readonly IDataRegulator _dataRegulator;
-    private readonly IFloodProtectionProfile _floodProtectionProfile;
+    private readonly DataRegulator _dataRegulator;
+    private readonly FloodProtectionProfile _floodProtectionProfile;
     private readonly Queue<ModeOperation> _modeOperations = new();
     private bool _authenticated;
 
@@ -32,8 +34,8 @@ public class User : ChatObject
     public DateTime LastPing = DateTime.UtcNow;
     public long PingCount;
 
-    public User(IConnection connection, IDataRegulator dataRegulator,
-        IFloodProtectionProfile floodProtectionProfile,
+    public User(IConnection connection, DataRegulator dataRegulator,
+        FloodProtectionProfile floodProtectionProfile,
         Server server)
     {
         Server = server;
@@ -72,16 +74,19 @@ public class User : ChatObject
 
         //Apollo
         Modes.Add(IrcStrings.UserModeHost, 0);
+        
+        // Access
+        base.AccessList.Entries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
+        {
+            { EnumAccessLevel.VOICE, new List<AccessEntry>() },
+            { EnumAccessLevel.DENY, new List<AccessEntry>() }
+        };
     }
 
-    public IProtocol Protocol { get; set; } = new Protocol();
-
-    public EnumUserAccessLevel Level => GetLevel();
-
+    public Protocol Protocol { get; set; } = new();
     public Address Address { get; set; } = new();
     private Profile Profile { get; } = new();
 
-    public IAccessList AccessList => _accessList;
     public bool Utf8 { get; set; }
     public string? Client { get; set; }
     public string? Pass { get; set; }
@@ -179,12 +184,12 @@ public class User : ChatObject
         _connection?.Disconnect($"{message}\r\n");
     }
 
-    public IDataRegulator GetDataRegulator()
+    public DataRegulator GetDataRegulator()
     {
         return _dataRegulator;
     }
 
-    public IFloodProtectionProfile GetFloodProtectionProfile()
+    public FloodProtectionProfile GetFloodProtectionProfile()
     {
         return _floodProtectionProfile;
     }
@@ -199,7 +204,7 @@ public class User : ChatObject
         _supportPackage = supportPackage;
     }
 
-    public void SetProtocol(IProtocol protocol)
+    public void SetProtocol(Protocol protocol)
     {
         Protocol = protocol;
     }
@@ -397,17 +402,16 @@ public class User : ChatObject
         return _modeOperations;
     }
 
-    public IChatFrame GetNextFrame()
+    public ChatFrame GetNextFrame()
     {
         _commandSequence++;
         var message = _dataRegulator.PopIncoming();
-        return new ChatFrame
-        {
-            SequenceId = _commandSequence,
-            Server = Server,
-            User = this,
-            Message = message
-        };
+        return new ChatFrame(
+            _commandSequence,
+            Server,
+            this,
+            message
+        );
     }
 
     public Profile GetProfile()

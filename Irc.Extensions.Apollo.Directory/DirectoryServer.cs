@@ -2,7 +2,9 @@
 using Irc.Enumerations;
 using Irc.Extensions.Apollo.Directory.Commands;
 using Irc.Interfaces;
+using Irc.IO;
 using Irc.Objects;
+using Irc.Security;
 using Nick = Irc.Extensions.Apollo.Directory.Commands.Nick;
 using Version = Irc.Commands.Version;
 
@@ -14,8 +16,8 @@ public class DirectoryServer : Server
     public string? ChatServerPort;
 
     public DirectoryServer(ISocketServer socketServer,
-        ISecurityManager securityManager,
-        IFloodProtectionManager floodProtectionManager,
+        SecurityManager securityManager,
+        FloodProtectionManager floodProtectionManager,
         Settings serverSettings,
         IList<Channel?> channels,
         ICredentialProvider? ntlmCredentialProvider = null)

@@ -1,16 +1,15 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.Commands;
 
-internal class Whowas : Command, ICommand
+internal class Whowas : Command
 {
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         chatFrame.User.Send(Raw.IRCX_ERR_COMMANDUNSUPPORTED_554(chatFrame.Server, chatFrame.User, nameof(Whowas)));
     }

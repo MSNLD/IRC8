@@ -1,11 +1,10 @@
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
-public class Subscriber : ModeRuleChannel, IModeRule
+public class Subscriber : ModeRuleChannel
 {
     public Subscriber() : base(IrcStrings.ChannelModeSubscriber)
     {

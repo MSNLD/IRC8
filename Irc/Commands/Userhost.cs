@@ -1,20 +1,19 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.Commands;
 
-internal class Userhost : Command, ICommand
+internal class Userhost : Command
 {
     public Userhost() : base(1)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var maxUsers = 30;
         var users = chatFrame.Server.GetUsersByList(chatFrame.Message.GetParameters(), ' ');

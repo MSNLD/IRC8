@@ -1,16 +1,15 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-public class UserCommand : Command, ICommand
+public class UserCommand : Command
 {
     public UserCommand() : base(4, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
@@ -20,7 +19,7 @@ public class UserCommand : Command, ICommand
         return IrcStrings.CommandUser;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var address = chatFrame.User.GetAddress();
         if (!string.IsNullOrWhiteSpace(address.RealName))

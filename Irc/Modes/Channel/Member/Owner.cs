@@ -1,11 +1,10 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel.Member;
 
-public class Owner : ModeRule, IModeRule
+public class Owner : ModeRule
 {
     /*
      -> sky-8a15b323126 MODE #test +q Sky2k
@@ -22,7 +21,7 @@ public class Owner : ModeRule, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
+    public override EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
         var channel = (Objects.Channel)target;
         if (!channel.CanBeModifiedBy(source)) return EnumIrcError.ERR_NOTONCHANNEL;

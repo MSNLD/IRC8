@@ -1,20 +1,19 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.Commands;
 
-public class Version : Command, ICommand
+public class Version : Command
 {
     public Version() : base(0, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         chatFrame.User.Send(Raw.IRCX_RPL_VERSION_351(chatFrame.Server, chatFrame.User, chatFrame.Server.ServerVersion));
     }

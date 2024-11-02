@@ -1,23 +1,22 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Props;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-public class Prop : Command, ICommand
+public class Prop : Command
 {
     public Prop() : base(2, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         //chatFrame.User.Send(Raw.IRCX_ERR_NOTIMPLEMENTED(chatFrame.Server, chatFrame.User, nameof(Access)));
         // Passport hack
@@ -52,27 +51,27 @@ public class Prop : Command, ICommand
                             if (chatFrame.Message.Parameters.Count >= 3)
                             {
                                 var regcookie = chatFrame.Message.Parameters[2];
-                                ((IExtendedServerObject)chatFrame.Server).ProcessCookie(chatFrame.User, "MSNREGCOOKIE",
+                                chatFrame.Server.ProcessCookie(chatFrame.User, "MSNREGCOOKIE",
                                     regcookie);
                             }
                         }
                         else if (string.Compare("SUBSCRIBERINFO", chatFrame.Message.Parameters[1], true) == 0)
                         {
                             var subscriberinfo = chatFrame.Message.Parameters[2];
-                            ((IExtendedServerObject)chatFrame.Server).ProcessCookie(chatFrame.User, "SUBSCRIBERINFO",
+                            chatFrame.Server.ProcessCookie(chatFrame.User, "SUBSCRIBERINFO",
                                 subscriberinfo);
                         }
                         else if (string.Compare("MSNPROFILE", chatFrame.Message.Parameters[1], true) == 0)
                         {
                             // TODO: Hook up to actual prop
                             var msnprofile = chatFrame.Message.Parameters[2];
-                            ((IExtendedServerObject)chatFrame.Server).ProcessCookie(chatFrame.User, "MSNPROFILE",
+                            chatFrame.Server.ProcessCookie(chatFrame.User, "MSNPROFILE",
                                 msnprofile);
                         }
                         else if (string.Compare("ROLE", chatFrame.Message.Parameters[1], true) == 0)
                         {
                             var role = chatFrame.Message.Parameters[2];
-                            ((IExtendedServerObject)chatFrame.Server).ProcessCookie(chatFrame.User, "ROLE", role);
+                            chatFrame.Server.ProcessCookie(chatFrame.User, "ROLE", role);
                         }
                         else
                         {
@@ -133,7 +132,7 @@ public class Prop : Command, ICommand
                                 chatObject.Props[prop.Name] = propValue;
                                 // prop.SetValue(propValue);
                                 chatObject.Send(
-                                    Raw.RPL_PROP_IRCX(chatFrame.Server, chatFrame.User, (ChatObject)chatObject,
+                                    Raw.RPL_PROP_IRCX(chatFrame.Server, chatFrame.User, chatObject,
                                         prop.Name, propValue), prop.WriteAccessLevel);
                             }
                         }

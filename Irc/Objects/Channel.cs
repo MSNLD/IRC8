@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Irc.Commands;
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Modes;
 using Irc.Resources;
 
@@ -9,8 +8,7 @@ namespace Irc.Objects;
 
 public class Channel : ChatObject
 {
-    public static Dictionary<char, IModeRule> ModeRules = ChannelModeRules.ModeRules;
-    private readonly ChannelAccess _accessList = new();
+    public static Dictionary<char, ModeRule> ModeRules = ChannelModeRules.ModeRules;
     protected readonly IList<Member?> _members = new List<Member?>();
     public HashSet<string> BanList = new();
     public HashSet<string> InviteList = new();
@@ -455,7 +453,7 @@ public class Channel : ChatObject
     {
         var userAccessLevel = EnumAccessLevel.NONE;
         var addressString = user.GetAddress().GetFullAddress();
-        var accessEntries = AccessList.GetEntries();
+        var accessEntries = AccessList.Entries;
 
         foreach (var accessKvp in accessEntries)
         {

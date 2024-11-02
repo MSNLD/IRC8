@@ -2,7 +2,7 @@
 
 namespace Irc.Security;
 
-public class SecurityManager : ISecurityManager
+public class SecurityManager
 {
     private readonly Dictionary<string?, SupportPackage> _supportProviders =
         new(StringComparer.InvariantCultureIgnoreCase);

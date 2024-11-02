@@ -1,22 +1,21 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-internal class Quit : Command, ICommand
+internal class Quit : Command
 {
     public Quit() : base(0, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;
         var user = chatFrame.User;

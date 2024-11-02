@@ -1,21 +1,20 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 
 namespace Irc.Commands;
 
-internal class Names : Command, ICommand
+internal class Names : Command
 {
     public Names() : base(1)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var user = chatFrame.User;
         string?[] channelNames = chatFrame.Message.Parameters.First()

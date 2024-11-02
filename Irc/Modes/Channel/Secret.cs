@@ -1,11 +1,10 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
-public class Secret : ModeRuleChannel, IModeRule
+public class Secret : ModeRuleChannel
 {
     public Secret() : base(IrcStrings.ChannelModeSecret)
     {

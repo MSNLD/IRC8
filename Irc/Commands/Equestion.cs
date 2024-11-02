@@ -1,23 +1,22 @@
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-public class Equestion : Command, ICommand
+public class Equestion : Command
 {
     public Equestion() : base(3)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
     // EQUESTION %#OnStage Nickname :Why am I here?
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var targetName = chatFrame.Message.Parameters.First();
         var nickname = chatFrame.Message.Parameters[1];

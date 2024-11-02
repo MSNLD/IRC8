@@ -1,11 +1,10 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
-public class AuthOnly : ModeRuleChannel, IModeRule
+public class AuthOnly : ModeRuleChannel
 {
     public AuthOnly() : base(IrcStrings.ChannelModeAuthOnly)
     {

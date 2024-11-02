@@ -1,22 +1,21 @@
 ﻿using System.Text.RegularExpressions;
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 
 namespace Irc.Commands;
 
-public class Who : Command, ICommand
+public class Who : Command
 {
     public Who() : base(1)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.Data;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;
         var user = chatFrame.User;

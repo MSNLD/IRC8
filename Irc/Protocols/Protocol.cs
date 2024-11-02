@@ -1,14 +1,13 @@
 ﻿using Irc.Commands;
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Version = Irc.Commands.Version;
 
 namespace Irc.Protocols;
 
-public class Protocol : IProtocol
+public class Protocol
 {
-    protected Dictionary<string?, ICommand> Commands = new(StringComparer.InvariantCultureIgnoreCase);
+    protected Dictionary<string?, Command> Commands = new(StringComparer.InvariantCultureIgnoreCase);
 
     public Protocol()
     {
@@ -71,18 +70,18 @@ public class Protocol : IProtocol
 
     public EnumProtocolType Ircvers { get; set; } = EnumProtocolType.IRC;
 
-    public ICommand? GetCommand(string? name)
+    public Command? GetCommand(string? name)
     {
         Commands.TryGetValue(name, out var command);
         return command;
     }
 
-    public Dictionary<string?, ICommand> GetCommands()
+    public Dictionary<string?, Command> GetCommands()
     {
         return Commands;
     }
 
-    public void AddCommand(ICommand command, string? name = null)
+    public void AddCommand(Command command, string? name = null)
     {
         if (!Commands.ContainsKey(name == null ? command.GetName() : name))
             Commands.Add(name ?? command.GetName(), command);
@@ -129,7 +128,7 @@ public class Protocol : IProtocol
         }
     }
 
-    public void UpdateCommand(ICommand command, string? name = null)
+    public void UpdateCommand(Command command, string? name = null)
     {
         var commandName = name ?? command.GetName();
         if (Commands.ContainsKey(commandName))

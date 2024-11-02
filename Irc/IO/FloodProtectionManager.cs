@@ -1,5 +1,4 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 
 namespace Irc.IO;
@@ -16,14 +15,14 @@ namespace Irc.IO;
     [08:53] <.>Sky> this is what Exchange has demonstrated to me so far and this is how I will implement it
  */
 
-public class FloodProtectionManager : IFloodProtectionManager
+public class FloodProtectionManager
 {
     public EnumFloodResult FloodCheck(EnumCommandDataType type, User user)
     {
         return Audit(user.GetFloodProtectionProfile(), type, user.GetLevel());
     }
 
-    public EnumFloodResult Audit(IFloodProtectionProfile protectionProfile, EnumCommandDataType type,
+    public EnumFloodResult Audit(FloodProtectionProfile protectionProfile, EnumCommandDataType type,
         EnumUserAccessLevel level)
     {
         if (level >= EnumUserAccessLevel.Guide) return EnumFloodResult.Ok;

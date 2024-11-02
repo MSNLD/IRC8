@@ -1,20 +1,19 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.Commands;
 
-public class Ping : Command, ICommand
+public class Ping : Command
 {
     public Ping() : base(1, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         chatFrame.User.Send($"PONG :{chatFrame.Message.Parameters.First()}");
     }

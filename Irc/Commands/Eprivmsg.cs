@@ -1,23 +1,22 @@
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-public class Eprivmsg : Command, ICommand
+public class Eprivmsg : Command
 {
     public Eprivmsg() : base(2)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
     // EPRIVMSG %#OnStage :Why am I here?
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var targetName = chatFrame.Message.Parameters.First();
         var message = chatFrame.Message.Parameters[1];

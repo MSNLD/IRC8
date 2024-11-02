@@ -1,9 +1,8 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.IO;
 
-public class FloodProtectionProfile : IFloodProtectionProfile
+public class FloodProtectionProfile
 {
     private FloodProtectionLevel _floodProtectionLevel;
 

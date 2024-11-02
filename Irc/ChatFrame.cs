@@ -1,12 +1,11 @@
-﻿using Irc.Interfaces;
-using Irc.Objects;
+﻿using Irc.Objects;
 
 namespace Irc;
 
-public class ChatFrame : IChatFrame
+public class ChatFrame(long sequenceId, Server server, User user, Message message)
 {
-    public long SequenceId { get; set; }
-    public Message Message { set; get; }
-    public Server Server { set; get; }
-    public User? User { set; get; }
+    public long SequenceId { get; set; } = sequenceId;
+    public Message Message { set; get; } = message;
+    public Server Server { set; get; } = server;
+    public User User { set; get; } = user;
 }

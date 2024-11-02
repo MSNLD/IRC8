@@ -1,16 +1,15 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.Commands;
 
-internal class Away : Command, ICommand
+internal class Away : Command
 {
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;
         var user = chatFrame.User;

@@ -1,21 +1,20 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-public class Pass : Command, ICommand
+public class Pass : Command
 {
     public Pass() : base(1, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         if (!chatFrame.User.IsRegistered())
             // TODO: Encrypt below pass

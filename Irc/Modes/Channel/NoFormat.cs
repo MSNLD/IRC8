@@ -1,11 +1,10 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
-public class NoFormat : ModeRuleChannel, IModeRule
+public class NoFormat : ModeRuleChannel
 {
     public NoFormat() : base(IrcStrings.ChannelModeProfanity)
     {

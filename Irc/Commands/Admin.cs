@@ -1,17 +1,16 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-public class Admin : Command, ICommand
+public class Admin : Command
 {
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         /*
          <- :sky-8a15b323126 256 Sky :Administrative info about sky-8a15b323126

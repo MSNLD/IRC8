@@ -1,10 +1,9 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 
 namespace Irc.Modes;
 
-public class ModeRule : IModeRule
+public class ModeRule
 {
     public ModeRule(char modeChar, bool requiresParameter = false, int initialValue = 0)
     {
@@ -21,7 +20,7 @@ public class ModeRule : IModeRule
 
     // Although the below is a string we are to evaluate and cast to integer
     // We can also throw bad value here if it is not the desired type
-    public EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
+    public virtual EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
         throw new NotSupportedException();
     }

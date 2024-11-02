@@ -1,21 +1,20 @@
 ﻿using Irc.Commands;
 using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.Extensions.Apollo.Directory.Commands;
 
-internal class Ircvers : Command, ICommand
+internal class Ircvers : Command
 {
     public Ircvers() : base(2, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.Standard;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
     }
 }

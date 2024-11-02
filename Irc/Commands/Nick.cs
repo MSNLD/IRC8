@@ -1,22 +1,21 @@
 ﻿using Irc.Enumerations;
 using Irc.Helpers;
-using Irc.Interfaces;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-public class Nick : Command, ICommand
+public class Nick : Command
 {
     public Nick() : base(1, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.Standard;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         // Is user not registered?
         // Set nickname according to regulations (should be available in user object and changes based on what they authenticated as)
@@ -39,7 +38,7 @@ public class Nick : Command, ICommand
                RegularExpressions.Match(mask, nickname, true);
     }
 
-    public static bool HandlePreauthNicknameChange(IChatFrame chatFrame)
+    public static bool HandlePreauthNicknameChange(ChatFrame chatFrame)
     {
         var nickname = chatFrame.Message.Parameters.First();
         // UTF8 / Guest / Normal / Admin/Sysop/Guide OK
@@ -53,7 +52,7 @@ public class Nick : Command, ICommand
         return true;
     }
 
-    public static bool HandlePreregNicknameChange(IChatFrame chatFrame)
+    public static bool HandlePreregNicknameChange(ChatFrame chatFrame)
     {
         var nickname = chatFrame.Message.Parameters.First();
         var guest = chatFrame.User != null && chatFrame.User.IsGuest();
@@ -69,7 +68,7 @@ public class Nick : Command, ICommand
         return true;
     }
 
-    public static bool HandleRegNicknameChange(IChatFrame chatFrame)
+    public static bool HandleRegNicknameChange(ChatFrame chatFrame)
     {
         var nickname = chatFrame.Message.Parameters.First();
         var guest = chatFrame.User != null && chatFrame.User.IsGuest();

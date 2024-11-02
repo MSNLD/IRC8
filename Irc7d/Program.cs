@@ -153,7 +153,7 @@ internal class Program
                         channel.Modes[keyValuePair.Key] = keyValuePair.Value;
 
                     foreach (var keyValuePair in defaultChannel.Props)
-                        ((Channel)channel).Props[keyValuePair.Key] = keyValuePair.Value;
+                        channel.Props[keyValuePair.Key] = keyValuePair.Value;
 
                     server.AddChannel(channel);
                 }

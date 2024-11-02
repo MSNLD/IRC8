@@ -1,26 +1,25 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 
 namespace Irc.Commands;
 
-public class Privmsg : Command, ICommand
+public class Privmsg : Command
 {
     public Privmsg() : base(2)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.Standard;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         SendMessage(chatFrame, false);
     }
 
-    public static void SendMessage(IChatFrame chatFrame, bool Notice)
+    public static void SendMessage(ChatFrame chatFrame, bool Notice)
     {
         var targetName = chatFrame.Message.Parameters.First();
         var message = chatFrame.Message.Parameters[1];
@@ -47,7 +46,7 @@ public class Privmsg : Command, ICommand
                 var channelMember = channel.GetMember(chatFrame.User);
                 var isOnChannel = channelMember != null;
                 var noExtern = channel.NoExtern;
-                var moderated = ((Channel)channel).Moderated;
+                var moderated = channel.Moderated;
 
                 if (
                     // No External Messages

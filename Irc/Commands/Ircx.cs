@@ -1,21 +1,20 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-internal class Ircx : Command, ICommand
+internal class Ircx : Command
 {
     public Ircx() : base(0, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var protocol = chatFrame.User.Protocol.Ircvers;
         if (protocol < EnumProtocolType.IRCX) protocol = EnumProtocolType.IRCX;

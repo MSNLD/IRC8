@@ -1,11 +1,10 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
-public class Moderated : ModeRuleChannel, IModeRule
+public class Moderated : ModeRuleChannel
 {
     public Moderated() : base(IrcStrings.ChannelModeModerated)
     {

@@ -1,11 +1,10 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.User;
 
-public class Gag : ModeRule, IModeRule
+public class Gag : ModeRule
 {
     /*
      * The GAG mode is applied by a sysop or sysop manager on a user
@@ -24,7 +23,7 @@ public class Gag : ModeRule, IModeRule
     {
     }
 
-    public new EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
+    public override EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
         if (source.Level >= EnumUserAccessLevel.Sysop)
         {

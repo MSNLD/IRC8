@@ -1,17 +1,16 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.User;
 
-public class Invisible : ModeRule, IModeRule
+public class Invisible : ModeRule
 {
     public Invisible() : base(IrcStrings.UserModeInvisible)
     {
     }
 
-    public new EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
+    public override EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
         if (source == target)
         {

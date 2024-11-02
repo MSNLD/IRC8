@@ -1,11 +1,10 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel;
 
-public class BanList : ModeRuleChannel, IModeRule
+public class BanList : ModeRuleChannel
 {
     public BanList() : base(IrcStrings.ChannelModeBan)
     {

@@ -1,4 +1,4 @@
-﻿using Irc.Interfaces;
+﻿using Irc.Modes;
 using Irc.Modes.Channel;
 using Irc.Modes.Channel.Member;
 using Irc.Resources;
@@ -21,7 +21,7 @@ v - give/take the ability to speak on a moderated channel;
 k - set a channel key (password).
 */
 
-    public static Dictionary<char, IModeRule> ModeRules = new()
+    public static Dictionary<char, ModeRule> ModeRules = new()
     {
         // IRC
         { IrcStrings.MemberModeHost, new Operator() },

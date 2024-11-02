@@ -1,7 +1,4 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
-using Irc.Modes;
-using Irc.Modes.Channel.Member;
 using Irc.Resources;
 
 namespace Irc.Objects;
@@ -56,12 +53,12 @@ public class Member : ChatObject
     {
         return _user;
     }
-    
+
     public string GetModeString()
     {
         return $"{new string(Modes.Where(mode => mode.Value > 0).Select(mode => mode.Key).ToArray())}";
     }
-    
+
     public string GetListedMode()
     {
         if (IsOwner()) return IrcStrings.MemberModeFlagOwner.ToString();
@@ -101,11 +98,11 @@ public class Member : ChatObject
         return !IsOwner() && !IsHost() && !IsVoice();
     }
 
-    public new void SetOwner(bool flag)
+    public void SetOwner(bool flag)
     {
         Modes[IrcStrings.MemberModeOwner] = flag ? 1 : 0;
     }
-    
+
     public void SetHost(bool flag)
     {
         Modes[IrcStrings.MemberModeHost] = flag ? 1 : 0;
@@ -123,11 +120,20 @@ public class Member : ChatObject
         SetVoice(false);
     }
 
-    public override void Send(string message) => _user.Send(message);
+    public override void Send(string message)
+    {
+        _user.Send(message);
+    }
 
-    public override void Send(string message, ChatObject except = null) => _user.Send(message, except);
+    public override void Send(string message, ChatObject except = null)
+    {
+        _user.Send(message, except);
+    }
 
-    public override void Send(string message, EnumChannelAccessLevel accessLevel) => _user.Send(message, accessLevel);
+    public override void Send(string message, EnumChannelAccessLevel accessLevel)
+    {
+        _user.Send(message, accessLevel);
+    }
 
     public override bool CanBeModifiedBy(ChatObject source)
     {

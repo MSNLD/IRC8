@@ -1,11 +1,17 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.Access;
 
-public class AccessList : IAccessList
+public class AccessList
 {
-    protected Dictionary<EnumAccessLevel, List<AccessEntry>> AccessEntries = new();
+    public Dictionary<EnumAccessLevel, List<AccessEntry>> Entries = new() 
+    {
+        { EnumAccessLevel.OWNER, new List<AccessEntry>() },
+        { EnumAccessLevel.HOST, new List<AccessEntry>() },
+        { EnumAccessLevel.VOICE, new List<AccessEntry>() },
+        { EnumAccessLevel.DENY, new List<AccessEntry>() },
+        { EnumAccessLevel.GRANT, new List<AccessEntry>() }
+    };
 
     public EnumAccessError Add(AccessEntry accessEntry)
     {
@@ -33,7 +39,7 @@ public class AccessList : IAccessList
 
     public List<AccessEntry>? Get(EnumAccessLevel accessLevel)
     {
-        AccessEntries.TryGetValue(accessLevel, out var list);
+        Entries.TryGetValue(accessLevel, out var list);
         return list;
     }
 
@@ -45,23 +51,18 @@ public class AccessList : IAccessList
         return accessList.FirstOrDefault(entry => entry.Mask == mask);
     }
 
-    public Dictionary<EnumAccessLevel, List<AccessEntry>> GetEntries()
-    {
-        return AccessEntries;
-    }
-
     public EnumAccessError Clear(EnumUserAccessLevel userAccessLevel, EnumAccessLevel accessLevel)
     {
         var hasRemaining = false;
-        AccessEntries
+        Entries
             .Where(kvp => accessLevel == EnumAccessLevel.All || kvp.Key == accessLevel)
             .ToList()
             .ForEach(
                 kvp =>
                 {
-                    AccessEntries[kvp.Key] = kvp.Value.Where(accessEntry => accessEntry.EntryLevel > userAccessLevel)
+                    Entries[kvp.Key] = kvp.Value.Where(accessEntry => accessEntry.EntryLevel > userAccessLevel)
                         .ToList();
-                    if (AccessEntries[kvp.Key].Count > 0) hasRemaining = true;
+                    if (Entries[kvp.Key].Count > 0) hasRemaining = true;
                 }
             );
 

@@ -1,5 +1,4 @@
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
@@ -7,7 +6,7 @@ namespace Irc.Modes;
 
 public class ModeOperation
 {
-    public IModeRule? Mode { get; set; }
+    public ModeRule? Mode { get; set; }
     public Objects.User? Source { get; set; }
     public ChatObject? Target { get; set; }
     public bool ModeFlag { get; set; }

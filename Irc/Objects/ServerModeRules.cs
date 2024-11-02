@@ -1,8 +1,8 @@
-﻿using Irc.Interfaces;
+﻿using Irc.Modes;
 
 namespace Irc.Objects;
 
 public class ServerModeRules
 {
-    public static Dictionary<char, IModeRule> ModeRules = new();
+    public static Dictionary<char, ModeRule> ModeRules = new();
 }

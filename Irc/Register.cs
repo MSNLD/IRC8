@@ -1,13 +1,12 @@
 ﻿using Irc.Commands;
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 
 namespace Irc;
 
 public static class Register
 {
-    public static void TryRegister(IChatFrame chatFrame)
+    public static void TryRegister(ChatFrame chatFrame)
     {
         if (CanRegister(chatFrame))
         {
@@ -94,7 +93,7 @@ public static class Register
         return false;
     }
 
-    public static bool CanRegister(IChatFrame chatFrame)
+    public static bool CanRegister(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;
         var user = chatFrame.User;

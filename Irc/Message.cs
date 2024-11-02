@@ -1,11 +1,12 @@
-﻿using Irc.Interfaces;
+﻿using Irc.Commands;
+using Irc.Protocols;
 
 namespace Irc;
 
 public class Message
 {
-    private readonly IProtocol _protocol;
-    private ICommand? _command;
+    private readonly Protocol _protocol;
+    private Command? _command;
     private string? _commandName;
 
     /*
@@ -27,7 +28,7 @@ public class Message
     // TODO: To get rid of below
     public int ParamOffset;
 
-    public Message(IProtocol protocol, string message)
+    public Message(Protocol protocol, string message)
     {
         _protocol = protocol;
         OriginalText = message;
@@ -42,7 +43,7 @@ public class Message
 
     public bool HasCommand { get; private set; }
 
-    public ICommand? GetCommand()
+    public Command? GetCommand()
     {
         return _command;
     }

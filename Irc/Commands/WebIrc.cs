@@ -1,5 +1,4 @@
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Resources;
 using NLog;
 
@@ -7,7 +6,7 @@ namespace Irc.Commands;
 // Implementation based on IRCv3 Spec
 // URL: https://ircv3.net/specs/extensions/webirc.html
 
-public class WebIrc : Command, ICommand
+public class WebIrc : Command
 {
     public static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -15,12 +14,12 @@ public class WebIrc : Command, ICommand
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var remoteAddress = chatFrame.User.GetConnection().GetIp();
 
@@ -82,7 +81,7 @@ public class WebIrc : Command, ICommand
         }
     }
 
-    public void Reject(IChatFrame chatFrame, string remoteAddress)
+    public void Reject(ChatFrame chatFrame, string remoteAddress)
     {
         Log.Warn($"Unauthorized WEBIRC attempt from {remoteAddress}");
         var originalCommand = chatFrame.Message.OriginalText.Split(' ', StringSplitOptions.RemoveEmptyEntries)

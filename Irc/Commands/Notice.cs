@@ -1,20 +1,19 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.Commands;
 
-internal class Notice : Command, ICommand
+internal class Notice : Command
 {
     public Notice() : base(2)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.Standard;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         Privmsg.SendMessage(chatFrame, true);
     }

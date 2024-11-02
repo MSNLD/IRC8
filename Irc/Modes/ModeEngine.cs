@@ -1,18 +1,11 @@
-﻿using Irc.Interfaces;
-using Irc.Objects;
+﻿using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes;
 
 public class ModeEngine
 {
-    private readonly IModeRules _modeRules;
     private readonly Dictionary<char, ModeRule> modeRules = new();
-
-    public ModeEngine(IModeRules modeRules)
-    {
-        _modeRules = modeRules;
-    }
 
     public void AddModeRule(char modeChar, ModeRule modeRule)
     {

@@ -1,11 +1,10 @@
 ﻿using System.Text.RegularExpressions;
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 
 namespace Irc.Props;
 
-public class PropRule : IPropRule
+public class PropRule
 {
     public string ValidationMask;
 

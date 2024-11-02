@@ -1,10 +1,9 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 
 namespace Irc.Modes;
 
-public class ModeRuleChannel : ModeRule, IModeRule
+public class ModeRuleChannel : ModeRule
 {
     private readonly EnumChannelAccessLevel accessLevel;
 
@@ -15,7 +14,7 @@ public class ModeRuleChannel : ModeRule, IModeRule
         this.accessLevel = accessLevel;
     }
 
-    public EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
+    public override EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
         var user = (Objects.User)source;
         var channel = (Objects.Channel)target;
@@ -49,7 +48,7 @@ public class ModeRuleChannel : ModeRule, IModeRule
     public void SetChannelMode(ChatObject source, Objects.Channel target, bool flag, string? parameter)
     {
         target.Modes[ModeChar] = flag ? 1 : 0;
-        DispatchModeChange(source, (ChatObject)target, flag, parameter);
+        DispatchModeChange(source, target, flag, parameter);
     }
 
     public interface IModeRuleCallback

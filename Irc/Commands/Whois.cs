@@ -1,22 +1,21 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-public class Whois : Command, ICommand
+public class Whois : Command
 {
     public Whois() : base(1)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         /*
          <- :sky-8a15b323126 311 Sky Sky ~no 192.168.88.131 * :Sky

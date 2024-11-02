@@ -1,20 +1,19 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 
 namespace Irc.Commands;
 
-public class Command : ICommand
+public abstract class Command
 {
     private readonly bool _registrationRequired;
-    protected int _requiredMaximumParameters;
-    protected int _requiredMinimumParameters;
+    protected readonly int RequiredMaximumParameters;
+    protected int RequiredMinimumParameters;
 
     public Command(int requiredMinimumParameters = 0, bool registrationRequired = true,
         int requiredMaximumParameters = -1)
     {
-        _requiredMinimumParameters = requiredMinimumParameters;
+        RequiredMinimumParameters = requiredMinimumParameters;
         _registrationRequired = registrationRequired;
-        _requiredMaximumParameters = requiredMaximumParameters;
+        RequiredMaximumParameters = requiredMaximumParameters;
     }
 
     public string? GetName()
@@ -22,27 +21,21 @@ public class Command : ICommand
         return GetType().Name;
     }
 
-    public EnumCommandDataType GetDataType()
-    {
-        throw new NotImplementedException();
-    }
+    public abstract EnumCommandDataType GetDataType();
 
-    public void Execute(IChatFrame chatFrame)
-    {
-        throw new NotImplementedException();
-    }
+    public abstract void Execute(ChatFrame chatFrame);
 
-    public bool ParametersAreValid(IChatFrame chatFrame)
+    public bool ParametersAreValid(ChatFrame chatFrame)
     {
         var parameterCount = chatFrame.Message.Parameters.Count;
 
-        if (parameterCount < _requiredMinimumParameters)
+        if (parameterCount < RequiredMinimumParameters)
         {
             chatFrame.User.Send(Raw.IRCX_ERR_NEEDMOREPARAMS_461(chatFrame.Server, chatFrame.User, GetName()));
             return false;
         }
 
-        if (_requiredMaximumParameters > 0 && parameterCount > _requiredMaximumParameters)
+        if (RequiredMaximumParameters > 0 && parameterCount > RequiredMaximumParameters)
         {
             chatFrame.User.Send(Raw.IRCX_ERR_TOOMANYARGUMENTS_901(chatFrame.Server, chatFrame.User, GetName()));
             return false;
@@ -51,7 +44,7 @@ public class Command : ICommand
         return true;
     }
 
-    public bool RegistrationNeeded(IChatFrame chatFrame)
+    public bool RegistrationNeeded(ChatFrame chatFrame)
     {
         if (!_registrationRequired || (_registrationRequired && chatFrame.User.IsRegistered())) return false;
 

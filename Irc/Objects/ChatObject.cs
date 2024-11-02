@@ -1,6 +1,5 @@
 ﻿using Irc.Access;
 using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Resources;
 
 namespace Irc.Objects;
@@ -14,7 +13,7 @@ public abstract class ChatObject
         { "NAME", null }
     };
 
-    public IAccessList AccessList { get; set; } = new AccessList();
+    public AccessList AccessList { get; set; } = new();
 
 
     public EnumUserAccessLevel Level => EnumUserAccessLevel.None;

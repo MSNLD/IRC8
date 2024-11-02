@@ -1,22 +1,21 @@
 ﻿using Irc.Enumerations;
 using Irc.Helpers;
-using Irc.Interfaces;
 using Irc.Security.Packages;
 
 namespace Irc.Commands;
 
-public class Auth : Command, ICommand
+public class Auth : Command
 {
     public Auth() : base(3, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         if (chatFrame.User.IsRegistered())
         {

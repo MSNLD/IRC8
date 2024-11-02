@@ -1,5 +1,4 @@
-﻿using Irc.Interfaces;
-using Irc.Objects;
+﻿using Irc.Objects;
 
 namespace Irc.Resources;
 

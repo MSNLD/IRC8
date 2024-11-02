@@ -1,17 +1,16 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-public class Users : Command, ICommand
+public class Users : Command
 {
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         // -> sky-8a15b323126 USERS
         // < - :sky - 8a15b323126 446 Sky2k: USERS has been disabled

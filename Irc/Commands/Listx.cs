@@ -1,23 +1,22 @@
 ﻿using Irc.Enumerations;
 using Irc.Helpers;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-internal class Listx : Command, ICommand
+internal class Listx : Command
 {
     public Listx() : base(1)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;
         var user = chatFrame.User;
@@ -64,7 +63,7 @@ internal class Listx : Command, ICommand
                     channel,
                     string.Join("", channel.Modes.Keys),
                     channel.GetMembers().Count,
-                    ((Channel)channel).UserLimit,
+                    channel.UserLimit,
                     channel.Props[IrcStrings.ChannelPropTopic] ?? string.Empty
                 ));
         user.Send(Raw.IRCX_RPL_LISTXEND_817(server, user));

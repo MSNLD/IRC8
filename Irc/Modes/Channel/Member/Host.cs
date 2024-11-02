@@ -1,17 +1,16 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Modes.Channel.Member;
 
-public class Host : ModeRuleChannel, IModeRule
+public class Host : ModeRuleChannel
 {
     public Host() : base(IrcStrings.UserModeHost, true)
     {
     }
 
-    public new EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
+    public override EnumIrcError Evaluate(ChatObject source, ChatObject? target, bool flag, string? parameter)
     {
         // TODO: Write this better
         if (target == source && flag)
@@ -23,6 +22,12 @@ public class Host : ModeRuleChannel, IModeRule
             var member = user.GetChannels().LastOrDefault().Value;
             if (channel.Props["OWNERKEY"] == parameter)
             {
+                if (member.IsOwner())
+                {
+                    member.SetHost(false);
+                    Operator.ExecuteHost(source, channel, false, member);
+                }
+                
                 Owner.ExecuteOwner(source, channel, true, member);
             }
             else if (channel.Props["HOSTKEY"] == parameter)
@@ -30,15 +35,11 @@ public class Host : ModeRuleChannel, IModeRule
                 if (member.IsOwner())
                 {
                     member.SetOwner(false);
-                    DispatchModeChange((ChatObject)channel, IrcStrings.MemberModeOwner, (ChatObject)source,
-                        (ChatObject)target, false, target.ToString());
-                    //channel.Modes.GetMode('q').DispatchModeChange(source, channel, false, target.ToString());
+                    Owner.ExecuteOwner(source, channel, false, member);
                 }
 
                 member.SetHost(true);
-                DispatchModeChange((ChatObject)channel, IrcStrings.MemberModeHost, (ChatObject)source,
-                    (ChatObject)target, true, target.ToString());
-                // channel.Modes.GetMode('o').DispatchModeChange(source, channel, true, target.ToString());
+                Operator.ExecuteHost(source, channel, true, member);
             }
 
             return EnumIrcError.OK;

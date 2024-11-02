@@ -1,8 +1,6 @@
-﻿using Irc.Interfaces;
+﻿namespace Irc.IO;
 
-namespace Irc.IO;
-
-public class DataRegulator : IDataRegulator
+public class DataRegulator
 {
     private readonly int _incomingByteThreshold;
 

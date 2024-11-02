@@ -1,23 +1,22 @@
 ﻿using Irc.Enumerations;
-using Irc.Interfaces;
 using Irc.Modes;
 using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
-internal class Mode : Command, ICommand
+internal class Mode : Command
 {
     public Mode() : base(1, false)
     {
     }
 
-    public new EnumCommandDataType GetDataType()
+    public override EnumCommandDataType GetDataType()
     {
         return EnumCommandDataType.None;
     }
 
-    public new void Execute(IChatFrame chatFrame)
+    public override void Execute(ChatFrame chatFrame)
     {
         if (!chatFrame.User.IsRegistered())
         {
@@ -56,7 +55,7 @@ internal class Mode : Command, ICommand
         }
     }
 
-    public void ProcessModes(IChatFrame chatFrame, ChatObject chatObject)
+    public void ProcessModes(ChatFrame chatFrame, ChatObject chatObject)
     {
         // Perform mode operation
         Queue<string> modeParameters = null;
@@ -65,7 +64,7 @@ internal class Mode : Command, ICommand
         ModeEngine.Breakdown(chatFrame.User, chatObject, chatFrame.Message.Parameters[1], modeParameters);
     }
 
-    public void ListModes(IChatFrame chatFrame, ChatObject chatObject)
+    public void ListModes(ChatFrame chatFrame, ChatObject chatObject)
     {
         /*-> sky-8a15b323126 MODE Sky
         <- :sky-8a15b323126 221 Sky +ix

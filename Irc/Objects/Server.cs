@@ -1,12 +1,16 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text;
+using Irc.Access;
 using Irc.Commands;
 using Irc.Enumerations;
 using Irc.Extensions.Security.Packages;
 using Irc.Interfaces;
 using Irc.IO;
+using Irc.Modes;
+using Irc.Protocols;
 using Irc.Resources;
+using Irc.Security;
 using Irc.Security.Credentials;
 using Irc.Security.Packages;
 using Irc.Security.Passport;
@@ -18,26 +22,26 @@ namespace Irc.Objects;
 public class Server : ChatObject
 {
     public static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
-    public static Dictionary<char, IModeRule> ModeRules = ServerModeRules.ModeRules;
+    public static Dictionary<char, ModeRule> ModeRules = ServerModeRules.ModeRules;
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private readonly IFloodProtectionManager _floodProtectionManager;
+    private readonly FloodProtectionManager _floodProtectionManager;
     private readonly PassportV4 _passport;
     private readonly Task _processingTask;
-    private readonly ISecurityManager _securityManager;
+    private readonly SecurityManager _securityManager;
     private readonly ISocketServer _socketServer;
     private readonly ConcurrentQueue<User?> PendingNewUserQueue = new();
     private readonly ConcurrentQueue<User?> PendingRemoveUserQueue = new();
-    public IDictionary<EnumProtocolType, IProtocol> _protocols = new Dictionary<EnumProtocolType, IProtocol>();
+    public IDictionary<EnumProtocolType, Protocol> _protocols = new Dictionary<EnumProtocolType, Protocol>();
     public IList<Channel?> Channels;
     public IList<User?> Users = new List<User?>();
 
     public Server(ISocketServer socketServer,
-        ISecurityManager securityManager,
-        IFloodProtectionManager floodProtectionManager,
+        SecurityManager securityManager,
+        FloodProtectionManager floodProtectionManager,
         Settings serverSettings,
         IList<Channel?> channels,
-        ICredentialProvider? ntlmCredentialProvider = null)
+        ICredentialProvider? ntlmCredentialProvider)
     {
         Name = serverSettings.Name;
         Title = Name;
@@ -87,9 +91,6 @@ public class Server : ChatObject
     }
 
     public Settings ServerSettings { get; set; }
-
-    public IAccessList AccessList { get; } = new ServerAccess();
-
     public string[] SupportPackages { get; }
 
     public DateTime CreationDate => ServerSettings.Creation;
@@ -163,7 +164,7 @@ public class Server : ChatObject
 
     public virtual Channel CreateChannel(User? creator, string? name, string? key)
     {
-        var channel = (Channel)CreateChannel(name);
+        var channel = CreateChannel(name);
         channel.Props[IrcStrings.ChannelPropTopic] = name;
         // if (!string.IsNullOrEmpty(key))
         // {
@@ -262,13 +263,13 @@ public class Server : ChatObject
         }
     }
 
-    public IProtocol GetProtocol(EnumProtocolType protocolType)
+    public Protocol GetProtocol(EnumProtocolType protocolType)
     {
         if (_protocols.TryGetValue(protocolType, out var protocol)) return protocol;
         return null;
     }
 
-    public ISecurityManager GetSecurityManager()
+    public SecurityManager GetSecurityManager()
     {
         return _securityManager;
     }
@@ -484,7 +485,7 @@ public class Server : ChatObject
         }
     }
 
-    protected void AddCommand(ICommand command, EnumProtocolType fromProtocol = EnumProtocolType.IRC,
+    protected void AddCommand(Command command, EnumProtocolType fromProtocol = EnumProtocolType.IRC,
         string? name = null)
     {
         foreach (var protocol in _protocols)
@@ -492,7 +493,7 @@ public class Server : ChatObject
                 protocol.Value.AddCommand(command, name);
     }
 
-    protected void AddProtocol(EnumProtocolType protocolType, IProtocol protocol, bool inheritCommands = true)
+    protected void AddProtocol(EnumProtocolType protocolType, Protocol protocol, bool inheritCommands = true)
     {
         if (inheritCommands)
             for (var protocolIndex = 0; protocolIndex < (int)protocolType; protocolIndex++)
