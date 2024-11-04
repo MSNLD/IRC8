@@ -1,16 +1,9 @@
-﻿using Irc.Enumerations;
-
-namespace Irc.Commands;
+﻿namespace Irc.Commands;
 
 internal class Userhost : Command
 {
     public Userhost() : base(1)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
     }
 
     public override void Execute(ChatFrame chatFrame)

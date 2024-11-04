@@ -71,7 +71,7 @@ public class Channel : ChatObject
     public Member? GetMemberByNickname(string? nickname)
     {
         return _members.FirstOrDefault(member =>
-            string.Compare(member?.GetUser().GetAddress().Nickname, nickname, StringComparison.OrdinalIgnoreCase) == 0);
+            string.Compare((member?.GetUser().Address).Nickname, nickname, StringComparison.OrdinalIgnoreCase) == 0);
     }
 
     public bool Allows(User? user)
@@ -173,21 +173,21 @@ public class Channel : ChatObject
 
     public override bool CanBeModifiedBy(ChatObject source)
     {
-        return source is Server || ((User)source).GetChannels().Keys.Contains(this);
+        return source is Server || ((User)source).Channels.Keys.Contains(this);
     }
 
     public EnumIrcError CanModifyMember(Member? source, Member target,
         EnumChannelAccessLevel requiredLevel)
     {
         // Oper check
-        if (target.GetUser().GetLevel() >= EnumUserAccessLevel.Guide)
+        if (target.GetUser().Level >= EnumUserAccessLevel.Guide)
         {
-            if (source.GetUser().GetLevel() < EnumUserAccessLevel.Guide) return EnumIrcError.ERR_NOIRCOP;
+            if (source.GetUser().Level < EnumUserAccessLevel.Guide) return EnumIrcError.ERR_NOIRCOP;
             // TODO: Maybe there is better raws for below
-            if (source.GetUser().GetLevel() < EnumUserAccessLevel.Sysop &&
-                source.GetUser().GetLevel() < target.GetUser().GetLevel()) return EnumIrcError.ERR_NOPERMS;
-            if (source.GetUser().GetLevel() < EnumUserAccessLevel.Administrator &&
-                source.GetUser().GetLevel() < target.GetUser().GetLevel()) return EnumIrcError.ERR_NOPERMS;
+            if (source.GetUser().Level < EnumUserAccessLevel.Sysop &&
+                source.GetUser().Level < target.GetUser().Level) return EnumIrcError.ERR_NOPERMS;
+            if (source.GetUser().Level < EnumUserAccessLevel.Administrator &&
+                source.GetUser().Level < target.GetUser().Level) return EnumIrcError.ERR_NOPERMS;
         }
 
         if (source.GetLevel() >= requiredLevel && source.GetLevel() >= target.GetLevel())
@@ -330,7 +330,7 @@ public class Channel : ChatObject
 
     public virtual bool InviteMember(User user)
     {
-        var address = user.GetAddress().GetAddress();
+        var address = user.Address.GetAddress();
         return InviteList.Add(address);
     }
 
@@ -374,13 +374,13 @@ public class Channel : ChatObject
 
     private static bool CompareUserAddress(User? user, User? otherUser)
     {
-        if (otherUser == user || otherUser.GetAddress().UserHost == user.GetAddress().UserHost) return true;
+        if (otherUser == user || otherUser.Address.UserHost == user.Address.UserHost) return true;
         return false;
     }
 
     private static bool CompareUserNickname(User? user, User? otherUser)
     {
-        return otherUser.GetAddress().Nickname.ToUpper() == user.GetAddress().Nickname.ToUpper();
+        return otherUser.Address.Nickname.ToUpper() == user.Address.Nickname.ToUpper();
     }
 
     public static bool ValidName(string? channel)
@@ -409,7 +409,7 @@ public class Channel : ChatObject
 
     protected EnumChannelAccessResult CheckOper(User? user)
     {
-        if (user.GetLevel() >= EnumUserAccessLevel.Guide) return EnumChannelAccessResult.SUCCESS_OWNER;
+        if (user.Level >= EnumUserAccessLevel.Guide) return EnumChannelAccessResult.SUCCESS_OWNER;
         return EnumChannelAccessResult.NONE;
     }
 
@@ -430,7 +430,7 @@ public class Channel : ChatObject
     protected EnumChannelAccessResult CheckInviteOnly(User? user)
     {
         if (Modes[IrcStrings.ChannelModeInvite] == 1)
-            return InviteList.Contains(user.GetAddress().GetAddress())
+            return InviteList.Contains(user.Address.GetAddress())
                 ? EnumChannelAccessResult.SUCCESS_MEMBER
                 : EnumChannelAccessResult.ERR_INVITEONLYCHAN;
 
@@ -452,7 +452,7 @@ public class Channel : ChatObject
     public EnumAccessLevel GetChannelAccess(User? user)
     {
         var userAccessLevel = EnumAccessLevel.NONE;
-        var addressString = user.GetAddress().GetFullAddress();
+        var addressString = user.Address.GetFullAddress();
         var accessEntries = AccessList.Entries;
 
         foreach (var accessKvp in accessEntries)

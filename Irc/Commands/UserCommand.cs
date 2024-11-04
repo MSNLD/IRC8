@@ -1,5 +1,4 @@
-﻿using Irc.Enumerations;
-using Irc.Resources;
+﻿using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -9,11 +8,6 @@ public class UserCommand : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public new string? GetName()
     {
         return IrcStrings.CommandUser;
@@ -21,7 +15,7 @@ public class UserCommand : Command
 
     public override void Execute(ChatFrame chatFrame)
     {
-        var address = chatFrame.User.GetAddress();
+        var address = chatFrame.User.Address;
         if (!string.IsNullOrWhiteSpace(address.RealName))
         {
             chatFrame.User.Send(Raw.IRCX_ERR_ALREADYREGISTERED_462(chatFrame.Server, chatFrame.User));

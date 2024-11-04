@@ -18,8 +18,8 @@ public class Host : ModeRuleChannel
             if (string.IsNullOrWhiteSpace(parameter)) return EnumIrcError.OK;
 
             var user = (Objects.User)source;
-            var channel = user.GetChannels().LastOrDefault().Key;
-            var member = user.GetChannels().LastOrDefault().Value;
+            var channel = user.Channels.LastOrDefault().Key;
+            var member = user.Channels.LastOrDefault().Value;
             if (channel.Props["OWNERKEY"] == parameter)
             {
                 if (member.IsOwner())

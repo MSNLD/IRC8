@@ -1,16 +1,9 @@
-﻿using Irc.Enumerations;
-
-namespace Irc.Commands;
+﻿namespace Irc.Commands;
 
 internal class Isircx : Command
 {
     public Isircx() : base(0, false)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
     }
 
     public override void Execute(ChatFrame chatFrame)

@@ -25,7 +25,6 @@ public class Server : ChatObject
     public static Dictionary<char, ModeRule> ModeRules = ServerModeRules.ModeRules;
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private readonly FloodProtectionManager _floodProtectionManager;
     private readonly PassportV4 _passport;
     private readonly Task _processingTask;
     private readonly SecurityManager _securityManager;
@@ -38,7 +37,6 @@ public class Server : ChatObject
 
     public Server(ISocketServer socketServer,
         SecurityManager securityManager,
-        FloodProtectionManager floodProtectionManager,
         Settings serverSettings,
         IList<Channel?> channels,
         ICredentialProvider? ntlmCredentialProvider)
@@ -47,7 +45,6 @@ public class Server : ChatObject
         Title = Name;
         _socketServer = socketServer;
         _securityManager = securityManager;
-        _floodProtectionManager = floodProtectionManager;
         ServerSettings = serverSettings;
         Channels = channels;
         _processingTask = new Task(Process);
@@ -182,8 +179,7 @@ public class Server : ChatObject
     public User? CreateUser(IConnection connection)
     {
         return new User(connection,
-            new DataRegulator(MaxInputBytes, MaxOutputBytes),
-            new FloodProtectionProfile(), this);
+            new DataRegulator(MaxInputBytes, MaxOutputBytes), this);
     }
 
     public IList<User?> GetUsers()
@@ -194,7 +190,7 @@ public class Server : ChatObject
 
     public User? GetUserByNickname(string? nickname)
     {
-        return Users.FirstOrDefault(user => string.Compare(user.GetAddress().Nickname.Trim(), nickname, true) == 0);
+        return Users.FirstOrDefault(user => string.Compare(user.Address.Nickname.Trim(), nickname, true) == 0);
     }
 
     public User? GetUserByNickname(string? nickname, User? currentUser)
@@ -214,7 +210,7 @@ public class Server : ChatObject
     public IList<User?> GetUsersByList(List<string?> nicknames, char separator)
     {
         return Users.Where(user =>
-            nicknames.Contains(user.GetAddress().Nickname, StringComparer.InvariantCultureIgnoreCase)).ToList();
+            nicknames.Contains(user.Address.Nickname, StringComparer.InvariantCultureIgnoreCase)).ToList();
     }
 
     public IList<Channel?> GetChannels()
@@ -321,20 +317,20 @@ public class Server : ChatObject
                 user.Nickname = encodedNickname;
 
                 // Set the RealName to empty string to allow it to pass register
-                user.GetAddress().RealName = string.Empty;
+                user.Address.RealName = string.Empty;
             }
         }
         else if (name == IrcStrings.UserPropSubscriberInfo && user.IsAuthenticated() && user.IsRegistered())
         {
             var subscribedString =
-                _passport.ValidateSubscriberInfo(value, user.GetSupportPackage().GetCredentials().GetIssuedAt());
+                _passport.ValidateSubscriberInfo(value, user.SupportPackage.GetCredentials().GetIssuedAt());
             int.TryParse(subscribedString, out var subscribed);
-            if ((subscribed & 1) == 1) user.GetProfile().Registered = true;
+            if ((subscribed & 1) == 1) user.Profile.Registered = true;
         }
         else if (name == IrcStrings.UserPropMsnProfile && user.IsAuthenticated() && !user.IsRegistered())
         {
             int.TryParse(value, out var profileCode);
-            user.GetProfile().SetProfileCode(profileCode);
+            user.Profile.SetProfileCode(profileCode);
         }
         else if (name == IrcStrings.UserPropRole && user.IsAuthenticated())
         {
@@ -424,7 +420,7 @@ public class Server : ChatObject
             {
                 if (user.DisconnectIfIncomingThresholdExceeded()) continue;
 
-                if (user.GetDataRegulator().GetIncomingBytes() > 0)
+                if (user.DataRegulator.GetIncomingBytes() > 0)
                 {
                     hasWork = true;
                     backoffMs = 0;
@@ -493,24 +489,14 @@ public class Server : ChatObject
                 protocol.Value.AddCommand(command, name);
     }
 
-    protected void AddProtocol(EnumProtocolType protocolType, Protocol protocol, bool inheritCommands = true)
-    {
-        if (inheritCommands)
-            for (var protocolIndex = 0; protocolIndex < (int)protocolType; protocolIndex++)
-                if (_protocols.ContainsKey((EnumProtocolType)protocolIndex))
-                    foreach (var command in _protocols[(EnumProtocolType)protocolIndex].GetCommands())
-                        protocol.AddCommand(command.Value, command.Key);
-        _protocols.Add(protocolType, protocol);
-    }
-
     protected void FlushCommands()
     {
         foreach (var protocol in _protocols) protocol.Value.FlushCommands();
     }
 
-    private void ProcessNextModeOperation(User? user)
+    private void ProcessNextModeOperation(User user)
     {
-        var modeOperations = user.GetModeOperations();
+        var modeOperations = user.ModeOperations;
         if (modeOperations.Count > 0) modeOperations.Dequeue().Execute();
     }
 
@@ -530,14 +516,13 @@ public class Server : ChatObject
 
     private void ProcessNextCommand(User? user)
     {
-        var message = user.GetDataRegulator().PeekIncoming();
+        var message = user.DataRegulator.PeekIncoming();
         if (message == null) return;
 
         var command = message.GetCommand();
         if (command != null)
         {
-            var floodResult = _floodProtectionManager.Audit(user.GetFloodProtectionProfile(),
-                command.GetDataType(), user.GetLevel());
+            var floodResult = user.FloodProtection.Audit(user.Level);
             if (floodResult == EnumFloodResult.Ok)
             {
                 if (command is not Ping && command is not Pong) user.LastIdle = DateTime.UtcNow;
@@ -563,7 +548,7 @@ public class Server : ChatObject
         }
         else
         {
-            user.GetDataRegulator().PopIncoming();
+            user.DataRegulator.PopIncoming();
             user.Send(Raw.IRCX_ERR_UNKNOWNCOMMAND_421(this, user, message.GetCommandName()));
             // command not found
         }

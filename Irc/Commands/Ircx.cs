@@ -9,11 +9,6 @@ internal class Ircx : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var protocol = chatFrame.User.Protocol.Ircvers;

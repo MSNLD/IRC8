@@ -9,7 +9,7 @@ public static class Raw
 {
     public static string IRCX_CLOSINGLINK(Server server, User? user, string code, string message)
     {
-        return $"ERROR :Closing Link: {user}[{user.GetAddress().RemoteIP}] {code} ({message})";
+        return $"ERROR :Closing Link: {user}[{user.Address.RemoteIP}] {code} ({message})";
     }
 
     public static string IRCX_CLOSINGLINK_007_SYSTEMKILL(Server server, User? user, string ip)
@@ -49,48 +49,48 @@ public static class Raw
 
     public static string RPL_JOIN_IRC(User user, Channel channel)
     {
-        return $":{user.GetAddress()} JOIN :{channel}";
+        return $":{user.Address} JOIN :{channel}";
     }
 
     public static string RPL_JOIN_MSN(Server server, User user, Channel channel)
     {
-        return $":{user.GetAddress()} JOIN %S :{channel}";
+        return $":{user.Address} JOIN %S :{channel}";
     }
 
     public static string RPL_PART_IRC(User user, Channel channel)
     {
-        return $":{user.GetAddress()} PART {channel}";
+        return $":{user.Address} PART {channel}";
     }
 
     public static string RPL_QUIT_IRC(Server server, User user)
     {
-        return $":{user.GetAddress()} QUIT :%s";
+        return $":{user.Address} QUIT :%s";
     }
 
     public static string RPL_MODE_IRC(User user, ChatObject? target, string modeString)
     {
-        return $":{user.GetAddress()} MODE {target} {modeString}";
+        return $":{user.Address} MODE {target} {modeString}";
     }
 
     public static string RPL_TOPIC_IRC(Server server, User? user, Channel channel, string? topic)
     {
-        return $":{user.GetAddress()} TOPIC {channel} :{topic}";
+        return $":{user.Address} TOPIC {channel} :{topic}";
     }
 
     public static string RPL_PROP_IRCX(Server server, User? user, ChatObject chatObject, string? propName,
         string? propValue)
     {
-        return $":{user.GetAddress()} PROP {chatObject} {propName} :{propValue}";
+        return $":{user.Address} PROP {chatObject} {propName} :{propValue}";
     }
 
     public static string RPL_KICK_IRC(User? user, Channel channel, User? target, string? reason)
     {
-        return $":{user.GetAddress()} KICK {channel} {target} :{reason}";
+        return $":{user.Address} KICK {channel} {target} :{reason}";
     }
 
     public static string RPL_KILL_IRC(User? user, User? targetUser, string? message)
     {
-        return $":{user.GetAddress()} KILL {targetUser} :{message}";
+        return $":{user.Address} KILL {targetUser} :{message}";
     }
 
     public static string RPL_SERVERKILL_IRC(Server server, User user)
@@ -105,12 +105,12 @@ public static class Raw
 
     public static string RPL_MSG_CHAN(Server server, User user, Channel channel)
     {
-        return $":{user.GetAddress()} %s {channel} :%s";
+        return $":{user.Address} %s {channel} :%s";
     }
 
     public static string RPL_MSG_USER(Server server, User user)
     {
-        return $":{user.GetAddress()} %s %s :%s";
+        return $":{user.Address} %s %s :%s";
     }
 
     public static string RPL_CHAN_MSG(Server server, User user)
@@ -121,47 +121,47 @@ public static class Raw
     public static string RPL_CHAN_WHISPER(Server server, User? user, Channel channel, ChatObject target,
         string? message)
     {
-        return $":{user.GetAddress()} WHISPER {channel} {target} :{message}";
+        return $":{user.Address} WHISPER {channel} {target} :{message}";
     }
 
     public static string RPL_EPRIVMSG_CHAN(Server server, User user, Channel channel)
     {
-        return $":{user.GetAddress()} EPRIVMSG {channel} :%s";
+        return $":{user.Address} EPRIVMSG {channel} :%s";
     }
 
     public static string RPL_NOTICE_USER(Server server, User? user, ChatObject target, string? message)
     {
-        return $":{user.GetAddress()} NOTICE {target} :{message}";
+        return $":{user.Address} NOTICE {target} :{message}";
     }
 
     public static string RPL_PRIVMSG_USER(Server server, User? user, ChatObject target, string? message)
     {
-        return $":{user.GetAddress()} PRIVMSG {target} :{message}";
+        return $":{user.Address} PRIVMSG {target} :{message}";
     }
 
     public static string RPL_NOTICE_CHAN(Server server, User user, Channel channel)
     {
-        return $":{user.GetAddress()} NOTICE {channel} :%s";
+        return $":{user.Address} NOTICE {channel} :%s";
     }
 
     public static string RPL_PRIVMSG_CHAN(User user, Channel channel, string message)
     {
-        return $":{user.GetAddress()} PRIVMSG {channel} :{message}";
+        return $":{user.Address} PRIVMSG {channel} :{message}";
     }
 
     public static string RPL_INVITE(Server server, User? user, User targetUser, string? host, Channel? channel)
     {
-        return $":{user.GetAddress()} INVITE {targetUser} {host} {channel}";
+        return $":{user.Address} INVITE {targetUser} {host} {channel}";
     }
 
     public static string RPL_KNOCK_CHAN(Server server, User user, Channel channel)
     {
-        return $":{user.GetAddress()} KNOCK {channel} %s";
+        return $":{user.Address} KNOCK {channel} %s";
     }
 
     public static string RPL_NICK(Server server, User user, string? newNick)
     {
-        return $":{user.GetAddress()} NICK {newNick}";
+        return $":{user.Address} NICK {newNick}";
     }
 
     public static string RPL_PONG(Server server, User user)
@@ -275,7 +275,7 @@ public static class Raw
 
     public static string IRCX_RPL_USERHOST_302(Server server, User? user)
     {
-        return $":{server} 302 {user} :{user}={user}!~{user.GetAddress().GetUserHost()}";
+        return $":{server} 302 {user} :{user}={user}!~{user.Address.GetUserHost()}";
     }
 
     public static string IRCX_RPL_UNAWAY_305(Server server, User? user)
@@ -779,12 +779,12 @@ public static class Raw
 
     public static string IRCX_RPL_USERUNAWAY_821(Server server, User? user)
     {
-        return $":{user.GetAddress()} 821 :User unaway";
+        return $":{user.Address} 821 :User unaway";
     }
 
     public static string IRCX_RPL_USERNOWAWAY_822(Server server, User? user, string? reason)
     {
-        return $":{user.GetAddress()} 822 :{reason}";
+        return $":{user.Address} 822 :{reason}";
     }
 
     public static string IRCX_RPL_REVEAL_851(Server server, User user)

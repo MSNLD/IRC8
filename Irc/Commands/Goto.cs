@@ -8,11 +8,6 @@ public class Goto : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;

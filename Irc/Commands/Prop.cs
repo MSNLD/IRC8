@@ -11,11 +11,6 @@ public class Prop : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         //chatFrame.User.Send(Raw.IRCX_ERR_NOTIMPLEMENTED(chatFrame.Server, chatFrame.User, nameof(Access)));
@@ -103,11 +98,12 @@ public class Prop : Command
             {
                 if (chatFrame.Message.Parameters.Count >= 3)
                 {
+                    var propName = chatFrame.Message.Parameters[1].ToUpper();
                     var propValue = chatFrame.Message.Parameters[2];
 
                     // Setter
                     // TODO: Needs refactoring
-                    var prop = ChannelPropCollection.PropRules[chatFrame.Message.Parameters[1]];
+                    var prop = ChannelPropCollection.PropRules[propName];
                     if (prop != null)
                     {
                         if (chatObject.CanBeModifiedBy(chatFrame.User))
@@ -188,7 +184,7 @@ public class Prop : Command
 
             if (targetObject is Channel)
             {
-                var kvp = user.GetChannels().FirstOrDefault(x => x.Key == targetObject);
+                var kvp = user.Channels.FirstOrDefault(x => x.Key == targetObject);
                 if (kvp.Value != null)
                 {
                     var member = kvp.Value;

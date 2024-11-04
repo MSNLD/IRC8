@@ -11,11 +11,6 @@ internal class Listx : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;
@@ -54,7 +49,7 @@ internal class Listx : Command
         user.Send(Raw.IRCX_RPL_LISTXSTART_811(server, user));
         foreach (var channel in channels)
             if (user.IsOn(channel) ||
-                user.GetLevel() >= EnumUserAccessLevel.Guide ||
+                user.Level >= EnumUserAccessLevel.Guide ||
                 (!((Channel)channel).Secret && !channel.Private))
                 //  :TK2CHATCHATA04 812 'Admin_Koach %#Roomname +tnfSl 0 50 :%Chatroom\c\bFor\bBL\bGames\c\bFun\band\bEvents.
                 user.Send(Raw.IRCX_RPL_LISTXLIST_812(

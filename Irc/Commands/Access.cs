@@ -10,11 +10,6 @@ internal class Access : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var objectName = chatFrame.Message.Parameters.First();
@@ -103,7 +98,7 @@ internal class Access : Command
                 return;
             }
 
-        var accessResult = targetObject.AccessList.Clear(chatFrame.User.GetLevel(), accessLevel);
+        var accessResult = targetObject.AccessList.Clear(chatFrame.User.Level, accessLevel);
         if (accessResult == EnumAccessError.IRCERR_INCOMPLETE)
         {
             // Some entries were not cleared due to ...
@@ -135,7 +130,7 @@ internal class Access : Command
         // TODO: Channel Access Level check
 
         var mask = parameters[1];
-        var entry = new AccessEntry(mask, chatFrame.User.GetLevel(), accessLevel, mask, 0, string.Empty);
+        var entry = new AccessEntry(mask, chatFrame.User.Level, accessLevel, mask, 0, string.Empty);
         var accessError = targetObject.AccessList.Delete(entry);
 
         if (accessError == EnumAccessError.IRCERR_NOACCESS)
@@ -176,7 +171,7 @@ internal class Access : Command
         if (parameters.Count > 3) reason = parameters[3];
 
         // TODO: Solve below level issue
-        var entry = new AccessEntry(chatFrame.User.GetAddress().GetUserHost(), chatFrame.User.GetLevel(), accessLevel,
+        var entry = new AccessEntry(chatFrame.User.Address.GetUserHost(), chatFrame.User.Level, accessLevel,
             mask, timeout, reason);
         var accessError = targetObject.AccessList.Add(entry);
 

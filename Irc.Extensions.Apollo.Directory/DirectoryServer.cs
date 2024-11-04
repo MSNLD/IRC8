@@ -17,13 +17,11 @@ public class DirectoryServer : Server
 
     public DirectoryServer(ISocketServer socketServer,
         SecurityManager securityManager,
-        FloodProtectionManager floodProtectionManager,
         Settings serverSettings,
         IList<Channel?> channels,
         ICredentialProvider? ntlmCredentialProvider = null)
         : base(socketServer,
             securityManager,
-            floodProtectionManager,
             serverSettings,
             channels,
             ntlmCredentialProvider)

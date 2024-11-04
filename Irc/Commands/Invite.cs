@@ -9,11 +9,6 @@ internal class Invite : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         // Invite <nick>
@@ -36,7 +31,7 @@ internal class Invite : Command
 
     public static void InviteNickToCurrentChannel(ChatFrame chatFrame, User targetUser)
     {
-        var targetChannelKvp = chatFrame.User.GetChannels().FirstOrDefault();
+        var targetChannelKvp = chatFrame.User.Channels.FirstOrDefault();
         var targetChannel = targetChannelKvp.Key;
         var member = targetChannelKvp.Value;
 
@@ -61,7 +56,7 @@ internal class Invite : Command
 
         var member = targetChannel.GetMember(chatFrame.User);
 
-        if (member == null && chatFrame.User.GetLevel() < EnumUserAccessLevel.Guide)
+        if (member == null && chatFrame.User.Level < EnumUserAccessLevel.Guide)
             chatFrame.User.Send(Raw.IRCX_ERR_NOTONCHANNEL_442(chatFrame.Server, chatFrame.User, targetChannel));
 
         ProcessInvite(chatFrame, member, targetChannel, targetUser);

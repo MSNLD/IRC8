@@ -115,7 +115,6 @@ internal class Program
                 {
                     server = new DirectoryServer(socketServer,
                         new SecurityManager(),
-                        new FloodProtectionManager(),
                         settings,
                         new List<Channel?>(),
                         credentialProvider);
@@ -130,7 +129,6 @@ internal class Program
                 {
                     server = new Server(socketServer,
                         new SecurityManager(),
-                        new FloodProtectionManager(),
                         settings,
                         new List<Channel?>(),
                         credentialProvider);

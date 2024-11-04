@@ -1,15 +1,9 @@
-﻿using Irc.Enumerations;
-using Irc.Resources;
+﻿using Irc.Resources;
 
 namespace Irc.Commands;
 
 public class Admin : Command
 {
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         /*

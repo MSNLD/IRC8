@@ -10,16 +10,11 @@ public class Who : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.Data;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;
         var user = chatFrame.User;
-        var userIsOperator = user.GetLevel() >= EnumUserAccessLevel.Guide;
+        var userIsOperator = user.Level >= EnumUserAccessLevel.Guide;
         var criteria = chatFrame.Message.Parameters.First();
 
         if (Channel.ValidName(criteria))
@@ -46,7 +41,7 @@ public class Who : Command
             var matchedUsers = new List<User?>();
             foreach (var matchUser in server.GetUsers())
             {
-                var fullAddress = matchUser.GetAddress().GetFullAddress();
+                var fullAddress = matchUser.Address.GetFullAddress();
                 if (regEx.IsMatch(fullAddress)) matchedUsers.Add(matchUser);
             }
 
@@ -71,8 +66,8 @@ public class Who : Command
                 //                 "<channel> <user> <host> <server> <nick> \
                 //                  <H|G>[*][@|+] :<hopcount> <real name>"
 
-                var address = chatUser.GetAddress();
-                var channels = chatUser.GetChannels();
+                var address = chatUser.Address;
+                var channels = chatUser.Channels;
                 var channel = channels.Count > 0 ? channels.First().Key : null;
                 var channelStoredName = channels.Count > 0 ? channel.GetName() : string.Empty;
                 var goneHome = chatUser.Away ? "G" : "H";

@@ -1,5 +1,4 @@
-﻿using Irc.Enumerations;
-using Irc.Resources;
+﻿using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -7,11 +6,6 @@ public class Pass : Command
 {
     public Pass() : base(1, false)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
     }
 
     public override void Execute(ChatFrame chatFrame)

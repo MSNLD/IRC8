@@ -9,11 +9,6 @@ internal class Ircvers : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.Standard;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         //return;

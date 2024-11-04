@@ -1,6 +1,4 @@
-﻿using Irc.Enumerations;
-
-namespace Irc.Commands;
+﻿namespace Irc.Commands;
 
 public abstract class Command
 {
@@ -20,8 +18,6 @@ public abstract class Command
     {
         return GetType().Name;
     }
-
-    public abstract EnumCommandDataType GetDataType();
 
     public abstract void Execute(ChatFrame chatFrame);
 

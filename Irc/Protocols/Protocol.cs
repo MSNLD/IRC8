@@ -109,7 +109,7 @@ public class Protocol
 
         var profile = GetFormat(Ircvers, member.GetUser());
 
-        return $"{profile}{modeChar}{member.GetUser().GetAddress().Nickname}";
+        return $"{profile}{modeChar}{member.GetUser().Address.Nickname}";
     }
 
     public static string GetFormat(EnumProtocolType ircvers, User user)
@@ -118,11 +118,11 @@ public class Protocol
         {
             case 5:
             case 6:
-                return $"{user.GetProfile().Irc5_ToString()},";
+                return $"{user.Profile.Irc5_ToString()},";
             case 7:
-                return $"{user.GetProfile().Irc7_ToString()},";
+                return $"{user.Profile.Irc7_ToString()},";
             case 8:
-                return $"{user.GetProfile()},";
+                return $"{user.Profile},";
             default:
                 return "";
         }

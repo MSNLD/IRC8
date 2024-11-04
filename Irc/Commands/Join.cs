@@ -9,11 +9,6 @@ public class Join : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;
@@ -53,7 +48,7 @@ public class Join : Command
         // TODO: Optimize the below code
         foreach (var channelName in channelNames)
         {
-            if (user.GetChannels().Count >= server.MaxChannels)
+            if (user.Channels.Count >= server.MaxChannels)
             {
                 user.Send(Raw.IRCX_ERR_TOOMANYCHANNELS_405(server, user, channelName));
                 continue;

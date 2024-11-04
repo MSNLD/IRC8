@@ -1,5 +1,4 @@
-﻿using Irc.Enumerations;
-using Irc.Resources;
+﻿using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -7,11 +6,6 @@ internal class Ison : Command
 {
     public Ison() : base(1)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.Data;
     }
 
     public override void Execute(ChatFrame chatFrame)

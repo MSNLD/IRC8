@@ -10,11 +10,6 @@ public class Nick : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.Standard;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         // Is user not registered?
@@ -56,7 +51,7 @@ public class Nick : Command
     {
         var nickname = chatFrame.Message.Parameters.First();
         var guest = chatFrame.User != null && chatFrame.User.IsGuest();
-        var oper = chatFrame.User != null && chatFrame.User.GetLevel() >= EnumUserAccessLevel.Guide;
+        var oper = chatFrame.User != null && chatFrame.User.Level >= EnumUserAccessLevel.Guide;
 
         if (!ValidateNickname(nickname, guest, oper, false, true))
         {
@@ -72,7 +67,7 @@ public class Nick : Command
     {
         var nickname = chatFrame.Message.Parameters.First();
         var guest = chatFrame.User != null && chatFrame.User.IsGuest();
-        var oper = chatFrame.User != null && chatFrame.User.GetLevel() >= EnumUserAccessLevel.Guide;
+        var oper = chatFrame.User != null && chatFrame.User.Level >= EnumUserAccessLevel.Guide;
 
         if (!guest && !oper)
         {
@@ -80,7 +75,7 @@ public class Nick : Command
             return false;
         }
 
-        var channels = chatFrame.User?.GetChannels();
+        var channels = chatFrame.User?.Channels;
         foreach (var channel in channels)
         foreach (var member in channel.Key?.GetMembers())
             if (member.GetUser().Nickname == nickname)

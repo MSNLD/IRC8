@@ -1,5 +1,4 @@
-﻿using Irc.Enumerations;
-using Irc.Objects;
+﻿using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
@@ -8,11 +7,6 @@ internal class Quit : Command
 {
     public Quit() : base(0, false)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
     }
 
     public override void Execute(ChatFrame chatFrame)
@@ -30,7 +24,7 @@ internal class Quit : Command
     {
         var users = new HashSet<User?>();
 
-        var channels = user.GetChannels().Keys;
+        var channels = user.Channels.Keys;
 
         foreach (var channel in channels)
         {
@@ -38,7 +32,7 @@ internal class Quit : Command
             channel.Quit(user);
         }
 
-        user.GetChannels().Clear();
+        user.Channels.Clear();
 
         var quitRaw = IrcRaws.RPL_QUIT(user, message);
 

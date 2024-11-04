@@ -15,7 +15,7 @@ public class ModeEngine
     public static void Breakdown(Objects.User? source, ChatObject target, string? modeString,
         Queue<string> modeParameters)
     {
-        var modeOperations = source.GetModeOperations();
+        var modeOperations = source.ModeOperations;
         var modeFlag = true;
 
         foreach (var c in modeString)

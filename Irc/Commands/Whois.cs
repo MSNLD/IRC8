@@ -10,11 +10,6 @@ public class Whois : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         /*
@@ -44,9 +39,9 @@ public class Whois : Command
 
         user.Send(IrcRaws.IRC_RAW_311(server, user, targetUser));
 
-        if (targetUser.GetChannels().Count > 0)
+        if (targetUser.Channels.Count > 0)
         {
-            var channels = targetUser.GetChannels();
+            var channels = targetUser.Channels;
             var channelStrings = channels.Select(c => $"{c.Value.GetListedMode()}{c.Key}").ToArray();
 
             // TODO: Properly format channels & user modes
@@ -55,10 +50,10 @@ public class Whois : Command
             ));
         }
 
-        if (targetUser.GetLevel() >= EnumUserAccessLevel.Guide)
+        if (targetUser.Level >= EnumUserAccessLevel.Guide)
             user.Send(IrcRaws.IRC_RAW_313(server, user, targetUser));
 
-        if (user.GetLevel() >= EnumUserAccessLevel.Guide) user.Send(Raw.IRCX_RPL_WHOISIP_320(server, user, targetUser));
+        if (user.Level >= EnumUserAccessLevel.Guide) user.Send(Raw.IRCX_RPL_WHOISIP_320(server, user, targetUser));
 
         if (user.Secure)
             user.Send(Raw.IRC2_RPL_WHOISSECURE_671(server, user, targetUser));

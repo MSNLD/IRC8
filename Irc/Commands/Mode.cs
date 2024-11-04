@@ -11,11 +11,6 @@ internal class Mode : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         if (!chatFrame.User.IsRegistered())

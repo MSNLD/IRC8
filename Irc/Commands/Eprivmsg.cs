@@ -1,4 +1,3 @@
-using Irc.Enumerations;
 using Irc.Objects;
 using Irc.Resources;
 
@@ -8,11 +7,6 @@ public class Eprivmsg : Command
 {
     public Eprivmsg() : base(2)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
     }
 
     // EPRIVMSG %#OnStage :Why am I here?

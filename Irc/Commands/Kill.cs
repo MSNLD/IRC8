@@ -8,11 +8,6 @@ internal class Kill : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.Standard;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;
@@ -20,13 +15,13 @@ internal class Kill : Command
         var target = chatFrame.Message.Parameters.First();
         var reason = chatFrame.Message.Parameters[1];
 
-        if (user.GetLevel() < EnumUserAccessLevel.Sysop)
+        if (user.Level < EnumUserAccessLevel.Sysop)
         {
             chatFrame.User.Send(Raw.IRCX_ERR_SECURITY_908(server, user));
             return;
         }
 
-        var channels = user.GetChannels();
+        var channels = user.Channels;
         if (channels.Count > 0)
         {
             var channel = channels.First().Key;
@@ -40,7 +35,7 @@ internal class Kill : Command
 
             var targetUser = member.GetUser();
 
-            if (targetUser.GetLevel() > user.GetLevel())
+            if (targetUser.Level > user.Level)
             {
                 chatFrame.User.Send(Raw.IRCX_ERR_SECURITY_908(server, user));
                 return;
@@ -50,7 +45,7 @@ internal class Kill : Command
             channel.GetMembers().Remove(member);
             channel.Send(Raw.RPL_KILL_IRC(user, targetUser, reason));
             targetUser.Disconnect(
-                Raw.IRCX_CLOSINGLINK_007_SYSTEMKILL(server, targetUser, targetUser.GetAddress().RemoteIP));
+                Raw.IRCX_CLOSINGLINK_007_SYSTEMKILL(server, targetUser, targetUser.Address.RemoteIP));
         }
     }
 }

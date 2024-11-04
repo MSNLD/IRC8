@@ -187,7 +187,11 @@ internal class ChannelPropCollection : PropCollection
         ValidationMask = IrcStrings.ChannelPropTopicRegex,
         Value = string.Empty,
         ReadOnly = false,
-        PostRule = (chatObject, propValue) => { ((Channel)chatObject).Props[IrcStrings.ChannelPropTopic] = propValue; }
+        PostRule = (chatObject, propValue) =>
+        {
+            ((Channel)chatObject).Props[IrcStrings.ChannelPropTopic] = propValue;
+            ((Channel)chatObject).SendTopic();
+        }
     };
 
     public static Dictionary<string?, PropRule> PropRules = new()

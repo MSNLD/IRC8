@@ -1,5 +1,4 @@
 using Irc.Commands;
-using Irc.Enumerations;
 using Irc.Helpers;
 using Irc.Resources;
 
@@ -9,11 +8,6 @@ public class Nick : Command
 {
     public Nick() : base(1, false)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.Standard;
     }
 
     public override void Execute(ChatFrame chatFrame)

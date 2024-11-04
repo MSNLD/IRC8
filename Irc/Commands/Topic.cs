@@ -10,11 +10,6 @@ internal class Topic : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.Standard;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var source = chatFrame.User;

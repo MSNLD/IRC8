@@ -80,28 +80,27 @@ public class NTLMShared
 
         private void Digest(string blobData)
         {
-            if (blobData.Length >= 16)
-            {
-                ClientHashResult = blobData.Substring(0, 16);
-                BlobData = blobData.Substring(16);
+            if (blobData.Length < 16) return;
+            
+            ClientHashResult = blobData.Substring(0, 16);
+            BlobData = blobData.Substring(16);
 
-                var blobHeaderSize = Marshal.SizeOf<NTLMv2BlobStruct>();
-                if (BlobData.Length >= blobHeaderSize)
-                {
-                    var blobHeaderData = BlobData.Substring(0, blobHeaderSize);
-                    var blobPayload = BlobData.Substring(blobHeaderSize);
+            var blobHeaderSize = Marshal.SizeOf<NTLMv2BlobStruct>();
+                
+            if (BlobData.Length < blobHeaderSize) return;
+                
+            var blobHeaderData = BlobData.Substring(0, blobHeaderSize);
+            var blobPayload = BlobData.Substring(blobHeaderSize);
 
-                    DeserializedBlob = blobHeaderData.ToByteArray().Deserialize<NTLMv2BlobStruct>();
+            DeserializedBlob = blobHeaderData.ToByteArray().Deserialize<NTLMv2BlobStruct>();
 
-                    ClientSignature = DeserializedBlob.BlobSignature;
-                    ClientNonce = DeserializedBlob.ClientNonce;
-                    ClientTimestamp = DeserializedBlob.Timestamp;
+            ClientSignature = DeserializedBlob.BlobSignature;
+            ClientNonce = DeserializedBlob.ClientNonce;
+            ClientTimestamp = DeserializedBlob.Timestamp;
 
-                    if (blobPayload.Length >= DeserializedBlob.TargetInformation.Length)
-                        ClientTarget =
-                            blobPayload.Substring(0, DeserializedBlob.TargetInformation.Length);
-                }
-            }
+            if (blobPayload.Length >= DeserializedBlob.TargetInformation.Length)
+                ClientTarget =
+                    blobPayload.Substring(0, DeserializedBlob.TargetInformation.Length);
         }
     }
 

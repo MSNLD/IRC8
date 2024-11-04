@@ -15,37 +15,30 @@ namespace Irc.Objects;
 public class User : ChatObject
 {
     public static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
-    private readonly UserAccess _accessList = new();
 
-    //public Access Access;
     private readonly IConnection _connection;
     private readonly DataRegulator _dataRegulator;
-    private readonly FloodProtectionProfile _floodProtectionProfile;
-    private readonly Queue<ModeOperation> _modeOperations = new();
+    public Queue<ModeOperation> ModeOperations { set; get; } = new();
     private bool _authenticated;
 
     private long _commandSequence;
     private bool _guest;
-    private EnumUserAccessLevel _level;
     private bool _registered;
-    private ISupportPackage _supportPackage;
-    public IDictionary<Channel?, Member> Channels;
+    public ISupportPackage SupportPackage { get; set; } = new ANON();
+    public ConcurrentDictionary<Channel, Member> Channels;
+    public FloodProtectionManager FloodProtection { get; } = new();
 
     public DateTime LastPing = DateTime.UtcNow;
     public long PingCount;
 
-    public User(IConnection connection, DataRegulator dataRegulator,
-        FloodProtectionProfile floodProtectionProfile,
-        Server server)
+    public User(IConnection connection, DataRegulator dataRegulator, Server server)
     {
         Server = server;
         _connection = connection;
         _dataRegulator = dataRegulator;
-        _floodProtectionProfile = floodProtectionProfile;
-        _supportPackage = new ANON();
-        Channels = new ConcurrentDictionary<Channel?, Member>();
+        Channels = new ConcurrentDictionary<Channel, Member>();
 
-        _connection.OnReceive += (sender, s) =>
+        _connection.OnReceive += (_, s) =>
         {
             LastPing = DateTime.UtcNow;
             PingCount = 0;
@@ -60,7 +53,7 @@ public class User : ChatObject
         Props.Add(IrcStrings.UserPropMsnProfile, "");
         Props.Add(IrcStrings.UserPropRole, "");
 
-        // TODO: Add Modes
+        // IRC
         Modes.Add(IrcStrings.UserModeOper, 0);
         Modes.Add(IrcStrings.UserModeInvisible, 0);
         Modes.Add(IrcStrings.UserModeSecure, 0);
@@ -76,7 +69,7 @@ public class User : ChatObject
         Modes.Add(IrcStrings.UserModeHost, 0);
         
         // Access
-        base.AccessList.Entries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
+        AccessList.Entries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
         {
             { EnumAccessLevel.VOICE, new List<AccessEntry>() },
             { EnumAccessLevel.DENY, new List<AccessEntry>() }
@@ -85,7 +78,7 @@ public class User : ChatObject
 
     public Protocol Protocol { get; set; } = new();
     public Address Address { get; set; } = new();
-    private Profile Profile { get; } = new();
+    public Profile Profile { get; } = new();
 
     public bool Utf8 { get; set; }
     public string? Client { get; set; }
@@ -108,19 +101,19 @@ public class User : ChatObject
     public bool Away { get; set; }
     public event EventHandler<string> OnSend;
 
-    public void BroadcastToChannels(string data, bool excludeUser)
+    public void BroadcastToChannels(string data, bool excludeUser) => 
+        Channels.Keys.ToList().ForEach( c => c.Send(data, excludeUser ? this : null) );
+
+    public void AddChannel(Channel channel, Member member)
     {
-        foreach (var channel in Channels.Keys) channel?.Send(data, this);
+        // TODO: What if this fails?
+        Channels.TryAdd(channel, member);
     }
 
-    public void AddChannel(Channel? channel, Member member)
+    public void RemoveChannel(Channel channel)
     {
-        Channels.Add(channel, member);
-    }
-
-    public void RemoveChannel(Channel? channel)
-    {
-        Channels.Remove(channel);
+        // TODO: What if this fails?
+        Channels.TryRemove(channel, out _);
     }
 
     public KeyValuePair<Channel, Member> GetChannelMemberInfo(Channel channel)
@@ -131,11 +124,6 @@ public class User : ChatObject
     public KeyValuePair<Channel, Member> GetChannelInfo(string Name)
     {
         return Channels.FirstOrDefault(c => c.Key.GetName() == Name);
-    }
-
-    public IDictionary<Channel?, Member> GetChannels()
-    {
-        return Channels;
     }
 
     public override void Send(string message)
@@ -157,66 +145,36 @@ public class User : ChatObject
     {
         var totalBytes = _dataRegulator.GetOutgoingBytes();
 
-        if (_dataRegulator.GetOutgoingBytes() > 0)
+        if (_dataRegulator.GetOutgoingBytes() <= 0) return;
+        
+        // Compensate for \r\n
+        var queueLength = _dataRegulator.GetOutgoingQueueLength();
+        var adjustedTotalBytes = totalBytes + queueLength * 2;
+
+        var stringBuilder = new StringBuilder(adjustedTotalBytes);
+        for (var i = 0; i < queueLength; i++)
         {
-            // Compensate for \r\n
-            var queueLength = _dataRegulator.GetOutgoingQueueLength();
-            var adjustedTotalBytes = totalBytes + queueLength * 2;
-
-            var stringBuilder = new StringBuilder(adjustedTotalBytes);
-            for (var i = 0; i < queueLength; i++)
-            {
-                stringBuilder.Append(_dataRegulator.PopOutgoing());
-                stringBuilder.Append("\r\n");
-            }
-
-            Log.Info($"Sending[{Protocol.GetType().Name}/{Name}]: {stringBuilder}");
-            _connection?.Send(stringBuilder.ToString());
+            stringBuilder.Append(_dataRegulator.PopOutgoing());
+            stringBuilder.Append("\r\n");
         }
+
+        Log.Info($"Sending[{Protocol.GetType().Name}/{Name}]: {stringBuilder}");
+        _connection?.Send(stringBuilder.ToString());
     }
 
     public void Disconnect(string message)
     {
         // Clean modes
-        _modeOperations.Clear();
+        ModeOperations.Clear();
 
         Log.Info($"Disconnecting[{Protocol.GetType().Name}/{Name}]: {message}");
         _connection?.Disconnect($"{message}\r\n");
     }
 
-    public DataRegulator GetDataRegulator()
-    {
-        return _dataRegulator;
-    }
-
-    public FloodProtectionProfile GetFloodProtectionProfile()
-    {
-        return _floodProtectionProfile;
-    }
-
-    public ISupportPackage GetSupportPackage()
-    {
-        return _supportPackage;
-    }
-
-    public void SetSupportPackage(ISupportPackage supportPackage)
-    {
-        _supportPackage = supportPackage;
-    }
-
-    public void SetProtocol(Protocol protocol)
-    {
-        Protocol = protocol;
-    }
-
+    public DataRegulator DataRegulator => _dataRegulator;
     public IConnection GetConnection()
     {
         return _connection;
-    }
-
-    public EnumUserAccessLevel GetLevel()
-    {
-        return _level;
     }
 
     public void ChangeNickname(string? newNick, bool utf8Prefix)
@@ -226,12 +184,7 @@ public class User : ChatObject
         Send(rawNicknameChange);
         Nickname = nickname;
 
-        foreach (var channel in Channels) channel.Key.Send(rawNicknameChange, this);
-    }
-
-    public Address GetAddress()
-    {
-        return Address;
+        Channels.Keys.ToList().ForEach( c => c.Send(rawNicknameChange, this));
     }
 
     public bool IsGuest()
@@ -239,16 +192,14 @@ public class User : ChatObject
         return _guest;
     }
 
-    public virtual void SetGuest(bool guest)
+    public virtual bool Guest
     {
-        Profile.Guest = guest;
-        if (Server.DisableGuestMode) return;
-        _guest = guest;
-    }
-
-    public void SetLevel(EnumUserAccessLevel level)
-    {
-        _level = level;
+        set
+        {
+            Profile.Guest = value;
+            if (Server.DisableGuestMode) return;
+            _guest = value;
+        }
     }
 
     public bool IsRegistered()
@@ -268,7 +219,7 @@ public class User : ChatObject
 
     public bool IsAnon()
     {
-        return _supportPackage is ANON;
+        return SupportPackage is ANON;
     }
 
     public bool IsSysop()
@@ -281,30 +232,20 @@ public class User : ChatObject
         return Admin;
     }
 
-    public virtual void SetAway(Server server, User? user, string? message)
+    public virtual void SetAway(string? message)
     {
         Profile.Away = true;
-        user.Away = true;
-        foreach (var channelPair in user.GetChannels())
-        {
-            var channel = channelPair.Key;
-            channel.Send(Raw.IRCX_RPL_USERNOWAWAY_822(server, user, message), user);
-        }
-
-        user.Send(Raw.IRCX_RPL_NOWAWAY_306(server, user));
+        Away = true;
+        BroadcastToChannels(Raw.IRCX_RPL_USERNOWAWAY_822(Server, this, message), true);
+        Send(Raw.IRCX_RPL_NOWAWAY_306(Server, this));
     }
 
-    public virtual void SetBack(Server server, User? user)
+    public virtual void SetBack()
     {
         Profile.Away = false;
-        user.Away = false;
-        foreach (var channelPair in user.GetChannels())
-        {
-            var channel = channelPair.Key;
-            channel.Send(Raw.IRCX_RPL_USERUNAWAY_821(server, user), user);
-        }
-
-        user.Send(Raw.IRCX_RPL_UNAWAY_305(server, user));
+        Away = false;
+        BroadcastToChannels(Raw.IRCX_RPL_USERUNAWAY_821(Server, this), true);
+        Send(Raw.IRCX_RPL_UNAWAY_305(Server, this));
     }
 
     public virtual void PromoteToAdministrator()
@@ -312,7 +253,7 @@ public class User : ChatObject
         Profile.Level = EnumUserAccessLevel.Administrator;
         Admin = true;
         ModeRule.DispatchModeChange(IrcStrings.UserModeAdmin, this, this, true, ToString());
-        _level = EnumUserAccessLevel.Administrator;
+        Level = EnumUserAccessLevel.Administrator;
         Send(Raw.IRCX_RPL_YOUREADMIN_386(Server, this));
     }
 
@@ -321,7 +262,7 @@ public class User : ChatObject
         Profile.Level = EnumUserAccessLevel.Sysop;
         Oper = true;
         ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, ToString());
-        _level = EnumUserAccessLevel.Sysop;
+        Level = EnumUserAccessLevel.Sysop;
         Send(Raw.IRCX_RPL_YOUREOPER_381(Server, this));
     }
 
@@ -330,15 +271,15 @@ public class User : ChatObject
         Profile.Level = EnumUserAccessLevel.Guide;
         Oper = true;
         ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, ToString());
-        _level = EnumUserAccessLevel.Guide;
+        Level = EnumUserAccessLevel.Guide;
         Send(Raw.IRCX_RPL_YOUREGUIDE_629(Server, this));
     }
 
     public bool DisconnectIfOutgoingThresholdExceeded()
     {
-        if (GetDataRegulator().IsOutgoingThresholdExceeded())
+        if (DataRegulator.IsOutgoingThresholdExceeded())
         {
-            GetDataRegulator().Purge();
+            DataRegulator.Purge();
             Disconnect("Output quota exceeded");
             return true;
         }
@@ -349,9 +290,9 @@ public class User : ChatObject
     public bool DisconnectIfIncomingThresholdExceeded()
     {
         // Disconnect user if incoming quota exceeded
-        if (GetDataRegulator().IsIncomingThresholdExceeded())
+        if (DataRegulator.IsIncomingThresholdExceeded())
         {
-            GetDataRegulator().Purge();
+            DataRegulator.Purge();
             Disconnect("Input quota exceeded");
             return true;
         }
@@ -372,7 +313,7 @@ public class User : ChatObject
             }
             else
             {
-                GetDataRegulator().Purge();
+                DataRegulator.Purge();
                 Disconnect(Raw.IRCX_CLOSINGLINK_011_PINGTIMEOUT(Server, this, _connection.GetIp()));
             }
         }
@@ -380,8 +321,8 @@ public class User : ChatObject
 
     public void Register()
     {
-        var userAddress = GetAddress();
-        var credentials = GetSupportPackage().GetCredentials();
+        var userAddress = Address;
+        var credentials = SupportPackage.GetCredentials();
         userAddress.User = credentials.GetUsername() ?? userAddress.MaskedIP;
         userAddress.Host = credentials.GetDomain();
         userAddress.Server = Server.Name;
@@ -397,11 +338,6 @@ public class User : ChatObject
         _authenticated = true;
     }
 
-    public Queue<ModeOperation> GetModeOperations()
-    {
-        return _modeOperations;
-    }
-
     public ChatFrame GetNextFrame()
     {
         _commandSequence++;
@@ -412,11 +348,6 @@ public class User : ChatObject
             this,
             message
         );
-    }
-
-    public Profile GetProfile()
-    {
-        return Profile;
     }
 
     public override bool CanBeModifiedBy(ChatObject source)

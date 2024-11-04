@@ -1,4 +1,3 @@
-using Irc.Enumerations;
 using Irc.Resources;
 using NLog;
 
@@ -12,11 +11,6 @@ public class WebIrc : Command
 
     public WebIrc() : base(0, false)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
     }
 
     public override void Execute(ChatFrame chatFrame)

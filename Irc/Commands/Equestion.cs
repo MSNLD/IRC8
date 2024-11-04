@@ -1,4 +1,3 @@
-using Irc.Enumerations;
 using Irc.Objects;
 using Irc.Resources;
 
@@ -8,11 +7,6 @@ public class Equestion : Command
 {
     public Equestion() : base(3)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
     }
 
     // EQUESTION %#OnStage Nickname :Why am I here?

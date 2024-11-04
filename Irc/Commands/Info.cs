@@ -1,14 +1,7 @@
-﻿using Irc.Enumerations;
-
-namespace Irc.Commands;
+﻿namespace Irc.Commands;
 
 internal class Info : Command
 {
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         chatFrame.User.Send(Raw.IRCX_RPL_RPL_INFO_371_VERS(chatFrame.Server, chatFrame.User,

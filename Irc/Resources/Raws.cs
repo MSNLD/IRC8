@@ -107,7 +107,7 @@ public static class IrcRaws
     public static string IRC_RAW_311(Server server, User? user, User targetUser)
     {
         return
-            $":{server} 311 {user} {targetUser} {targetUser.GetAddress().User} {targetUser.GetAddress().Host} * :{targetUser.GetAddress().RealName}";
+            $":{server} 311 {user} {targetUser} {targetUser.Address.User} {targetUser.Address.Host} * :{targetUser.Address.RealName}";
     }
 
     public static string IRC_RAW_312(Server server, User user, User targetUser)
@@ -192,27 +192,27 @@ public static class IrcRaws
 
     public static string RPL_JOIN(User? user, Channel channel)
     {
-        return $":{user.GetAddress()} JOIN :{channel}";
+        return $":{user.Address} JOIN :{channel}";
     }
 
     public static string RPL_PART(User? user, Channel channel)
     {
-        return $":{user.GetAddress()} PART {channel}";
+        return $":{user.Address} PART {channel}";
     }
 
     public static string RPL_PRIVMSG(User? user, Channel channel, string? message)
     {
-        return $":{user.GetAddress()} PRIVMSG {channel} :{message}";
+        return $":{user.Address} PRIVMSG {channel} :{message}";
     }
 
     public static string RPL_NOTICE(User? user, Channel channel, string? message)
     {
-        return $":{user.GetAddress()} NOTICE {channel} :{message}";
+        return $":{user.Address} NOTICE {channel} :{message}";
     }
 
     public static string RPL_QUIT(User? user, string? message)
     {
-        return $":{user.GetAddress()} QUIT :{message}";
+        return $":{user.Address} QUIT :{message}";
     }
 }
 
@@ -455,16 +455,16 @@ public class IrcxRaws
         var listedMode = joinMember.GetListedMode();
         var listedModeString = !string.IsNullOrWhiteSpace(listedMode) ? $",{listedMode}" : "";
         return
-            $":{joinUser.GetAddress()} JOIN {sourceUser.Protocol.GetFormat(joinUser)}{listedModeString} :{channel}";
+            $":{joinUser.Address} JOIN {sourceUser.Protocol.GetFormat(joinUser)}{listedModeString} :{channel}";
     }
 
     public static string RPL_EPRIVMSG(User? user, Channel? channel, string? message)
     {
-        return $":{user.GetAddress()} EPRIVMSG {channel} :{message}";
+        return $":{user.Address} EPRIVMSG {channel} :{message}";
     }
 
     public static string RPL_EQUESTION(User? user, Channel? channel, string? nickname, string? message)
     {
-        return $":{user.GetAddress()} EQUESTION {channel} {nickname} {channel} :{message}";
+        return $":{user.Address} EQUESTION {channel} {nickname} {channel} :{message}";
     }
 }

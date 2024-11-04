@@ -45,7 +45,7 @@ public static class Register
                 chatFrame.User.Send(Raw.IRCX_RPL_RPL_ENDOFMOTD_376(chatFrame.Server, chatFrame.User));
             }
 
-            switch (chatFrame.User.GetLevel())
+            switch (chatFrame.User.Level)
             {
                 case EnumUserAccessLevel.Administrator:
                 {
@@ -99,10 +99,10 @@ public static class Register
         var user = chatFrame.User;
         var authenticating = chatFrame.User.IsAuthenticated() != true && chatFrame.User.IsAnon() == false;
         var registered = chatFrame.User.IsRegistered();
-        var nickname = chatFrame.User.GetAddress().Nickname;
+        var nickname = chatFrame.User.Address.Nickname;
         var hasNickname = !string.IsNullOrWhiteSpace(nickname);
         var guest = user.IsGuest();
-        var oper = user.GetLevel() >= EnumUserAccessLevel.Guide;
+        var oper = user.Level >= EnumUserAccessLevel.Guide;
 
         if (!authenticating && !registered && hasNickname)
         {
@@ -117,7 +117,7 @@ public static class Register
             }
         }
 
-        var hasUserAddress = server.DisableUserRegistration || chatFrame.User.GetAddress().IsAddressPopulated();
+        var hasUserAddress = server.DisableUserRegistration || chatFrame.User.Address.IsAddressPopulated();
 
         return !authenticating && !registered & hasNickname & hasUserAddress;
     }

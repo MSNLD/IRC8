@@ -16,7 +16,7 @@ public abstract class ChatObject
     public AccessList AccessList { get; set; } = new();
 
 
-    public EnumUserAccessLevel Level => EnumUserAccessLevel.None;
+    public EnumUserAccessLevel Level { set; get; } = EnumUserAccessLevel.None;
 
     public Guid Id { get; } = Guid.NewGuid();
 

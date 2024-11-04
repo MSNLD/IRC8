@@ -1,5 +1,4 @@
-﻿using Irc.Enumerations;
-using Irc.Objects;
+﻿using Irc.Objects;
 
 namespace Irc.Commands;
 
@@ -7,11 +6,6 @@ internal class Names : Command
 {
     public Names() : base(1)
     {
-    }
-
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
     }
 
     public override void Execute(ChatFrame chatFrame)

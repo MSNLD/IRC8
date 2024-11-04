@@ -9,11 +9,6 @@ internal class Whisper : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         // <sender> WHISPER <channel> <nick list> :<text>
@@ -56,7 +51,7 @@ internal class Whisper : Command
             return;
         }
 
-        if (channel.NoGuestWhisper && user.IsGuest() && user.GetLevel() < EnumUserAccessLevel.Guide)
+        if (channel.NoGuestWhisper && user.IsGuest() && user.Level < EnumUserAccessLevel.Guide)
         {
             user.Send(Raw.IRCX_ERR_NOWHISPER_923(server, user, channel));
             return;

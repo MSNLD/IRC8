@@ -1,16 +1,10 @@
-﻿using Irc.Enumerations;
-using Irc.Objects;
+﻿using Irc.Objects;
 using Irc.Resources;
 
 namespace Irc.Commands;
 
 internal class List : Command
 {
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.Data;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var server = chatFrame.Server;

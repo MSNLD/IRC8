@@ -10,11 +10,6 @@ public class Auth : Command
     {
     }
 
-    public override EnumCommandDataType GetDataType()
-    {
-        return EnumCommandDataType.None;
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         if (chatFrame.User.IsRegistered())
@@ -29,7 +24,7 @@ public class Auth : Command
         {
             var parameters = chatFrame.Message.Parameters;
 
-            var supportPackage = chatFrame.User.GetSupportPackage();
+            var supportPackage = chatFrame.User.SupportPackage;
             var packageName = parameters[0];
             var sequence = parameters[1].ToUpper();
             var token = parameters[2].ToLiteral();
@@ -50,7 +45,7 @@ public class Auth : Command
                     supportPackage = chatFrame.Server.GetSecurityManager()
                         .CreatePackageInstance(packageName, chatFrame.Server.GetCredentialManager());
 
-                    chatFrame.User.SetSupportPackage(supportPackage);
+                    chatFrame.User.SupportPackage = supportPackage;
                 }
 
                 var supportPackageSequence =
@@ -67,34 +62,34 @@ public class Auth : Command
             else if (sequence == "S")
             {
                 var supportPackageSequence =
-                    chatFrame.User.GetSupportPackage().AcceptSecurityContext(token, chatFrame.Server.RemoteIP);
+                    chatFrame.User.SupportPackage.AcceptSecurityContext(token, chatFrame.Server.RemoteIP);
                 if (supportPackageSequence == EnumSupportPackageSequence.SSP_OK)
                 {
                     chatFrame.User.Authenticate();
 
-                    var credentials = chatFrame.User.GetSupportPackage().GetCredentials();
+                    var credentials = chatFrame.User.SupportPackage.GetCredentials();
                     if (credentials == null)
                     {
                         // Invalid credentials handle
                     }
                     else
                     {
-                        var user = chatFrame.User.GetSupportPackage().GetCredentials().GetUsername();
-                        var domain = chatFrame.User.GetSupportPackage().GetCredentials().GetDomain();
-                        var userAddress = chatFrame.User.GetAddress();
+                        var user = chatFrame.User.SupportPackage.GetCredentials().GetUsername();
+                        var domain = chatFrame.User.SupportPackage.GetCredentials().GetDomain();
+                        var userAddress = chatFrame.User.Address;
                         userAddress.User = credentials.GetUsername() ?? userAddress.MaskedIP;
                         userAddress.Host = credentials.GetDomain();
                         userAddress.Server = chatFrame.Server.Name;
                         var nickname = credentials.GetNickname();
                         if (nickname != null) chatFrame.User.Name = credentials.GetNickname();
-                        if (credentials.Guest && chatFrame.User.GetAddress().RealName == null)
+                        if (credentials.Guest && chatFrame.User.Address.RealName == null)
                             userAddress.RealName = string.Empty;
 
-                        chatFrame.User.SetGuest(credentials.Guest);
-                        chatFrame.User.SetLevel(credentials.GetLevel());
+                        chatFrame.User.Guest = credentials.Guest;
+                        chatFrame.User.Level = credentials.GetLevel();
 
                         // TODO: find another way to work in Utf8 nicknames
-                        if (chatFrame.User.GetLevel() >= EnumUserAccessLevel.Guide) chatFrame.User.Utf8 = true;
+                        if (chatFrame.User.Level >= EnumUserAccessLevel.Guide) chatFrame.User.Utf8 = true;
 
                         // Send reply
                         chatFrame.User.Send(Raw.RPL_AUTH_SUCCESS(packageName, $"{user}@{domain}", 0));

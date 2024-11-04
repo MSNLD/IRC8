@@ -33,14 +33,14 @@ public class Member : ChatObject
     {
         if (operCheck)
             // Oper check
-            if (target.GetUser().GetLevel() >= EnumUserAccessLevel.Guide)
+            if (target.GetUser().Level >= EnumUserAccessLevel.Guide)
             {
-                if (_user.GetLevel() < EnumUserAccessLevel.Guide) return EnumIrcError.ERR_NOIRCOP;
+                if (_user.Level < EnumUserAccessLevel.Guide) return EnumIrcError.ERR_NOIRCOP;
                 // TODO: Maybe there is better raws for below
-                if (_user.GetLevel() < EnumUserAccessLevel.Sysop && _user.GetLevel() < target.GetUser().GetLevel())
+                if (_user.Level < EnumUserAccessLevel.Sysop && _user.Level < target.GetUser().Level)
                     return EnumIrcError.ERR_NOPERMS;
-                if (_user.GetLevel() < EnumUserAccessLevel.Administrator &&
-                    _user.GetLevel() < target.GetUser().GetLevel()) return EnumIrcError.ERR_NOPERMS;
+                if (_user.Level < EnumUserAccessLevel.Administrator &&
+                    _user.Level < target.GetUser().Level) return EnumIrcError.ERR_NOPERMS;
             }
 
         if (!IsOwner() && requiredLevel >= EnumChannelAccessLevel.ChatOwner) return EnumIrcError.ERR_NOCHANOWNER;
