@@ -1,16 +1,16 @@
 ﻿using Irc.Commands;
 using Irc.Enumerations;
 using Irc.Objects;
-using Version = Irc.Commands.Version;
 
 namespace Irc.Protocols;
 
 public class Protocol
 {
-    protected Dictionary<string?, Command> Commands = new(StringComparer.InvariantCultureIgnoreCase);
+    public Dictionary<string, Command> Commands = new(StringComparer.InvariantCultureIgnoreCase);
 
     public Protocol()
     {
+        AddCommand(new WebIrc());
         AddCommand(new Auth());
         AddCommand(new Ircvers());
         AddCommand(new Ircx());
@@ -18,7 +18,7 @@ public class Protocol
         AddCommand(new Notice());
         AddCommand(new Ping());
         AddCommand(new Nick());
-        AddCommand(new UserCommand(), "User");
+        AddCommand(new Commands.User());
         AddCommand(new List());
         AddCommand(new Mode());
         AddCommand(new Join());
@@ -27,45 +27,15 @@ public class Protocol
         AddCommand(new Kill());
         AddCommand(new Names());
         AddCommand(new Userhost());
-        AddCommand(new Version());
-        AddCommand(new Info());
         AddCommand(new Pong());
         AddCommand(new Pass());
         AddCommand(new Quit());
-        AddCommand(new Trace());
-        AddCommand(new Ison());
-        AddCommand(new Time());
-        AddCommand(new Admin());
-        AddCommand(new Links());
-        AddCommand(new Who());
-        AddCommand(new Whois());
-        AddCommand(new Users());
         AddCommand(new Topic());
-        AddCommand(new Invite());
-        AddCommand(new WebIrc());
-
-        // IRCX
-        AddCommand(new Commands.Access());
         AddCommand(new Away());
-        AddCommand(new Create());
-        AddCommand(new Data());
-        AddCommand(new Event());
         AddCommand(new Isircx());
-        AddCommand(new Kill());
-        AddCommand(new Listx());
-        AddCommand(new Reply());
-        AddCommand(new Request());
         AddCommand(new Whisper());
-        AddCommand(new Auth());
-        AddCommand(new Ircx());
         AddCommand(new Prop());
-        AddCommand(new Listx());
-
-        // IRC3
-        AddCommand(new Goto());
-        AddCommand(new Esubmit());
-        AddCommand(new Eprivmsg());
-        AddCommand(new Equestion());
+        AddCommand(new Commands.Access());
     }
 
     public EnumProtocolType Ircvers { get; set; } = EnumProtocolType.IRC;
@@ -76,10 +46,9 @@ public class Protocol
         return command;
     }
 
-    public void AddCommand(Command command, string? name = null)
+    public void AddCommand(Command command)
     {
-        if (!Commands.ContainsKey(name == null ? command.GetName() : name))
-            Commands.Add(name ?? command.GetName(), command);
+        Commands.Add(command.GetType().Name, command);
     }
 
     public void FlushCommands()
@@ -87,7 +56,7 @@ public class Protocol
         Commands.Clear();
     }
 
-    public string GetFormat(User user)
+    public string GetFormat(Objects.User user)
     {
         return GetFormat(Ircvers, user);
     }
@@ -102,7 +71,7 @@ public class Protocol
         return $"{profile}{modeChar}{member.GetUser().Address.Nickname}";
     }
 
-    public static string GetFormat(EnumProtocolType ircvers, User user)
+    public static string GetFormat(EnumProtocolType ircvers, Objects.User user)
     {
         switch ((int)ircvers)
         {

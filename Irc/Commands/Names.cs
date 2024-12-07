@@ -31,7 +31,7 @@ internal class Names : Command
         }
     }
 
-    public static void ProcessNamesReply(User? user, Channel channel)
+    public static void ProcessNamesReply(Objects.User? user, Channel channel)
     {
         // RFC 2812 "=" for others(public channels).
         var channelType = '=';

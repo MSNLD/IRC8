@@ -2,9 +2,9 @@
 
 namespace Irc.Commands;
 
-public class UserCommand : Command
+public class User : Command
 {
-    public UserCommand() : base(4, false)
+    public User() : base(4, false)
     {
     }
 

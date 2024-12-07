@@ -20,9 +20,9 @@ internal class Quit : Command
         QuitChannels(user, quitMessage);
     }
 
-    public static void QuitChannels(User? user, string? message)
+    public static void QuitChannels(Objects.User? user, string? message)
     {
-        var users = new HashSet<User?>();
+        var users = new HashSet<Objects.User?>();
 
         var channels = user.Channels.Keys;
 

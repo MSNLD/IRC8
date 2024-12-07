@@ -25,7 +25,7 @@ internal class List : Command
         ListChannels(server, user, channels);
     }
 
-    public void ListChannels(Server server, User? user, IList<Channel?> channels)
+    public void ListChannels(Server server, Objects.User? user, IList<Channel?> channels)
     {
         user.Send(Raws.IRCX_RPL_MODE_321(server, user));
         foreach (var channel in channels) user.Send(Raws.IRCX_RPL_MODE_322(server, user, channel));

@@ -72,7 +72,7 @@ internal class Mode : Command
             // TODO: Fix below when UserLimit is 0
             chatFrame.User.Send(Raws.IRCX_RPL_MODE_324(chatFrame.Server, chatFrame.User, (Channel)chatObject,
                 $"{modes} {((Channel)chatObject).UserLimit}"));
-        else if (chatObject is User)
+        else if (chatObject is Objects.User)
             chatFrame.User.Send(Raws.IRCX_RPL_UMODEIS_221(chatFrame.Server, chatFrame.User,
                 string.Join(string.Empty, chatObject.Modes.Keys)));
     }

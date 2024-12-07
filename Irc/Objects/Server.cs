@@ -31,7 +31,7 @@ public class Server : ChatObject
     private readonly ISocketServer _socketServer;
     private readonly ConcurrentQueue<User?> PendingNewUserQueue = new();
     private readonly ConcurrentQueue<User?> PendingRemoveUserQueue = new();
-    public IDictionary<EnumProtocolType, Protocol> _protocols = new Dictionary<EnumProtocolType, Protocol>();
+    public readonly Protocol Protocol = new();
     public IList<Channel?> Channels;
     public IList<User?> Users = new List<User?>();
 
@@ -259,12 +259,6 @@ public class Server : ChatObject
         }
     }
 
-    public Protocol GetProtocol(EnumProtocolType protocolType)
-    {
-        if (_protocols.TryGetValue(protocolType, out var protocol)) return protocol;
-        return null;
-    }
-
     public SecurityManager GetSecurityManager()
     {
         return _securityManager;
@@ -481,17 +475,9 @@ public class Server : ChatObject
         }
     }
 
-    protected void AddCommand(Command command, EnumProtocolType fromProtocol = EnumProtocolType.IRC,
-        string? name = null)
-    {
-        foreach (var protocol in _protocols)
-            if (protocol.Key >= fromProtocol)
-                protocol.Value.AddCommand(command, name);
-    }
-
     protected void FlushCommands()
     {
-        foreach (var protocol in _protocols) protocol.Value.FlushCommands();
+        Protocol.FlushCommands();
     }
 
     private void ProcessNextModeOperation(User user)
@@ -501,19 +487,6 @@ public class Server : ChatObject
     }
 
     // Ircx
-    protected EnumChannelAccessResult CheckAuthOnly()
-    {
-        if (Modes[Tokens.ChannelModeAuthOnly] == 1)
-            return EnumChannelAccessResult.ERR_AUTHONLYCHAN;
-        return EnumChannelAccessResult.NONE;
-    }
-
-    protected EnumChannelAccessResult CheckSecureOnly()
-    {
-        // TODO: Whatever this is...
-        return EnumChannelAccessResult.ERR_SECUREONLYCHAN;
-    }
-
     private void ProcessNextCommand(User? user)
     {
         var message = user.DataRegulator.PeekIncoming();

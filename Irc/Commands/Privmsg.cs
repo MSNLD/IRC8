@@ -58,14 +58,14 @@ public class Privmsg : Command
                 if (Notice) ((Channel)chatObject).SendNotice(chatFrame.User, message);
                 else ((Channel)chatObject).SendMessage(chatFrame.User, message);
             }
-            else if (chatObject is User)
+            else if (chatObject is Objects.User)
             {
                 if (Notice)
-                    ((User)chatObject).Send(
+                    ((Objects.User)chatObject).Send(
                         Raws.RPL_NOTICE_USER(chatFrame.Server, chatFrame.User, chatObject, message)
                     );
                 else
-                    ((User)chatObject).Send(
+                    ((Objects.User)chatObject).Send(
                         Raws.RPL_PRIVMSG_USER(chatFrame.Server, chatFrame.User, chatObject, message)
                     );
             }

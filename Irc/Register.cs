@@ -2,6 +2,7 @@
 using Irc.Enumerations;
 using Irc.Objects;
 using Irc.Resources;
+using User = Irc.Objects.User;
 
 namespace Irc;
 

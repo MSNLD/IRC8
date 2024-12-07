@@ -170,7 +170,7 @@ public class Prop : Command
     }
 
     // TODO: Rewrite this code
-    public void SendProps(Server server, User? user, ChatObject targetObject, Dictionary<string?, string?> props)
+    public void SendProps(Server server, Objects.User? user, ChatObject targetObject, Dictionary<string?, string?> props)
     {
         var propsSent = 0;
         foreach (var prop in props)
@@ -208,7 +208,7 @@ public class Prop : Command
         if (propsSent > 0) user.Send(IrcxRaws.IRCX_RPL_PROPEND_819(server, user, targetObject));
     }
 
-    public void SendProp(Server server, User? user, ChatObject targetObject, string? propName,
+    public void SendProp(Server server, Objects.User? user, ChatObject targetObject, string? propName,
         string? propValue)
     {
         user.Send(IrcxRaws.IRCX_RPL_PROPLIST_818(server, user, targetObject, propName, propValue));

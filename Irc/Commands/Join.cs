@@ -23,7 +23,7 @@ public class Join : Command
         JoinChannels(server, user, channelNames, key);
     }
 
-    public static List<string?> ValidateChannels(Server server, User? user, string? channels)
+    public static List<string?> ValidateChannels(Server server, Objects.User? user, string? channels)
     {
         List<string?> channelNames = channels.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
 
@@ -44,7 +44,7 @@ public class Join : Command
         return channelNames;
     }
 
-    public static void JoinChannels(Server server, User? user, List<string?> channelNames, string? key)
+    public static void JoinChannels(Server server, Objects.User? user, List<string?> channelNames, string? key)
     {
         // TODO: Optimize the below code
         foreach (var channelName in channelNames)
@@ -77,7 +77,7 @@ public class Join : Command
         }
     }
 
-    public static void SendJoinError(Server server, Channel channel, User? user, EnumChannelAccessResult result)
+    public static void SendJoinError(Server server, Channel channel, Objects.User? user, EnumChannelAccessResult result)
     {
         switch (result)
         {

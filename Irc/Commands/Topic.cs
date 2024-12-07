@@ -49,7 +49,7 @@ internal class Topic : Command
         }
     }
 
-    public static EnumIrcError ProcessTopic(ChatFrame chatFrame, Channel channel, User? source, string? topic)
+    public static EnumIrcError ProcessTopic(ChatFrame chatFrame, Channel channel, Objects.User? source, string? topic)
     {
         if (!channel.CanBeModifiedBy((ChatObject)source)) return EnumIrcError.ERR_NOTONCHANNEL;
 

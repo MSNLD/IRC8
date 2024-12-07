@@ -71,7 +71,7 @@ internal class Access : Command
             // No Access
             return false;
 
-        if (targetObject is User && targetObject != chatFrame.User)
+        if (targetObject is Objects.User && targetObject != chatFrame.User)
             // No Access
             return false;
 
