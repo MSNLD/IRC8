@@ -8,7 +8,7 @@ namespace Irc.Security.Packages;
 // Created: Long time ago...
 // NTLM is required for the CAC to work
 
-public class Ntlm : SupportPackage, ISupportPackage
+public class Ntlm : SupportPackage
 {
     private readonly ICredentialProvider? _credentialProvider;
     private readonly NTLMShared.TargetInformation _targetInformation = new();

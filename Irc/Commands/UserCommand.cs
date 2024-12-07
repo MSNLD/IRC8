@@ -10,7 +10,7 @@ public class UserCommand : Command
 
     public new string? GetName()
     {
-        return IrcStrings.CommandUser;
+        return "USER";
     }
 
     public override void Execute(ChatFrame chatFrame)

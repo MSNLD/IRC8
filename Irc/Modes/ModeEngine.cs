@@ -57,7 +57,7 @@ public class ModeEngine
                             // Not enough parameters
                             //:sky-8a15b323126 461 Sky MODE +q :Not enough parameters
                             source.Send(Raw.IRCX_ERR_NEEDMOREPARAMS_461(source.Server, source,
-                                $"{IrcStrings.CommandMode} {c}"));
+                                $"MODE {c}"));
                             continue;
                         }
                     }

@@ -69,8 +69,9 @@ public class WebIrc : Command
                     })
             );
 
+            var webircOptionSecure = "secure";
             foreach (var option in options)
-                if (option.Key.ToLowerInvariant() == IrcStrings.webirc_option_secure)
+                if (option.Key.ToLowerInvariant() == webircOptionSecure)
                     chatFrame.User.Secure = true;
         }
     }

@@ -29,7 +29,7 @@ internal class Ircvers : Command
 
                     var isircx = enumProtocolType > EnumProtocolType.IRC;
                     chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
-                        chatFrame.Server.MaxInputBytes, IrcStrings.IRCXOptions));
+                        chatFrame.Server.MaxInputBytes, "*"));
 
                     // TODO: Fix below
                     // chatFrame.User.Send(Raw.IRCX_ERR_BADVALUE_906(chatFrame.Server, chatFrame.User, ircvers));

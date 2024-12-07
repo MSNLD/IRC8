@@ -14,6 +14,6 @@ public class Links : Command
         var linkCount = 0;
         chatFrame.User.Send(IrcRaws.IRC_RAW_364(chatFrame.Server, chatFrame.User, chatFrame.Server.ToString(),
             linkCount));
-        chatFrame.User.Send(IrcRaws.IRC_RAW_365(chatFrame.Server, chatFrame.User, IrcStrings.Wildcard));
+        chatFrame.User.Send(IrcRaws.IRC_RAW_365(chatFrame.Server, chatFrame.User, "*"));
     }
 }

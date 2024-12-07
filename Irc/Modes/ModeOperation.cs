@@ -23,7 +23,7 @@ public class ModeOperation
                 // -> sky-8a15b323126 MODE #test +l hello
                 // < - :sky - 8a15b323126 461 Sky MODE +l :Not enough parameters
                 Source.Send(Raw.IRCX_ERR_NEEDMOREPARAMS_461(Source.Server, Source,
-                    $"{IrcStrings.CommandMode} {Mode.GetModeChar()}"));
+                    $"MODE {Mode.GetModeChar()}"));
                 break;
             }
             case EnumIrcError.ERR_NOCHANOP:

@@ -24,7 +24,7 @@ public abstract class ChatObject
 
     public string? Name
     {
-        get => Props["NAME"] ?? IrcStrings.Wildcard;
+        get => Props["NAME"] ?? "*";
         set => Props["NAME"] = value;
     }
 

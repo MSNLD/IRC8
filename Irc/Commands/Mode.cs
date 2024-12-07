@@ -15,12 +15,12 @@ internal class Mode : Command
     {
         if (!chatFrame.User.IsRegistered())
         {
-            if (chatFrame.Message.Parameters.First().ToUpper() == IrcStrings.ISIRCX)
+            if (chatFrame.Message.Parameters.First().ToUpper() == "ISIRCX")
             {
                 var protocol = chatFrame.User.Protocol.Ircvers;
                 var isircx = protocol > EnumProtocolType.IRC;
                 chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
-                    chatFrame.Server.MaxInputBytes, IrcStrings.IRCXOptions));
+                    chatFrame.Server.MaxInputBytes, "*"));
             }
         }
         else
