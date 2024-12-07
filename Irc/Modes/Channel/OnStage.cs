@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class OnStage : ModeRuleChannel
 {
-    public OnStage() : base(IrcStrings.ChannelModeOnStage)
+    public OnStage() : base(Tokens.ChannelModeOnStage)
     {
     }
 

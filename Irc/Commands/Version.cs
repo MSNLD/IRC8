@@ -1,4 +1,6 @@
-﻿namespace Irc.Commands;
+﻿using Irc.Resources;
+
+namespace Irc.Commands;
 
 public class Version : Command
 {
@@ -8,6 +10,6 @@ public class Version : Command
 
     public override void Execute(ChatFrame chatFrame)
     {
-        chatFrame.User.Send(Raw.IRCX_RPL_VERSION_351(chatFrame.Server, chatFrame.User, chatFrame.Server.ServerVersion));
+        chatFrame.User.Send(Raws.IRCX_RPL_VERSION_351(chatFrame.Server, chatFrame.User, chatFrame.Server.ServerVersion));
     }
 }

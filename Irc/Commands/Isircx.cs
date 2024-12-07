@@ -1,4 +1,6 @@
-﻿namespace Irc.Commands;
+﻿using Irc.Resources;
+
+namespace Irc.Commands;
 
 internal class Isircx : Command
 {
@@ -8,6 +10,6 @@ internal class Isircx : Command
 
     public override void Execute(ChatFrame chatFrame)
     {
-        chatFrame.User.Send(Raw.IRCX_ERR_NOTIMPLEMENTED(chatFrame.Server, chatFrame.User, nameof(Access)));
+        chatFrame.User.Send(Raws.IRCX_ERR_NOTIMPLEMENTED(chatFrame.Server, chatFrame.User, nameof(Access)));
     }
 }

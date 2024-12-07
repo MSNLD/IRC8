@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class TopicOp : ModeRuleChannel
 {
-    public TopicOp() : base(IrcStrings.ChannelModeTopicOp)
+    public TopicOp() : base(Tokens.ChannelModeTopicOp)
     {
     }
 

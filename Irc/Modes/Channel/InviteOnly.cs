@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class InviteOnly : ModeRuleChannel
 {
-    public InviteOnly() : base(IrcStrings.ChannelModeInvite)
+    public InviteOnly() : base(Tokens.ChannelModeInvite)
     {
     }
 

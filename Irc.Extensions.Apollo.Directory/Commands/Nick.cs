@@ -22,9 +22,9 @@ public class Nick : Command
 
     public static bool ValidateNickname(string? nickname)
     {
-        var mask = IrcStrings.PreAuthNicknameMask;
+        var mask = Tokens.PreAuthNicknameMask;
 
-        return nickname.Length <= IrcStrings.MaxFieldLen &&
+        return nickname.Length <= Tokens.MaxFieldLen &&
                RegularExpressions.Match(mask, nickname, true);
     }
 
@@ -34,7 +34,7 @@ public class Nick : Command
         // UTF8 / Guest / Normal / Admin/Sysop/Guide OK
         if (!ValidateNickname(nickname))
         {
-            chatFrame.User?.Send(Raw.IRCX_ERR_ERRONEOUSNICK_432(chatFrame.Server, chatFrame.User, nickname));
+            chatFrame.User?.Send(Raws.IRCX_ERR_ERRONEOUSNICK_432(chatFrame.Server, chatFrame.User, nickname));
             return false;
         }
 

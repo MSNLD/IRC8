@@ -7,6 +7,7 @@ using Irc.IO;
 using Irc.Modes;
 using Irc.Protocols;
 using Irc.Resources;
+using Irc.Security;
 using Irc.Security.Packages;
 using NLog;
 
@@ -24,7 +25,7 @@ public class User : ChatObject
     private long _commandSequence;
     private bool _guest;
     private bool _registered;
-    public ISupportPackage SupportPackage { get; set; } = new ANON();
+    public SupportPackage SupportPackage { get; set; } = new ANON();
     public ConcurrentDictionary<Channel, Member> Channels;
     public FloodProtectionManager FloodProtection { get; } = new();
 
@@ -48,25 +49,25 @@ public class User : ChatObject
 
         Address.SetIP(connection.GetIp());
 
-        Props.Add(IrcStrings.UserPropOid, "");
-        Props.Add(IrcStrings.UserPropSubscriberInfo, "");
-        Props.Add(IrcStrings.UserPropMsnProfile, "");
-        Props.Add(IrcStrings.UserPropRole, "");
+        Props.Add(Tokens.UserPropOid, "");
+        Props.Add(Tokens.UserPropSubscriberInfo, "");
+        Props.Add(Tokens.UserPropMsnProfile, "");
+        Props.Add(Tokens.UserPropRole, "");
 
         // IRC
-        Modes.Add(IrcStrings.UserModeOper, 0);
-        Modes.Add(IrcStrings.UserModeInvisible, 0);
-        Modes.Add(IrcStrings.UserModeSecure, 0);
-        Modes.Add(IrcStrings.UserModeServerNotice, 0);
-        Modes.Add(IrcStrings.UserModeWallops, 0);
+        Modes.Add(Tokens.UserModeOper, 0);
+        Modes.Add(Tokens.UserModeInvisible, 0);
+        Modes.Add(Tokens.UserModeSecure, 0);
+        Modes.Add(Tokens.UserModeServerNotice, 0);
+        Modes.Add(Tokens.UserModeWallops, 0);
 
         //IRCX
-        Modes.Add(IrcStrings.UserModeAdmin, 0);
-        Modes.Add(IrcStrings.UserModeIrcx, 0);
-        Modes.Add(IrcStrings.UserModeGag, 0);
+        Modes.Add(Tokens.UserModeAdmin, 0);
+        Modes.Add(Tokens.UserModeIrcx, 0);
+        Modes.Add(Tokens.UserModeGag, 0);
 
         //Apollo
-        Modes.Add(IrcStrings.UserModeHost, 0);
+        Modes.Add(Tokens.UserModeHost, 0);
         
         // Access
         AccessList.Entries = new Dictionary<EnumAccessLevel, List<AccessEntry>>
@@ -180,7 +181,7 @@ public class User : ChatObject
     public void ChangeNickname(string? newNick, bool utf8Prefix)
     {
         var nickname = utf8Prefix ? $"'{newNick}" : newNick;
-        var rawNicknameChange = Raw.RPL_NICK(Server, this, nickname);
+        var rawNicknameChange = Raws.RPL_NICK(Server, this, nickname);
         Send(rawNicknameChange);
         Nickname = nickname;
 
@@ -236,43 +237,43 @@ public class User : ChatObject
     {
         Profile.Away = true;
         Away = true;
-        BroadcastToChannels(Raw.IRCX_RPL_USERNOWAWAY_822(Server, this, message), true);
-        Send(Raw.IRCX_RPL_NOWAWAY_306(Server, this));
+        BroadcastToChannels(Raws.IRCX_RPL_USERNOWAWAY_822(Server, this, message), true);
+        Send(Raws.IRCX_RPL_NOWAWAY_306(Server, this));
     }
 
     public virtual void SetBack()
     {
         Profile.Away = false;
         Away = false;
-        BroadcastToChannels(Raw.IRCX_RPL_USERUNAWAY_821(Server, this), true);
-        Send(Raw.IRCX_RPL_UNAWAY_305(Server, this));
+        BroadcastToChannels(Raws.IRCX_RPL_USERUNAWAY_821(Server, this), true);
+        Send(Raws.IRCX_RPL_UNAWAY_305(Server, this));
     }
 
     public virtual void PromoteToAdministrator()
     {
         Profile.Level = EnumUserAccessLevel.Administrator;
         Admin = true;
-        ModeRule.DispatchModeChange(IrcStrings.UserModeAdmin, this, this, true, ToString());
+        ModeRule.DispatchModeChange(Tokens.UserModeAdmin, this, this, true, ToString());
         Level = EnumUserAccessLevel.Administrator;
-        Send(Raw.IRCX_RPL_YOUREADMIN_386(Server, this));
+        Send(Raws.IRCX_RPL_YOUREADMIN_386(Server, this));
     }
 
     public virtual void PromoteToSysop()
     {
         Profile.Level = EnumUserAccessLevel.Sysop;
         Oper = true;
-        ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, ToString());
+        ModeRule.DispatchModeChange(Tokens.UserModeOper, this, this, true, ToString());
         Level = EnumUserAccessLevel.Sysop;
-        Send(Raw.IRCX_RPL_YOUREOPER_381(Server, this));
+        Send(Raws.IRCX_RPL_YOUREOPER_381(Server, this));
     }
 
     public virtual void PromoteToGuide()
     {
         Profile.Level = EnumUserAccessLevel.Guide;
         Oper = true;
-        ModeRule.DispatchModeChange(IrcStrings.UserModeOper, this, this, true, ToString());
+        ModeRule.DispatchModeChange(Tokens.UserModeOper, this, this, true, ToString());
         Level = EnumUserAccessLevel.Guide;
-        Send(Raw.IRCX_RPL_YOUREGUIDE_629(Server, this));
+        Send(Raws.IRCX_RPL_YOUREGUIDE_629(Server, this));
     }
 
     public bool DisconnectIfOutgoingThresholdExceeded()
@@ -309,12 +310,12 @@ public class User : ChatObject
             {
                 Log.Debug($"Ping Count for {this} hit stage {PingCount + 1}");
                 PingCount++;
-                Send(Raw.RPL_PING(Server, this));
+                Send(Raws.RPL_PING(Server, this));
             }
             else
             {
                 DataRegulator.Purge();
-                Disconnect(Raw.IRCX_CLOSINGLINK_011_PINGTIMEOUT(Server, this, _connection.GetIp()));
+                Disconnect(Raws.IRCX_CLOSINGLINK_011_PINGTIMEOUT(Server, this, _connection.GetIp()));
             }
         }
     }
@@ -359,59 +360,59 @@ public class User : ChatObject
 
     public bool Oper
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeOper]);
-        set => Modes[IrcStrings.UserModeOper] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.UserModeOper]);
+        set => Modes[Tokens.UserModeOper] = Convert.ToInt32(value);
     }
 
     public bool Invisible
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeInvisible]);
-        set => Modes[IrcStrings.UserModeOper] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.UserModeInvisible]);
+        set => Modes[Tokens.UserModeOper] = Convert.ToInt32(value);
     }
 
     public bool Secure
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeSecure]);
-        set => Modes[IrcStrings.UserModeSecure] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.UserModeSecure]);
+        set => Modes[Tokens.UserModeSecure] = Convert.ToInt32(value);
     }
 
     public bool ServerNotice
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeServerNotice]);
-        set => Modes[IrcStrings.UserModeServerNotice] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.UserModeServerNotice]);
+        set => Modes[Tokens.UserModeServerNotice] = Convert.ToInt32(value);
     }
 
     public bool Wallops
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeWallops]);
-        set => Modes[IrcStrings.UserModeWallops] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.UserModeWallops]);
+        set => Modes[Tokens.UserModeWallops] = Convert.ToInt32(value);
     }
 
     public bool Admin
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeAdmin]);
-        set => Modes[IrcStrings.UserModeAdmin] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.UserModeAdmin]);
+        set => Modes[Tokens.UserModeAdmin] = Convert.ToInt32(value);
     }
 
 
     public bool Ircx
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeIrcx]);
-        set => Modes[IrcStrings.UserModeIrcx] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.UserModeIrcx]);
+        set => Modes[Tokens.UserModeIrcx] = Convert.ToInt32(value);
     }
 
 
     public bool Gag
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeGag]);
-        set => Modes[IrcStrings.UserModeGag] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.UserModeGag]);
+        set => Modes[Tokens.UserModeGag] = Convert.ToInt32(value);
     }
 
 
     public bool Host
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.UserModeHost]);
-        set => Modes[IrcStrings.UserModeHost] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.UserModeHost]);
+        set => Modes[Tokens.UserModeHost] = Convert.ToInt32(value);
     }
 
     #endregion

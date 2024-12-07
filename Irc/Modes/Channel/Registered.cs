@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class Registered : ModeRuleChannel
 {
-    public Registered() : base(IrcStrings.ChannelModeRegistered)
+    public Registered() : base(Tokens.ChannelModeRegistered)
     {
     }
 

@@ -8,10 +8,10 @@ public class UserPropCollection : PropCollection
 {
     public static PropRule Msnprofile = new()
     {
-        Name = IrcStrings.UserPropMsnProfile,
+        Name = Tokens.UserPropMsnProfile,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.ChatMember,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = "0",
         ReadOnly = true,
         PostRule = (chatObject, propValue) =>
@@ -41,60 +41,60 @@ public class UserPropCollection : PropCollection
 
     public static PropRule Nick = new()
     {
-        Name = IrcStrings.UserPropNickname,
+        Name = Tokens.UserPropNickname,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.None,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = true
     };
 
     public static PropRule Role = new()
     {
-        Name = IrcStrings.UserPropRole,
+        Name = Tokens.UserPropRole,
         ReadAccessLevel = EnumChannelAccessLevel.None,
         WriteAccessLevel = EnumChannelAccessLevel.ChatMember,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = true,
         PostRule = (chatObject, propValue) =>
         {
             ((User)chatObject).Server.ProcessCookie((User)chatObject,
-                IrcStrings.UserPropRole, propValue);
+                Tokens.UserPropRole, propValue);
         }
     };
 
     public static PropRule Subscriberinfo = new()
     {
-        Name = IrcStrings.UserPropSubscriberInfo,
+        Name = Tokens.UserPropSubscriberInfo,
         ReadAccessLevel = EnumChannelAccessLevel.None,
         WriteAccessLevel = EnumChannelAccessLevel.ChatMember,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = "0",
         ReadOnly = true,
         PostRule = (chatObject, propValue) =>
         {
             ((User)chatObject).Server.ProcessCookie((User)chatObject,
-                IrcStrings.UserPropSubscriberInfo, propValue);
+                Tokens.UserPropSubscriberInfo, propValue);
         }
     };
 
     public static PropRule Oid = new()
     {
-        Name = IrcStrings.UserPropOid,
+        Name = Tokens.UserPropOid,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.None,
-        ValidationMask = IrcStrings.ChannelPropOIDRegex,
+        ValidationMask = Tokens.ChannelPropOIDRegex,
         Value = "0",
         ReadOnly = true
     };
 
     public static Dictionary<string?, PropRule> PropRules = new()
     {
-        { IrcStrings.UserPropOid, Oid },
-        { IrcStrings.UserPropNickname, Nick },
-        { IrcStrings.UserPropSubscriberInfo, Subscriberinfo },
-        { IrcStrings.UserPropMsnProfile, Msnprofile },
-        { IrcStrings.UserPropRole, Role }
+        { Tokens.UserPropOid, Oid },
+        { Tokens.UserPropNickname, Nick },
+        { Tokens.UserPropSubscriberInfo, Subscriberinfo },
+        { Tokens.UserPropMsnProfile, Msnprofile },
+        { Tokens.UserPropRole, Role }
     };
 }

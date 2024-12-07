@@ -10,9 +10,9 @@ public class Member : ChatObject
     public Member(User? User)
     {
         _user = User;
-        Modes[IrcStrings.MemberModeOwner] = 0;
-        Modes[IrcStrings.MemberModeHost] = 0;
-        Modes[IrcStrings.MemberModeVoice] = 0;
+        Modes[Tokens.MemberModeOwner] = 0;
+        Modes[Tokens.MemberModeHost] = 0;
+        Modes[Tokens.MemberModeVoice] = 0;
     }
 
     public EnumChannelAccessLevel GetLevel()
@@ -61,18 +61,18 @@ public class Member : ChatObject
 
     public string GetListedMode()
     {
-        if (IsOwner()) return IrcStrings.MemberModeFlagOwner.ToString();
-        if (IsHost()) return IrcStrings.MemberModeFlagHost.ToString();
-        if (IsVoice()) return IrcStrings.MemberModeFlagVoice.ToString();
+        if (IsOwner()) return Tokens.MemberModeFlagOwner.ToString();
+        if (IsHost()) return Tokens.MemberModeFlagHost.ToString();
+        if (IsVoice()) return Tokens.MemberModeFlagVoice.ToString();
 
         return "";
     }
 
     public char GetModeChar()
     {
-        if (IsOwner()) return IrcStrings.MemberModeOwner;
-        if (IsHost()) return IrcStrings.MemberModeHost;
-        if (IsVoice()) return IrcStrings.MemberModeVoice;
+        if (IsOwner()) return Tokens.MemberModeOwner;
+        if (IsHost()) return Tokens.MemberModeHost;
+        if (IsVoice()) return Tokens.MemberModeVoice;
 
         return (char)0;
     }
@@ -80,17 +80,17 @@ public class Member : ChatObject
     public bool IsOwner()
     {
         // TODO: Need to think about a better way of handling the below
-        return Modes.ContainsKey(IrcStrings.MemberModeOwner) && Modes[IrcStrings.MemberModeOwner] > 0;
+        return Modes.ContainsKey(Tokens.MemberModeOwner) && Modes[Tokens.MemberModeOwner] > 0;
     }
 
     public bool IsHost()
     {
-        return Modes[IrcStrings.MemberModeHost] > 0;
+        return Modes[Tokens.MemberModeHost] > 0;
     }
 
     public bool IsVoice()
     {
-        return Modes[IrcStrings.MemberModeVoice] > 0;
+        return Modes[Tokens.MemberModeVoice] > 0;
     }
 
     public bool IsNormal()
@@ -100,17 +100,17 @@ public class Member : ChatObject
 
     public void SetOwner(bool flag)
     {
-        Modes[IrcStrings.MemberModeOwner] = flag ? 1 : 0;
+        Modes[Tokens.MemberModeOwner] = flag ? 1 : 0;
     }
 
     public void SetHost(bool flag)
     {
-        Modes[IrcStrings.MemberModeHost] = flag ? 1 : 0;
+        Modes[Tokens.MemberModeHost] = flag ? 1 : 0;
     }
 
     public void SetVoice(bool flag)
     {
-        Modes[IrcStrings.MemberModeVoice] = flag ? 1 : 0;
+        Modes[Tokens.MemberModeVoice] = flag ? 1 : 0;
     }
 
     public void SetNormal()

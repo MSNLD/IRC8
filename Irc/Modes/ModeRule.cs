@@ -1,5 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Modes;
 
@@ -54,7 +55,7 @@ public class ModeRule
         string? parameter)
     {
         target.Send(
-            Raw.RPL_MODE_IRC(
+            Raws.RPL_MODE_IRC(
                 (Objects.User)source,
                 target,
                 $"{(flag ? "+" : "-")}{modeChar}{(parameter != null ? $" {parameter}" : string.Empty)}"
@@ -67,7 +68,7 @@ public class ModeRule
         bool flag, string? parameter)
     {
         recipientObject.Send(
-            Raw.RPL_MODE_IRC(
+            Raws.RPL_MODE_IRC(
                 (Objects.User)source,
                 target,
                 $"{(flag ? "+" : "-")}{modeChar}{(parameter != null ? $" {parameter}" : string.Empty)}"

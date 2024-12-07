@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class UserLimit : ModeRuleChannel
 {
-    public UserLimit() : base(IrcStrings.ChannelModeUserLimit, true)
+    public UserLimit() : base(Tokens.ChannelModeUserLimit, true)
     {
     }
 

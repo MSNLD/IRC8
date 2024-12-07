@@ -1,4 +1,5 @@
 ﻿using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -30,7 +31,7 @@ public class Privmsg : Command
             if (chatObject == null)
             {
                 // TODO: To make common function for this
-                chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, target));
+                chatFrame.User.Send(Raws.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, target));
                 return;
             }
 
@@ -50,7 +51,7 @@ public class Privmsg : Command
                 )
                 {
                     chatFrame.User.Send(
-                        Raw.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));
+                        Raws.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));
                     return;
                 }
 
@@ -61,11 +62,11 @@ public class Privmsg : Command
             {
                 if (Notice)
                     ((User)chatObject).Send(
-                        Raw.RPL_NOTICE_USER(chatFrame.Server, chatFrame.User, chatObject, message)
+                        Raws.RPL_NOTICE_USER(chatFrame.Server, chatFrame.User, chatObject, message)
                     );
                 else
                     ((User)chatObject).Send(
-                        Raw.RPL_PRIVMSG_USER(chatFrame.Server, chatFrame.User, chatObject, message)
+                        Raws.RPL_PRIVMSG_USER(chatFrame.Server, chatFrame.User, chatObject, message)
                     );
             }
         }

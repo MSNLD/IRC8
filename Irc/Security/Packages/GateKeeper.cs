@@ -12,7 +12,7 @@ using NLog;
 // ReSharper disable once CheckNamespace
 namespace Irc.Extensions.Security.Packages;
 
-public class GateKeeper : SupportPackage, ISupportPackage
+public class GateKeeper : SupportPackage
 {
     public static readonly NLog.Logger Log = LogManager.GetCurrentClassLogger();
 

@@ -1,4 +1,5 @@
 ﻿using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -25,7 +26,7 @@ internal class Names : Command
             }
             else
             {
-                chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, channelName));
+                chatFrame.User.Send(Raws.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, channelName));
             }
         }
     }
@@ -43,7 +44,7 @@ internal class Names : Command
             channelType = '*';
 
         user.Send(
-            Raw.IRCX_RPL_NAMEREPLY_353(user.Server, user, channel, channelType,
+            Raws.IRCX_RPL_NAMEREPLY_353(user.Server, user, channel, channelType,
                 string.Join(' ',
                     channel.GetMembers().Select(m =>
                         $"{user.Protocol.FormattedUser(m)}"
@@ -51,6 +52,6 @@ internal class Names : Command
                 )
             )
         );
-        user.Send(Raw.IRCX_RPL_ENDOFNAMES_366(user.Server, user, channel));
+        user.Send(Raws.IRCX_RPL_ENDOFNAMES_366(user.Server, user, channel));
     }
 }

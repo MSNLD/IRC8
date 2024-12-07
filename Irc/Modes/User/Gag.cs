@@ -19,7 +19,7 @@ public class Gag : ModeRule
          MODE <nick> { + | - }z
     */
 
-    public Gag() : base(IrcStrings.UserModeGag)
+    public Gag() : base(Tokens.UserModeGag)
     {
     }
 
@@ -29,7 +29,7 @@ public class Gag : ModeRule
         {
             if (source.Level < target.Level) return EnumIrcError.ERR_NOPERMS;
 
-            target.Modes[IrcStrings.UserModeGag] = Convert.ToInt32(flag);
+            target.Modes[Tokens.UserModeGag] = Convert.ToInt32(flag);
             DispatchModeChange(source, target, flag, parameter);
             return EnumIrcError.OK;
         }

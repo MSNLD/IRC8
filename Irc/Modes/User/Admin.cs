@@ -6,7 +6,7 @@ namespace Irc.Modes.User;
 
 public class Admin : ModeRule
 {
-    public Admin() : base(IrcStrings.UserModeAdmin)
+    public Admin() : base(Tokens.UserModeAdmin)
     {
     }
 
@@ -15,7 +15,7 @@ public class Admin : ModeRule
         // :sky-8a15b323126 908 Sky :No permissions to perform command
         if (source is Objects.User && ((Objects.User)source).IsAdministrator() && flag == false)
         {
-            target.Modes[IrcStrings.UserModeAdmin] = Convert.ToInt32(flag);
+            target.Modes[Tokens.UserModeAdmin] = Convert.ToInt32(flag);
             DispatchModeChange(source, target, flag, parameter);
             return EnumIrcError.OK;
         }

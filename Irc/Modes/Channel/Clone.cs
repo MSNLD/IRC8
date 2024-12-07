@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class Clone : ModeRuleChannel
 {
-    public Clone() : base(IrcStrings.ChannelModeClone)
+    public Clone() : base(Tokens.ChannelModeClone)
     {
     }
 

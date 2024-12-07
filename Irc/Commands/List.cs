@@ -11,14 +11,14 @@ internal class List : Command
         var user = chatFrame.User;
         var parameters = chatFrame.Message.Parameters;
 
-        var channels = server.GetChannels().Where(c => c.Modes[IrcStrings.ChannelModeSecret] != 1).ToList();
+        var channels = server.GetChannels().Where(c => c.Modes[Tokens.ChannelModeSecret] != 1).ToList();
         if (parameters.Count > 0)
         {
             List<string?> channelNames = parameters.First().Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
 
             channels = server
                 .GetChannels()
-                .Where(c => c.Modes[IrcStrings.ChannelModeSecret] != 1
+                .Where(c => c.Modes[Tokens.ChannelModeSecret] != 1
                             && channelNames.Contains(c.GetName(), StringComparer.InvariantCultureIgnoreCase)).ToList();
         }
 
@@ -27,8 +27,8 @@ internal class List : Command
 
     public void ListChannels(Server server, User? user, IList<Channel?> channels)
     {
-        user.Send(Raw.IRCX_RPL_MODE_321(server, user));
-        foreach (var channel in channels) user.Send(Raw.IRCX_RPL_MODE_322(server, user, channel));
-        user.Send(Raw.IRCX_RPL_MODE_323(server, user));
+        user.Send(Raws.IRCX_RPL_MODE_321(server, user));
+        foreach (var channel in channels) user.Send(Raws.IRCX_RPL_MODE_322(server, user, channel));
+        user.Send(Raws.IRCX_RPL_MODE_323(server, user));
     }
 }

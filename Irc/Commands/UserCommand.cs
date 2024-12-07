@@ -8,17 +8,12 @@ public class UserCommand : Command
     {
     }
 
-    public new string? GetName()
-    {
-        return "USER";
-    }
-
     public override void Execute(ChatFrame chatFrame)
     {
         var address = chatFrame.User.Address;
         if (!string.IsNullOrWhiteSpace(address.RealName))
         {
-            chatFrame.User.Send(Raw.IRCX_ERR_ALREADYREGISTERED_462(chatFrame.Server, chatFrame.User));
+            chatFrame.User.Send(Raws.IRCX_ERR_ALREADYREGISTERED_462(chatFrame.Server, chatFrame.User));
         }
         else
         {

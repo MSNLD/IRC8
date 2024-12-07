@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class Subscriber : ModeRuleChannel
 {
-    public Subscriber() : base(IrcStrings.ChannelModeSubscriber)
+    public Subscriber() : base(Tokens.ChannelModeSubscriber)
     {
     }
 

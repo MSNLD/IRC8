@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel.Member;
 
 public class Host : ModeRuleChannel
 {
-    public Host() : base(IrcStrings.UserModeHost, true)
+    public Host() : base(Tokens.UserModeHost, true)
     {
     }
 

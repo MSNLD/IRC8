@@ -70,7 +70,7 @@ public class Prop : Command
                         }
                         else
                         {
-                            chatFrame.User.Send(Raw.IRCX_ERR_BADPROPERTY_905(chatFrame.Server, chatFrame.User,
+                            chatFrame.User.Send(Raws.IRCX_ERR_BADPROPERTY_905(chatFrame.Server, chatFrame.User,
                                 chatFrame.Message.Parameters[1]));
                         }
                     }
@@ -92,7 +92,7 @@ public class Prop : Command
             if (chatObject == null)
             {
                 // No such object
-                chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHOBJECT_924(chatFrame.Server, chatFrame.User, objectName));
+                chatFrame.User.Send(Raws.IRCX_ERR_NOSUCHOBJECT_924(chatFrame.Server, chatFrame.User, objectName));
             }
             else
             {
@@ -111,14 +111,14 @@ public class Prop : Command
                             var ircError = prop.EvaluateSet(chatFrame.User, chatObject, propValue);
                             if (ircError == EnumIrcError.ERR_NOPERMS)
                             {
-                                chatFrame.User.Send(Raw.IRCX_ERR_NOACCESS_913(chatFrame.Server, chatFrame.User,
+                                chatFrame.User.Send(Raws.IRCX_ERR_NOACCESS_913(chatFrame.Server, chatFrame.User,
                                     chatObject));
                                 return;
                             }
 
                             if (ircError == EnumIrcError.ERR_BADVALUE)
                             {
-                                chatFrame.User.Send(Raw.IRCX_ERR_BADVALUE_906(chatFrame.Server, chatFrame.User,
+                                chatFrame.User.Send(Raws.IRCX_ERR_BADVALUE_906(chatFrame.Server, chatFrame.User,
                                     propValue));
                                 return;
                             }
@@ -128,20 +128,20 @@ public class Prop : Command
                                 chatObject.Props[prop.Name] = propValue;
                                 // prop.SetValue(propValue);
                                 chatObject.Send(
-                                    Raw.RPL_PROP_IRCX(chatFrame.Server, chatFrame.User, chatObject,
+                                    Raws.RPL_PROP_IRCX(chatFrame.Server, chatFrame.User, chatObject,
                                         prop.Name, propValue), prop.WriteAccessLevel);
                             }
                         }
                         else
                         {
-                            chatFrame.User.Send(Raw.IRCX_ERR_NOACCESS_913(chatFrame.Server, chatFrame.User,
+                            chatFrame.User.Send(Raws.IRCX_ERR_NOACCESS_913(chatFrame.Server, chatFrame.User,
                                 chatObject));
                         }
                     }
                     else
                     {
                         // Bad prop
-                        chatFrame.User.Send(Raw.IRCX_ERR_BADPROPERTY_905(chatFrame.Server, chatFrame.User, objectName));
+                        chatFrame.User.Send(Raws.IRCX_ERR_BADPROPERTY_905(chatFrame.Server, chatFrame.User, objectName));
                     }
                 }
                 else
@@ -159,7 +159,7 @@ public class Prop : Command
                             props[propName] = propValue;
                         else
                             // Bad prop
-                            chatFrame.User.Send(Raw.IRCX_ERR_BADPROPERTY_905(chatFrame.Server, chatFrame.User,
+                            chatFrame.User.Send(Raws.IRCX_ERR_BADPROPERTY_905(chatFrame.Server, chatFrame.User,
                                 objectName));
                     }
 
@@ -178,7 +178,7 @@ public class Prop : Command
             if (ChannelPropCollection.PropRules[prop.Key].EvaluateGet((ChatObject)user, targetObject) ==
                 EnumIrcError.ERR_NOPERMS)
             {
-                if (props.Count == 1) user.Send(Raw.IRCX_ERR_SECURITY_908(server, user));
+                if (props.Count == 1) user.Send(Raws.IRCX_ERR_SECURITY_908(server, user));
                 continue;
             }
 

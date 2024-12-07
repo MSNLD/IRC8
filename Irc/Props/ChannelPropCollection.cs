@@ -8,80 +8,80 @@ internal class ChannelPropCollection : PropCollection
 {
     public static PropRule Account = new()
     {
-        Name = IrcStrings.ChannelPropAccount,
+        Name = Tokens.ChannelPropAccount,
         ReadAccessLevel = EnumChannelAccessLevel.ChatHost,
         WriteAccessLevel = EnumChannelAccessLevel.ChatHost,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = true
     };
 
     public static PropRule Client = new()
     {
-        Name = IrcStrings.ChannelPropClient,
+        Name = Tokens.ChannelPropClient,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.ChatHost,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = true
     };
 
     public static PropRule ClientGuid = new()
     {
-        Name = IrcStrings.ChannelPropClientGuid,
+        Name = Tokens.ChannelPropClientGuid,
         ReadAccessLevel = EnumChannelAccessLevel.None,
         WriteAccessLevel = EnumChannelAccessLevel.None,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = true
     };
 
     public static PropRule Creation = new()
     {
-        Name = IrcStrings.ChannelPropCreation,
+        Name = Tokens.ChannelPropCreation,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.None,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = true
     };
 
     public static PropRule Hostkey = new()
     {
-        Name = IrcStrings.ChannelPropHostkey,
+        Name = Tokens.ChannelPropHostkey,
         ReadAccessLevel = EnumChannelAccessLevel.None,
         WriteAccessLevel = EnumChannelAccessLevel.ChatOwner,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = false
     };
 
     public static PropRule Lag = new()
     {
-        Name = IrcStrings.ChannelPropLag,
+        Name = Tokens.ChannelPropLag,
         ReadAccessLevel = EnumChannelAccessLevel.ChatHost,
         WriteAccessLevel = EnumChannelAccessLevel.ChatHost,
-        ValidationMask = IrcStrings.ChannelPropLagRegex,
+        ValidationMask = Tokens.ChannelPropLagRegex,
         Value = string.Empty,
         ReadOnly = false
     };
 
     public static PropRule Language = new()
     {
-        Name = IrcStrings.ChannelPropLanguage,
+        Name = Tokens.ChannelPropLanguage,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.ChatHost,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = false
     };
 
     public static PropRule Memberkey = new()
     {
-        Name = IrcStrings.ChannelPropMemberkey,
+        Name = Tokens.ChannelPropMemberkey,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.ChatHost,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = false,
         PostRule = (chatObject, propValue) =>
@@ -89,129 +89,129 @@ internal class ChannelPropCollection : PropCollection
             if (!string.IsNullOrWhiteSpace(propValue))
             {
                 ((Channel)chatObject).Key = true;
-                ((Channel)chatObject).Props[IrcStrings.ChannelPropMemberkey] = propValue;
+                ((Channel)chatObject).Props[Tokens.ChannelPropMemberkey] = propValue;
             }
             else
             {
                 ((Channel)chatObject).Key = false;
-                ((Channel)chatObject).Props[IrcStrings.ChannelPropMemberkey] = null;
+                ((Channel)chatObject).Props[Tokens.ChannelPropMemberkey] = null;
             }
         }
     };
 
     public static PropRule Name = new()
     {
-        Name = IrcStrings.ChannelPropName,
+        Name = Tokens.ChannelPropName,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.None,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = true
     };
 
     public static PropRule Oid = new()
     {
-        Name = IrcStrings.ChannelPropOID,
+        Name = Tokens.ChannelPropOID,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.None,
-        ValidationMask = IrcStrings.ChannelPropOIDRegex,
+        ValidationMask = Tokens.ChannelPropOIDRegex,
         Value = "0",
         ReadOnly = true
     };
 
     public static PropRule Onjoin = new()
     {
-        Name = IrcStrings.ChannelPropOnJoin,
+        Name = Tokens.ChannelPropOnJoin,
         ReadAccessLevel = EnumChannelAccessLevel.ChatHost,
         WriteAccessLevel = EnumChannelAccessLevel.ChatHost,
-        ValidationMask = IrcStrings.ChannelPropOnjoinRegex,
+        ValidationMask = Tokens.ChannelPropOnjoinRegex,
         Value = "",
         ReadOnly = false
     };
 
     public static PropRule Onpart = new()
     {
-        Name = IrcStrings.ChannelPropOnPart,
+        Name = Tokens.ChannelPropOnPart,
         ReadAccessLevel = EnumChannelAccessLevel.ChatHost,
         WriteAccessLevel = EnumChannelAccessLevel.ChatHost,
-        ValidationMask = IrcStrings.ChannelPropOnpartRegex,
+        ValidationMask = Tokens.ChannelPropOnpartRegex,
         Value = "",
         ReadOnly = false
     };
 
     public static PropRule Ownerkey = new()
     {
-        Name = IrcStrings.ChannelPropOwnerkey,
+        Name = Tokens.ChannelPropOwnerkey,
         ReadAccessLevel = EnumChannelAccessLevel.None,
         WriteAccessLevel = EnumChannelAccessLevel.ChatOwner,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = false
     };
 
     public static PropRule Pics = new()
     {
-        Name = IrcStrings.ChannelPropPICS,
+        Name = Tokens.ChannelPropPICS,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.None,
-        ValidationMask = IrcStrings.ChannelPropPICSRegex,
+        ValidationMask = Tokens.ChannelPropPICSRegex,
         Value = string.Empty,
         ReadOnly = false
     };
 
     public static PropRule Servicepath = new()
     {
-        Name = IrcStrings.ChannelPropServicePath,
+        Name = Tokens.ChannelPropServicePath,
         ReadAccessLevel = EnumChannelAccessLevel.None,
         WriteAccessLevel = EnumChannelAccessLevel.ChatOwner,
-        ValidationMask = IrcStrings.ChannelPropPICSRegex,
+        ValidationMask = Tokens.ChannelPropPICSRegex,
         Value = string.Empty,
         ReadOnly = true
     };
 
     public static PropRule Subject = new()
     {
-        Name = IrcStrings.ChannelPropSubject,
+        Name = Tokens.ChannelPropSubject,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.None,
-        ValidationMask = IrcStrings.GenericProps,
+        ValidationMask = Tokens.GenericProps,
         Value = string.Empty,
         ReadOnly = true
     };
 
     public static PropRule Topic = new()
     {
-        Name = IrcStrings.ChannelPropTopic,
+        Name = Tokens.ChannelPropTopic,
         ReadAccessLevel = EnumChannelAccessLevel.ChatMember,
         WriteAccessLevel = EnumChannelAccessLevel.ChatHost,
-        ValidationMask = IrcStrings.ChannelPropTopicRegex,
+        ValidationMask = Tokens.ChannelPropTopicRegex,
         Value = string.Empty,
         ReadOnly = false,
         PostRule = (chatObject, propValue) =>
         {
-            ((Channel)chatObject).Props[IrcStrings.ChannelPropTopic] = propValue;
+            ((Channel)chatObject).Props[Tokens.ChannelPropTopic] = propValue;
             ((Channel)chatObject).SendTopic();
         }
     };
 
     public static Dictionary<string?, PropRule> PropRules = new()
     {
-        { IrcStrings.ChannelPropAccount, Account },
-        { IrcStrings.ChannelPropClient, Client },
-        { IrcStrings.ChannelPropClientGuid, ClientGuid },
-        { IrcStrings.ChannelPropCreation, Creation },
-        { IrcStrings.ChannelPropHostkey, Hostkey },
-        { IrcStrings.ChannelPropLag, Lag },
-        { IrcStrings.ChannelPropLanguage, Language },
-        { IrcStrings.ChannelPropMemberkey, Memberkey },
-        { IrcStrings.ChannelPropName, Name },
-        { IrcStrings.ChannelPropOID, Oid },
-        { IrcStrings.ChannelPropOnJoin, Onjoin },
-        { IrcStrings.ChannelPropOnPart, Onpart },
-        { IrcStrings.ChannelPropOwnerkey, Ownerkey },
-        { IrcStrings.ChannelPropPICS, Pics },
-        { IrcStrings.ChannelPropServicePath, Servicepath },
-        { IrcStrings.ChannelPropSubject, Subject },
-        { IrcStrings.ChannelPropTopic, Topic }
+        { Tokens.ChannelPropAccount, Account },
+        { Tokens.ChannelPropClient, Client },
+        { Tokens.ChannelPropClientGuid, ClientGuid },
+        { Tokens.ChannelPropCreation, Creation },
+        { Tokens.ChannelPropHostkey, Hostkey },
+        { Tokens.ChannelPropLag, Lag },
+        { Tokens.ChannelPropLanguage, Language },
+        { Tokens.ChannelPropMemberkey, Memberkey },
+        { Tokens.ChannelPropName, Name },
+        { Tokens.ChannelPropOID, Oid },
+        { Tokens.ChannelPropOnJoin, Onjoin },
+        { Tokens.ChannelPropOnPart, Onpart },
+        { Tokens.ChannelPropOwnerkey, Ownerkey },
+        { Tokens.ChannelPropPICS, Pics },
+        { Tokens.ChannelPropServicePath, Servicepath },
+        { Tokens.ChannelPropSubject, Subject },
+        { Tokens.ChannelPropTopic, Topic }
     };
 }

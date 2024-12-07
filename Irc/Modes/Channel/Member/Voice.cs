@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel.Member;
 
 public class Voice : ModeRule
 {
-    public Voice() : base(IrcStrings.MemberModeVoice, true)
+    public Voice() : base(Tokens.MemberModeVoice, true)
     {
     }
 

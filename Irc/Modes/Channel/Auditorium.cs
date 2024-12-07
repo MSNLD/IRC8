@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class Auditorium : ModeRuleChannel
 {
-    public Auditorium() : base(IrcStrings.ChannelModeAuditorium)
+    public Auditorium() : base(Tokens.ChannelModeAuditorium)
     {
     }
 

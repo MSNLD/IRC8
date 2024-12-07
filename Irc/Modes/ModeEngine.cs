@@ -36,7 +36,7 @@ public class ModeEngine
                     {
                         // Unknown mode char
                         // :sky-8a15b323126 472 Sky S :is unknown mode char to me
-                        source.Send(Raw.IRCX_ERR_UNKNOWNMODE_472(source.Server, source, c));
+                        source.Send(Raws.IRCX_ERR_UNKNOWNMODE_472(source.Server, source, c));
                         continue;
                     }
 
@@ -56,7 +56,7 @@ public class ModeEngine
                         {
                             // Not enough parameters
                             //:sky-8a15b323126 461 Sky MODE +q :Not enough parameters
-                            source.Send(Raw.IRCX_ERR_NEEDMOREPARAMS_461(source.Server, source,
+                            source.Send(Raws.IRCX_ERR_NEEDMOREPARAMS_461(source.Server, source,
                                 $"MODE {c}"));
                             continue;
                         }

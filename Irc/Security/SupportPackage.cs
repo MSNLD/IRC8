@@ -3,9 +3,9 @@ using Irc.Interfaces;
 
 namespace Irc.Security;
 
-public class SupportPackage : ISupportPackage
+public class SupportPackage
 {
-    protected ICredential _credentials;
+    protected Credential? _credentials;
     public bool Guest;
     public bool Listed = true;
     public EnumSupportPackageSequence ServerSequence;
@@ -43,7 +43,7 @@ public class SupportPackage : ISupportPackage
         return GetType().Name;
     }
 
-    public virtual ICredential GetCredentials()
+    public virtual Credential? GetCredentials()
     {
         return _credentials;
     }

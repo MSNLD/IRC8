@@ -81,6 +81,6 @@ public class WebIrc : Command
         Log.Warn($"Unauthorized WEBIRC attempt from {remoteAddress}");
         var originalCommand = chatFrame.Message.OriginalText.Split(' ', StringSplitOptions.RemoveEmptyEntries)
             .FirstOrDefault();
-        chatFrame.User.Send(Raw.IRCX_ERR_UNKNOWNCOMMAND_421(chatFrame.Server, chatFrame.User, originalCommand));
+        chatFrame.User.Send(Raws.IRCX_ERR_UNKNOWNCOMMAND_421(chatFrame.Server, chatFrame.User, originalCommand));
     }
 }

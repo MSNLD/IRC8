@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class Service : ModeRuleChannel
 {
-    public Service() : base(IrcStrings.ChannelModeService)
+    public Service() : base(Tokens.ChannelModeService)
     {
     }
 

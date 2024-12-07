@@ -6,7 +6,7 @@ namespace Irc.Modes.User;
 
 public class Secure : ModeRule
 {
-    public Secure() : base(IrcStrings.UserModeSecure)
+    public Secure() : base(Tokens.UserModeSecure)
     {
     }
 

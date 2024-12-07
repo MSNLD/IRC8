@@ -6,7 +6,7 @@ namespace Irc.Modes.User;
 
 public class ServerNotice : ModeRule
 {
-    public ServerNotice() : base(IrcStrings.UserModeServerNotice)
+    public ServerNotice() : base(Tokens.UserModeServerNotice)
     {
     }
 

@@ -1,6 +1,6 @@
 ﻿namespace Irc.Resources;
 
-public static class IrcStrings
+public static class Tokens
 {
     public static long Epoch = 621355968000000000;
     public static string? Connresetbypeer = "Connection reset by peer";

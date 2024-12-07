@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 internal class Key : ModeRuleChannel
 {
-    public Key() : base(IrcStrings.ChannelModeKey, true)
+    public Key() : base(Tokens.ChannelModeKey, true)
     {
     }
 
@@ -17,9 +17,9 @@ internal class Key : ModeRuleChannel
         if (member.GetLevel() >= EnumChannelAccessLevel.ChatHost)
         {
             // Unset key
-            if (!flag && parameter == channel.Props[IrcStrings.ChannelPropMemberkey])
+            if (!flag && parameter == channel.Props[Tokens.ChannelPropMemberkey])
             {
-                channel.Props[IrcStrings.ChannelPropMemberkey] = null;
+                channel.Props[Tokens.ChannelPropMemberkey] = null;
                 DispatchModeChange(source, (ChatObject)target, flag, parameter);
                 return EnumIrcError.OK;
             }
@@ -27,10 +27,10 @@ internal class Key : ModeRuleChannel
             // Set key
             if (flag)
             {
-                if (!string.IsNullOrWhiteSpace(channel.Props[IrcStrings.ChannelPropMemberkey]))
+                if (!string.IsNullOrWhiteSpace(channel.Props[Tokens.ChannelPropMemberkey]))
                     return EnumIrcError.ERR_KEYSET;
 
-                channel.Props[IrcStrings.ChannelPropMemberkey] = flag ? parameter : null;
+                channel.Props[Tokens.ChannelPropMemberkey] = flag ? parameter : null;
                 DispatchModeChange(source, (ChatObject)target, flag, parameter);
             }
 

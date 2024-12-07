@@ -162,13 +162,13 @@ public class Server : ChatObject
     public virtual Channel CreateChannel(User? creator, string? name, string? key)
     {
         var channel = CreateChannel(name);
-        channel.Props[IrcStrings.ChannelPropTopic] = name;
+        channel.Props[Tokens.ChannelPropTopic] = name;
         // if (!string.IsNullOrEmpty(key))
         // {
         //     channel.Modes.Key = key;
         //     ChannelStore.Set("key", key);
         // }
-        channel.Props[IrcStrings.ChannelPropOwnerkey] = key;
+        channel.Props[Tokens.ChannelPropOwnerkey] = key;
         channel.NoExtern = true;
         channel.TopicOp = true;
         channel.UserLimit = 50;
@@ -308,7 +308,7 @@ public class Server : ChatObject
 
     public void ProcessCookie(User user, string? name, string value)
     {
-        if (name == IrcStrings.UserPropMsnRegCookie && user.IsAuthenticated() && !user.IsRegistered())
+        if (name == Tokens.UserPropMsnRegCookie && user.IsAuthenticated() && !user.IsRegistered())
         {
             var nickname = _passport.ValidateRegCookie(value);
             if (nickname != null)
@@ -320,19 +320,19 @@ public class Server : ChatObject
                 user.Address.RealName = string.Empty;
             }
         }
-        else if (name == IrcStrings.UserPropSubscriberInfo && user.IsAuthenticated() && user.IsRegistered())
+        else if (name == Tokens.UserPropSubscriberInfo && user.IsAuthenticated() && user.IsRegistered())
         {
             var subscribedString =
                 _passport.ValidateSubscriberInfo(value, user.SupportPackage.GetCredentials().GetIssuedAt());
             int.TryParse(subscribedString, out var subscribed);
             if ((subscribed & 1) == 1) user.Profile.Registered = true;
         }
-        else if (name == IrcStrings.UserPropMsnProfile && user.IsAuthenticated() && !user.IsRegistered())
+        else if (name == Tokens.UserPropMsnProfile && user.IsAuthenticated() && !user.IsRegistered())
         {
             int.TryParse(value, out var profileCode);
             user.Profile.SetProfileCode(profileCode);
         }
-        else if (name == IrcStrings.UserPropRole && user.IsAuthenticated())
+        else if (name == Tokens.UserPropRole && user.IsAuthenticated())
         {
             var dict = _passport.ValidateRole(value);
             if (dict == null) return;
@@ -449,7 +449,7 @@ public class Server : ChatObject
             // add new pending users
             foreach (var user in PendingNewUserQueue)
             {
-                user.Props[IrcStrings.UserPropOid] = "0";
+                user.Props[Tokens.UserPropOid] = "0";
                 Users.Add(user);
             }
 
@@ -503,7 +503,7 @@ public class Server : ChatObject
     // Ircx
     protected EnumChannelAccessResult CheckAuthOnly()
     {
-        if (Modes[IrcStrings.ChannelModeAuthOnly] == 1)
+        if (Modes[Tokens.ChannelModeAuthOnly] == 1)
             return EnumChannelAccessResult.ERR_AUTHONLYCHAN;
         return EnumChannelAccessResult.NONE;
     }
@@ -538,7 +538,7 @@ public class Server : ChatObject
                     catch (Exception e)
                     {
                         chatFrame.User.Send(
-                            IrcRaws.IRC_RAW_999(chatFrame.Server, chatFrame.User, IrcStrings.ServerError));
+                            Raws.IRC_RAW_999(chatFrame.Server, chatFrame.User, Tokens.ServerError));
                         Log.Error(e.ToString());
                     }
 
@@ -549,7 +549,7 @@ public class Server : ChatObject
         else
         {
             user.DataRegulator.PopIncoming();
-            user.Send(Raw.IRCX_ERR_UNKNOWNCOMMAND_421(this, user, message.GetCommandName()));
+            user.Send(Raws.IRCX_ERR_UNKNOWNCOMMAND_421(this, user, message.GetCommandName()));
             // command not found
         }
     }

@@ -32,16 +32,13 @@ public class ANON : SupportPackage
         return nameof(ANON);
     }
 
-    public override ICredential GetCredentials()
+    public override Credential? GetCredentials() => new()
     {
-        return new Credential
-        {
-            Level = EnumUserAccessLevel.Member,
-            Domain = GetType().Name,
-            Username = null,
-            Guest = true
-        };
-    }
+        Level = EnumUserAccessLevel.Member,
+        Domain = GetType().Name,
+        Username = null,
+        Guest = true
+    };
 
     public override SupportPackage CreateInstance(ICredentialProvider credentialProvider)
     {

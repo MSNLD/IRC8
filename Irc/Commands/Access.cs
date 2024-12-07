@@ -1,6 +1,7 @@
 ﻿using Irc.Access;
 using Irc.Enumerations;
 using Irc.Objects;
+using Irc.Resources;
 
 namespace Irc.Commands;
 
@@ -19,7 +20,7 @@ internal class Access : Command
         if (!Enum.TryParse(accessCommandName, true, out AccessCommand accessCommand))
         {
             // Bad Command
-            chatFrame.User.Send(Raw.IRCX_ERR_BADCOMMAND_900(chatFrame.Server, chatFrame.User, accessCommandName));
+            chatFrame.User.Send(Raws.IRCX_ERR_BADCOMMAND_900(chatFrame.Server, chatFrame.User, accessCommandName));
             return;
         }
 
@@ -27,13 +28,13 @@ internal class Access : Command
         if (targetObject == null)
         {
             // No such object
-            chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHOBJECT_924(chatFrame.Server, chatFrame.User, objectName));
+            chatFrame.User.Send(Raws.IRCX_ERR_NOSUCHOBJECT_924(chatFrame.Server, chatFrame.User, objectName));
             return;
         }
 
         if (!CanModify(chatFrame, targetObject))
         {
-            chatFrame.User.Send(Raw.IRCX_ERR_SECURITY_908(chatFrame.Server, chatFrame.User));
+            chatFrame.User.Send(Raws.IRCX_ERR_SECURITY_908(chatFrame.Server, chatFrame.User));
             // No permissions
             return;
         }
@@ -94,7 +95,7 @@ internal class Access : Command
             if (!Enum.TryParse(parameters[0], true, out accessLevel))
             {
                 // Bad level
-                chatFrame.User.Send(Raw.IRCX_ERR_BADLEVEL_903(chatFrame.Server, chatFrame.User, parameters[0]));
+                chatFrame.User.Send(Raws.IRCX_ERR_BADLEVEL_903(chatFrame.Server, chatFrame.User, parameters[0]));
                 return;
             }
 
@@ -105,7 +106,7 @@ internal class Access : Command
         }
         else
         {
-            chatFrame.User.Send(Raw.IRCX_RPL_ACCESSCLEAR_820(chatFrame.Server, chatFrame.User, targetObject,
+            chatFrame.User.Send(Raws.IRCX_RPL_ACCESSCLEAR_820(chatFrame.Server, chatFrame.User, targetObject,
                 accessLevel));
         }
     }
@@ -123,7 +124,7 @@ internal class Access : Command
         if (!Enum.TryParse<EnumAccessLevel>(parameters[0], true, out var accessLevel))
         {
             // Bad level
-            chatFrame.User.Send(Raw.IRCX_ERR_BADLEVEL_903(chatFrame.Server, chatFrame.User, parameters[0]));
+            chatFrame.User.Send(Raws.IRCX_ERR_BADLEVEL_903(chatFrame.Server, chatFrame.User, parameters[0]));
             return;
         }
 
@@ -134,10 +135,10 @@ internal class Access : Command
         var accessError = targetObject.AccessList.Delete(entry);
 
         if (accessError == EnumAccessError.IRCERR_NOACCESS)
-            chatFrame.User.Send(Raw.IRCX_ERR_DUPACCESS_914(chatFrame.Server, chatFrame.User));
+            chatFrame.User.Send(Raws.IRCX_ERR_DUPACCESS_914(chatFrame.Server, chatFrame.User));
         else if (accessError == EnumAccessError.SUCCESS)
             // RPL Access Add
-            chatFrame.User.Send(Raw.IRCX_RPL_ACCESSDELETE_802(chatFrame.Server, chatFrame.User, targetObject,
+            chatFrame.User.Send(Raws.IRCX_RPL_ACCESSDELETE_802(chatFrame.Server, chatFrame.User, targetObject,
                 entry.EntryLevel.ToString(), entry.Mask, entry.Timeout, entry.EntryAddress, entry.Reason));
     }
 
@@ -154,7 +155,7 @@ internal class Access : Command
         if (!Enum.TryParse<EnumAccessLevel>(parameters[0], true, out var accessLevel))
         {
             // Bad level
-            chatFrame.User.Send(Raw.IRCX_ERR_BADLEVEL_903(chatFrame.Server, chatFrame.User, parameters[0]));
+            chatFrame.User.Send(Raws.IRCX_ERR_BADLEVEL_903(chatFrame.Server, chatFrame.User, parameters[0]));
             return;
         }
 
@@ -166,7 +167,7 @@ internal class Access : Command
 
         if (parameters.Count > 2)
             if (!int.TryParse(parameters[2], out timeout) || timeout < 0 || timeout > 999999)
-                chatFrame.User.Send(Raw.IRCX_ERR_BADCOMMAND_900(chatFrame.Server, chatFrame.User, parameters[0]));
+                chatFrame.User.Send(Raws.IRCX_ERR_BADCOMMAND_900(chatFrame.Server, chatFrame.User, parameters[0]));
         // Bad command
         if (parameters.Count > 3) reason = parameters[3];
 
@@ -176,28 +177,28 @@ internal class Access : Command
         var accessError = targetObject.AccessList.Add(entry);
 
         if (accessError == EnumAccessError.IRCERR_DUPACCESS)
-            chatFrame.User.Send(Raw.IRCX_ERR_DUPACCESS_914(chatFrame.Server, chatFrame.User));
+            chatFrame.User.Send(Raws.IRCX_ERR_DUPACCESS_914(chatFrame.Server, chatFrame.User));
         else if (accessError == EnumAccessError.SUCCESS)
             // RPL Access Add
-            chatFrame.User.Send(Raw.IRCX_RPL_ACCESSADD_801(chatFrame.Server, chatFrame.User, targetObject,
+            chatFrame.User.Send(Raws.IRCX_RPL_ACCESSADD_801(chatFrame.Server, chatFrame.User, targetObject,
                 entry.AccessLevel.ToString(), entry.Mask, entry.Timeout, entry.EntryAddress, entry.Reason));
     }
 
     private void ListAccess(ChatFrame chatFrame, ChatObject targetObject)
     {
-        chatFrame.User.Send(Raw.IRCX_RPL_ACCESSSTART_803(chatFrame.Server, chatFrame.User, targetObject));
+        chatFrame.User.Send(Raws.IRCX_RPL_ACCESSSTART_803(chatFrame.Server, chatFrame.User, targetObject));
 
         // TODO: Some entries were not listed due to level restriction
         // :TK2CHATCHATA01 804 'Admin_Koach * DENY *!96E5C937AE1CEFB3@*$* 2873 Sysop_Wondrously@cg :Violation of MSN Code of Conduct - 6-US
         targetObject.AccessList.Entries.Values.ToList().ForEach(
             list => list.ForEach(entry =>
-                chatFrame.User.Send(Raw.IRCX_RPL_ACCESSLIST_804(chatFrame.Server, chatFrame.User, targetObject,
+                chatFrame.User.Send(Raws.IRCX_RPL_ACCESSLIST_804(chatFrame.Server, chatFrame.User, targetObject,
                     entry.AccessLevel.ToString(), entry.Mask, entry.Ttl.Minutes,
                     entry.EntryAddress, entry.Reason))
             )
         );
 
-        chatFrame.User.Send(Raw.IRCX_RPL_ACCESSEND_805(chatFrame.Server, chatFrame.User, targetObject));
+        chatFrame.User.Send(Raws.IRCX_RPL_ACCESSEND_805(chatFrame.Server, chatFrame.User, targetObject));
     }
 
     private enum AccessCommand

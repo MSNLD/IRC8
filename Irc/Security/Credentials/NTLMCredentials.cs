@@ -11,12 +11,12 @@ public class NTLMCredentials : NtlmProvider, ICredentialProvider
         _credentials = credentials;
     }
 
-    public new ICredential ValidateTokens(Dictionary<string, string> tokens)
+    public new Credential? ValidateTokens(Dictionary<string, string> tokens)
     {
         throw new NotImplementedException();
     }
 
-    public new ICredential GetUserCredentials(string domain, string username)
+    public new Credential GetUserCredentials(string domain, string username)
     {
         _credentials.TryGetValue($"{domain}\\{username}", out var credential);
         return credential;

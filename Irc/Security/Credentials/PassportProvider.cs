@@ -16,12 +16,12 @@ public class PassportProvider : ICredentialProvider
         this.passportV4 = passportV4;
     }
 
-    public ICredential GetUserCredentials(string domain, string username)
+    public Credential GetUserCredentials(string domain, string username)
     {
         throw new NotImplementedException();
     }
 
-    public ICredential ValidateTokens(Dictionary<string, string> tokens)
+    public Credential? ValidateTokens(Dictionary<string, string> tokens)
     {
         var ticket = tokens["ticket"];
         var profile = tokens["profile"];

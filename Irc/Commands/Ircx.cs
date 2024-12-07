@@ -18,7 +18,7 @@ internal class Ircx : Command
         chatFrame.User.Ircx = true;
 
 
-        chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
+        chatFrame.User.Send(Raws.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
             chatFrame.Server.MaxInputBytes, "*"));
     }
 }

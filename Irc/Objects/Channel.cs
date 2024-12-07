@@ -17,41 +17,41 @@ public class Channel : ChatObject
     {
         SetName(name);
         Props["NAME"] = name;
-        Props[IrcStrings.ChannelPropOID] = "";
-        Props[IrcStrings.ChannelPropCreation] = "";
-        Props[IrcStrings.ChannelPropLanguage] = "";
-        Props[IrcStrings.ChannelPropMemberkey] = "";
-        Props[IrcStrings.ChannelPropOwnerkey] = "";
-        Props[IrcStrings.ChannelPropHostkey] = "";
-        Props[IrcStrings.ChannelPropPICS] = "";
-        Props[IrcStrings.ChannelPropTopic] = "";
-        Props[IrcStrings.ChannelPropSubject] = "";
-        Props[IrcStrings.ChannelPropOnJoin] = "";
-        Props[IrcStrings.ChannelPropOnPart] = "";
-        Props[IrcStrings.ChannelPropLag] = "";
-        Props[IrcStrings.ChannelPropClient] = "";
-        Props[IrcStrings.ChannelPropClientGuid] = "";
-        Props[IrcStrings.ChannelPropServicePath] = "";
+        Props[Tokens.ChannelPropOID] = "";
+        Props[Tokens.ChannelPropCreation] = "";
+        Props[Tokens.ChannelPropLanguage] = "";
+        Props[Tokens.ChannelPropMemberkey] = "";
+        Props[Tokens.ChannelPropOwnerkey] = "";
+        Props[Tokens.ChannelPropHostkey] = "";
+        Props[Tokens.ChannelPropPICS] = "";
+        Props[Tokens.ChannelPropTopic] = "";
+        Props[Tokens.ChannelPropSubject] = "";
+        Props[Tokens.ChannelPropOnJoin] = "";
+        Props[Tokens.ChannelPropOnPart] = "";
+        Props[Tokens.ChannelPropLag] = "";
+        Props[Tokens.ChannelPropClient] = "";
+        Props[Tokens.ChannelPropClientGuid] = "";
+        Props[Tokens.ChannelPropServicePath] = "";
 
         // TODO: Add Modes
-        Modes[IrcStrings.ChannelModeInvite] = 0;
-        Modes[IrcStrings.ChannelModeKey] = 0;
-        Modes[IrcStrings.ChannelModeModerated] = 0;
-        Modes[IrcStrings.ChannelModeNoExtern] = 0;
-        Modes[IrcStrings.ChannelModePrivate] = 0;
-        Modes[IrcStrings.ChannelModeSecret] = 0;
-        Modes[IrcStrings.ChannelModeHidden] = 0;
-        Modes[IrcStrings.ChannelModeTopicOp] = 0;
-        Modes[IrcStrings.ChannelModeUserLimit] = 0;
-        Modes[IrcStrings.ChannelModeAuthOnly] = 0;
-        Modes[IrcStrings.ChannelModeProfanity] = 0;
-        Modes[IrcStrings.ChannelModeRegistered] = 0;
-        Modes[IrcStrings.ChannelModeKnock] = 0;
-        Modes[IrcStrings.ChannelModeNoWhisper] = 0;
-        Modes[IrcStrings.ChannelModeNoGuestWhisper] = 0;
-        Modes[IrcStrings.ChannelModeCloneable] = 0;
-        Modes[IrcStrings.ChannelModeClone] = 0;
-        Modes[IrcStrings.ChannelModeService] = 0;
+        Modes[Tokens.ChannelModeInvite] = 0;
+        Modes[Tokens.ChannelModeKey] = 0;
+        Modes[Tokens.ChannelModeModerated] = 0;
+        Modes[Tokens.ChannelModeNoExtern] = 0;
+        Modes[Tokens.ChannelModePrivate] = 0;
+        Modes[Tokens.ChannelModeSecret] = 0;
+        Modes[Tokens.ChannelModeHidden] = 0;
+        Modes[Tokens.ChannelModeTopicOp] = 0;
+        Modes[Tokens.ChannelModeUserLimit] = 0;
+        Modes[Tokens.ChannelModeAuthOnly] = 0;
+        Modes[Tokens.ChannelModeProfanity] = 0;
+        Modes[Tokens.ChannelModeRegistered] = 0;
+        Modes[Tokens.ChannelModeKnock] = 0;
+        Modes[Tokens.ChannelModeNoWhisper] = 0;
+        Modes[Tokens.ChannelModeNoGuestWhisper] = 0;
+        Modes[Tokens.ChannelModeCloneable] = 0;
+        Modes[Tokens.ChannelModeClone] = 0;
+        Modes[Tokens.ChannelModeService] = 0;
     }
 
     public string? GetName()
@@ -88,7 +88,7 @@ public class Channel : ChatObject
             var channelUser = channelMember.GetUser();
             if (channelUser.Protocol.Ircvers <= EnumProtocolType.IRC3)
             {
-                channelMember.GetUser().Send(IrcRaws.RPL_JOIN(user, this));
+                channelMember.GetUser().Send(Raws.RPL_JOIN(user, this));
 
                 if (!joinMember.IsNormal())
                 {
@@ -109,7 +109,7 @@ public class Channel : ChatObject
 
     public Channel SendTopic(User? user)
     {
-        user.Send(Raw.IRCX_RPL_TOPIC_332(user.Server, user, this, Props[IrcStrings.ChannelPropTopic] ?? string.Empty));
+        user.Send(Raws.IRCX_RPL_TOPIC_332(user.Server, user, this, Props[Tokens.ChannelPropTopic] ?? string.Empty));
         return this;
     }
 
@@ -127,7 +127,7 @@ public class Channel : ChatObject
 
     public Channel Part(User? user)
     {
-        Send(IrcRaws.RPL_PART(user, this));
+        Send(Raws.RPL_PART(user, this));
         RemoveMember(user);
         return this;
     }
@@ -140,19 +140,19 @@ public class Channel : ChatObject
 
     public Channel Kick(User? source, User? target, string? reason)
     {
-        Send(Raw.RPL_KICK_IRC(source, this, target, reason));
+        Send(Raws.RPL_KICK_IRC(source, this, target, reason));
         RemoveMember(target);
         return this;
     }
 
     public void SendMessage(User? user, string? message)
     {
-        Send(IrcRaws.RPL_PRIVMSG(user, this, message), (ChatObject)user);
+        Send(Raws.RPL_PRIVMSG(user, this, message), (ChatObject)user);
     }
 
     public void SendNotice(User? user, string? message)
     {
-        Send(IrcRaws.RPL_NOTICE(user, this, message), (ChatObject)user);
+        Send(Raws.RPL_NOTICE(user, this, message), (ChatObject)user);
     }
 
     public IList<Member?> GetMembers()
@@ -207,55 +207,55 @@ public class Channel : ChatObject
             {
                 // -> sky-8a15b323126 MODE #test +l hello
                 // < - :sky - 8a15b323126 461 Sky MODE +l :Not enough parameters
-                source.Send(Raw.IRCX_ERR_NEEDMOREPARAMS_461(server, source, data));
+                source.Send(Raws.IRCX_ERR_NEEDMOREPARAMS_461(server, source, data));
                 break;
             }
             case EnumIrcError.ERR_NOCHANOP:
             {
                 //:sky-8a15b323126 482 Sky3k #test :You're not channel operator
-                source.Send(Raw.IRCX_ERR_CHANOPRIVSNEEDED_482(server, source, this));
+                source.Send(Raws.IRCX_ERR_CHANOPRIVSNEEDED_482(server, source, this));
                 break;
             }
             case EnumIrcError.ERR_NOCHANOWNER:
             {
                 //:sky-8a15b323126 482 Sky3k #test :You're not channel operator
-                source.Send(Raw.IRCX_ERR_CHANQPRIVSNEEDED_485(server, source, this));
+                source.Send(Raws.IRCX_ERR_CHANQPRIVSNEEDED_485(server, source, this));
                 break;
             }
             case EnumIrcError.ERR_NOIRCOP:
             {
-                source.Send(Raw.IRCX_ERR_NOPRIVILEGES_481(server, source));
+                source.Send(Raws.IRCX_ERR_NOPRIVILEGES_481(server, source));
                 break;
             }
             case EnumIrcError.ERR_NOTONCHANNEL:
             {
-                source.Send(Raw.IRCX_ERR_NOTONCHANNEL_442(server, source, this));
+                source.Send(Raws.IRCX_ERR_NOTONCHANNEL_442(server, source, this));
                 break;
             }
             // TODO: The below should not happen
             case EnumIrcError.ERR_NOSUCHNICK:
             {
-                source.Send(Raw.IRCX_ERR_NOSUCHNICK_401(server, source, target.Name));
+                source.Send(Raws.IRCX_ERR_NOSUCHNICK_401(server, source, target.Name));
                 break;
             }
             case EnumIrcError.ERR_NOSUCHCHANNEL:
             {
-                source.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(server, source, Name));
+                source.Send(Raws.IRCX_ERR_NOSUCHCHANNEL_403(server, source, Name));
                 break;
             }
             case EnumIrcError.ERR_CANNOTSETFOROTHER:
             {
-                source.Send(Raw.IRCX_ERR_USERSDONTMATCH_502(server, source));
+                source.Send(Raws.IRCX_ERR_USERSDONTMATCH_502(server, source));
                 break;
             }
             case EnumIrcError.ERR_UNKNOWNMODEFLAG:
             {
-                source.Send(IrcRaws.IRC_RAW_501(server, source));
+                source.Send(Raws.IRC_RAW_501(server, source));
                 break;
             }
             case EnumIrcError.ERR_NOPERMS:
             {
-                source.Send(Raw.IRCX_ERR_SECURITY_908(server, source));
+                source.Send(Raws.IRCX_ERR_SECURITY_908(server, source));
                 break;
             }
         }
@@ -385,7 +385,7 @@ public class Channel : ChatObject
 
     public static bool ValidName(string? channel)
     {
-        var regex = new Regex(IrcStrings.IrcxChannelRegex);
+        var regex = new Regex(Tokens.IrcxChannelRegex);
         return regex.Match(channel).Success;
     }
 
@@ -417,9 +417,9 @@ public class Channel : ChatObject
     {
         if (string.IsNullOrWhiteSpace(key)) return EnumChannelAccessResult.NONE;
 
-        if (Modes[IrcStrings.ChannelModeKey] == 1)
+        if (Modes[Tokens.ChannelModeKey] == 1)
         {
-            if (Props[IrcStrings.ChannelPropMemberkey] == key)
+            if (Props[Tokens.ChannelPropMemberkey] == key)
                 return EnumChannelAccessResult.SUCCESS_MEMBER;
             return EnumChannelAccessResult.ERR_BADCHANNELKEY;
         }
@@ -429,7 +429,7 @@ public class Channel : ChatObject
 
     protected EnumChannelAccessResult CheckInviteOnly(User? user)
     {
-        if (Modes[IrcStrings.ChannelModeInvite] == 1)
+        if (Modes[Tokens.ChannelModeInvite] == 1)
             return InviteList.Contains(user.Address.GetAddress())
                 ? EnumChannelAccessResult.SUCCESS_MEMBER
                 : EnumChannelAccessResult.ERR_INVITEONLYCHAN;
@@ -439,7 +439,7 @@ public class Channel : ChatObject
 
     protected EnumChannelAccessResult CheckUserLimit(bool IsGoto)
     {
-        var modeLimit = Modes[IrcStrings.ChannelModeUserLimit];
+        var modeLimit = Modes[Tokens.ChannelModeUserLimit];
         var serverLimit = 10000; //TODO: Change later
         var userLimit = modeLimit > 0 ? modeLimit : serverLimit;
 
@@ -491,119 +491,119 @@ public class Channel : ChatObject
     // IRC
     public bool InviteOnly
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeInvite]);
-        set => Modes[IrcStrings.ChannelModeInvite] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeInvite]);
+        set => Modes[Tokens.ChannelModeInvite] = Convert.ToInt32(value);
     }
 
     public bool Key
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeKey]);
-        set => Modes[IrcStrings.ChannelModeKey] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeKey]);
+        set => Modes[Tokens.ChannelModeKey] = Convert.ToInt32(value);
     }
 
     public bool Moderated
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeModerated]);
-        set => Modes[IrcStrings.ChannelModeModerated] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeModerated]);
+        set => Modes[Tokens.ChannelModeModerated] = Convert.ToInt32(value);
     }
 
     public bool NoExtern
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeNoExtern]);
-        set => Modes[IrcStrings.ChannelModeNoExtern] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeNoExtern]);
+        set => Modes[Tokens.ChannelModeNoExtern] = Convert.ToInt32(value);
     }
 
     public bool Private
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModePrivate]);
-        set => Modes[IrcStrings.ChannelModePrivate] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModePrivate]);
+        set => Modes[Tokens.ChannelModePrivate] = Convert.ToInt32(value);
     }
 
     public bool Secret
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeSecret]);
-        set => Modes[IrcStrings.ChannelModeSecret] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeSecret]);
+        set => Modes[Tokens.ChannelModeSecret] = Convert.ToInt32(value);
     }
 
     public bool Hidden
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeHidden]);
-        set => Modes[IrcStrings.ChannelModeHidden] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeHidden]);
+        set => Modes[Tokens.ChannelModeHidden] = Convert.ToInt32(value);
     }
 
     public bool TopicOp
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeTopicOp]);
-        set => Modes[IrcStrings.ChannelModeTopicOp] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeTopicOp]);
+        set => Modes[Tokens.ChannelModeTopicOp] = Convert.ToInt32(value);
     }
 
     public int UserLimit
     {
-        get => Modes[IrcStrings.ChannelModeUserLimit];
-        set => Modes[IrcStrings.ChannelModeUserLimit] = value;
+        get => Modes[Tokens.ChannelModeUserLimit];
+        set => Modes[Tokens.ChannelModeUserLimit] = value;
     }
 
     //IRCX
     public bool AuthOnly
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeAuthOnly]);
-        set => Modes[IrcStrings.ChannelModeAuthOnly] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeAuthOnly]);
+        set => Modes[Tokens.ChannelModeAuthOnly] = Convert.ToInt32(value);
     }
 
     public bool Profanity
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeProfanity]);
-        set => Modes[IrcStrings.ChannelModeProfanity] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeProfanity]);
+        set => Modes[Tokens.ChannelModeProfanity] = Convert.ToInt32(value);
     }
 
     public bool Registered
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeRegistered]);
-        set => Modes[IrcStrings.ChannelModeRegistered] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeRegistered]);
+        set => Modes[Tokens.ChannelModeRegistered] = Convert.ToInt32(value);
     }
 
     public bool Knock
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeKnock]);
-        set => Modes[IrcStrings.ChannelModeKnock] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeKnock]);
+        set => Modes[Tokens.ChannelModeKnock] = Convert.ToInt32(value);
     }
 
     public bool NoWhisper
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeNoWhisper]);
-        set => Modes[IrcStrings.ChannelModeNoWhisper] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeNoWhisper]);
+        set => Modes[Tokens.ChannelModeNoWhisper] = Convert.ToInt32(value);
     }
 
     public bool NoGuestWhisper
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeNoGuestWhisper]);
-        set => Modes[IrcStrings.ChannelModeNoGuestWhisper] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeNoGuestWhisper]);
+        set => Modes[Tokens.ChannelModeNoGuestWhisper] = Convert.ToInt32(value);
     }
 
     public bool Cloneable
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeCloneable]);
-        set => Modes[IrcStrings.ChannelModeCloneable] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeCloneable]);
+        set => Modes[Tokens.ChannelModeCloneable] = Convert.ToInt32(value);
     }
 
     public bool Clone
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeClone]);
-        set => Modes[IrcStrings.ChannelModeClone] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeClone]);
+        set => Modes[Tokens.ChannelModeClone] = Convert.ToInt32(value);
     }
 
     public bool Service
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeService]);
-        set => Modes[IrcStrings.ChannelModeService] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeService]);
+        set => Modes[Tokens.ChannelModeService] = Convert.ToInt32(value);
     }
 
     // Apollo
 
     public bool OnStage
     {
-        get => Convert.ToBoolean(Modes[IrcStrings.ChannelModeOnStage]);
-        set => Modes[IrcStrings.ChannelModeOnStage] = Convert.ToInt32(value);
+        get => Convert.ToBoolean(Modes[Tokens.ChannelModeOnStage]);
+        set => Modes[Tokens.ChannelModeOnStage] = Convert.ToInt32(value);
     }
 
     #endregion

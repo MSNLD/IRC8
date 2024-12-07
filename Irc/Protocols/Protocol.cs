@@ -76,20 +76,10 @@ public class Protocol
         return command;
     }
 
-    public Dictionary<string?, Command> GetCommands()
-    {
-        return Commands;
-    }
-
     public void AddCommand(Command command, string? name = null)
     {
         if (!Commands.ContainsKey(name == null ? command.GetName() : name))
             Commands.Add(name ?? command.GetName(), command);
-    }
-
-    public void SetVers(EnumProtocolType ircvers)
-    {
-        Ircvers = ircvers;
     }
 
     public void FlushCommands()
@@ -126,12 +116,5 @@ public class Protocol
             default:
                 return "";
         }
-    }
-
-    public void UpdateCommand(Command command, string? name = null)
-    {
-        var commandName = name ?? command.GetName();
-        if (Commands.ContainsKey(commandName))
-            Commands[commandName] = command;
     }
 }

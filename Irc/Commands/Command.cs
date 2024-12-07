@@ -1,4 +1,6 @@
-﻿namespace Irc.Commands;
+﻿using Irc.Resources;
+
+namespace Irc.Commands;
 
 public abstract class Command
 {
@@ -27,13 +29,13 @@ public abstract class Command
 
         if (parameterCount < RequiredMinimumParameters)
         {
-            chatFrame.User.Send(Raw.IRCX_ERR_NEEDMOREPARAMS_461(chatFrame.Server, chatFrame.User, GetName()));
+            chatFrame.User.Send(Raws.IRCX_ERR_NEEDMOREPARAMS_461(chatFrame.Server, chatFrame.User, GetName()));
             return false;
         }
 
         if (RequiredMaximumParameters > 0 && parameterCount > RequiredMaximumParameters)
         {
-            chatFrame.User.Send(Raw.IRCX_ERR_TOOMANYARGUMENTS_901(chatFrame.Server, chatFrame.User, GetName()));
+            chatFrame.User.Send(Raws.IRCX_ERR_TOOMANYARGUMENTS_901(chatFrame.Server, chatFrame.User, GetName()));
             return false;
         }
 
@@ -44,7 +46,7 @@ public abstract class Command
     {
         if (!_registrationRequired || (_registrationRequired && chatFrame.User.IsRegistered())) return false;
 
-        chatFrame.User.Send(Raw.IRCX_ERR_NOTREGISTERED_451(chatFrame.Server, chatFrame.User));
+        chatFrame.User.Send(Raws.IRCX_ERR_NOTREGISTERED_451(chatFrame.Server, chatFrame.User));
         return true;
     }
 }

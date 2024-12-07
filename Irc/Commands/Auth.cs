@@ -1,5 +1,6 @@
 ﻿using Irc.Enumerations;
 using Irc.Helpers;
+using Irc.Resources;
 using Irc.Security.Packages;
 
 namespace Irc.Commands;
@@ -14,11 +15,11 @@ public class Auth : Command
     {
         if (chatFrame.User.IsRegistered())
         {
-            chatFrame.User.Send(Raw.IRCX_ERR_ALREADYREGISTERED_462(chatFrame.Server, chatFrame.User));
+            chatFrame.User.Send(Raws.IRCX_ERR_ALREADYREGISTERED_462(chatFrame.Server, chatFrame.User));
         }
         else if (chatFrame.User.IsAuthenticated())
         {
-            chatFrame.User.Send(Raw.IRCX_ERR_ALREADYAUTHENTICATED_909(chatFrame.Server, chatFrame.User));
+            chatFrame.User.Send(Raws.IRCX_ERR_ALREADYAUTHENTICATED_909(chatFrame.Server, chatFrame.User));
         }
         else
         {
@@ -36,7 +37,7 @@ public class Auth : Command
 
                 if (targetPackage == null)
                 {
-                    chatFrame.User.Send(Raw.IRCX_ERR_UNKNOWNPACKAGE_912(chatFrame.Server, chatFrame.User, packageName));
+                    chatFrame.User.Send(Raws.IRCX_ERR_UNKNOWNPACKAGE_912(chatFrame.Server, chatFrame.User, packageName));
                     return;
                 }
 
@@ -54,7 +55,7 @@ public class Auth : Command
                 if (supportPackageSequence == EnumSupportPackageSequence.SSP_OK)
                 {
                     var securityToken = supportPackage.CreateSecurityChallenge().ToEscape();
-                    chatFrame.User.Send(Raw.RPL_AUTH_SEC_REPLY(packageName, securityToken));
+                    chatFrame.User.Send(Raws.RPL_AUTH_SEC_REPLY(packageName, securityToken));
                     // Send reply
                     return;
                 }
@@ -92,7 +93,7 @@ public class Auth : Command
                         if (chatFrame.User.Level >= EnumUserAccessLevel.Guide) chatFrame.User.Utf8 = true;
 
                         // Send reply
-                        chatFrame.User.Send(Raw.RPL_AUTH_SUCCESS(packageName, $"{user}@{domain}", 0));
+                        chatFrame.User.Send(Raws.RPL_AUTH_SUCCESS(packageName, $"{user}@{domain}", 0));
                     }
 
                     return;
@@ -100,14 +101,14 @@ public class Auth : Command
 
                 if (supportPackageSequence == EnumSupportPackageSequence.SSP_CREDENTIALS)
                 {
-                    chatFrame.User.Send(Raw.RPL_AUTH_SEC_REPLY(packageName, "OK"));
+                    chatFrame.User.Send(Raws.RPL_AUTH_SEC_REPLY(packageName, "OK"));
                     return;
                 }
             }
 
             // auth failed
             chatFrame.User.Disconnect(
-                Raw.IRCX_ERR_AUTHENTICATIONFAILED_910(chatFrame.Server, chatFrame.User, packageName));
+                Raws.IRCX_ERR_AUTHENTICATIONFAILED_910(chatFrame.Server, chatFrame.User, packageName));
         }
     }
 }

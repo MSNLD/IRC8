@@ -14,7 +14,7 @@ internal class Quit : Command
         var server = chatFrame.Server;
         var user = chatFrame.User;
 
-        var quitMessage = IrcStrings.Connresetbypeer;
+        var quitMessage = Tokens.Connresetbypeer;
         if (chatFrame.Message.Parameters.Count > 0) quitMessage = chatFrame.Message.Parameters.First();
 
         QuitChannels(user, quitMessage);
@@ -34,7 +34,7 @@ internal class Quit : Command
 
         user.Channels.Clear();
 
-        var quitRaw = IrcRaws.RPL_QUIT(user, message);
+        var quitRaw = Raws.RPL_QUIT(user, message);
 
         foreach (var targetUser in users) targetUser.Send(quitRaw);
         user.Disconnect(quitRaw);

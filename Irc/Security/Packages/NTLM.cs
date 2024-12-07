@@ -12,7 +12,7 @@ public class Ntlm : SupportPackage
 {
     private readonly ICredentialProvider? _credentialProvider;
     private readonly NTLMShared.TargetInformation _targetInformation = new();
-    private ICredential? _credential;
+    private Credential? _credential;
     private NtlmType1Message _message1;
     private NtlmType2Message _message2;
     private NtlmType3Message _message3;
@@ -30,10 +30,7 @@ public class Ntlm : SupportPackage
         return new Ntlm(credentialProvider ?? _credentialProvider);
     }
 
-    public override ICredential GetCredentials()
-    {
-        return _credential;
-    }
+    public override Credential? GetCredentials() => _credential;
 
     public override EnumSupportPackageSequence InitializeSecurityContext(string data, string? ip)
     {

@@ -24,35 +24,35 @@ k - set a channel key (password).
     public static Dictionary<char, ModeRule> ModeRules = new()
     {
         // IRC
-        { IrcStrings.MemberModeHost, new Operator() },
-        { IrcStrings.MemberModeVoice, new Voice() },
-        { IrcStrings.ChannelModePrivate, new Private() },
-        { IrcStrings.ChannelModeSecret, new Secret() },
-        { IrcStrings.ChannelModeHidden, new Hidden() },
-        { IrcStrings.ChannelModeInvite, new InviteOnly() },
-        { IrcStrings.ChannelModeTopicOp, new TopicOp() },
-        { IrcStrings.ChannelModeNoExtern, new NoExtern() },
-        { IrcStrings.ChannelModeModerated, new Moderated() },
-        { IrcStrings.ChannelModeUserLimit, new UserLimit() },
-        { IrcStrings.ChannelModeBan, new BanList() },
-        { IrcStrings.ChannelModeKey, new Key() },
+        { Tokens.MemberModeHost, new Operator() },
+        { Tokens.MemberModeVoice, new Voice() },
+        { Tokens.ChannelModePrivate, new Private() },
+        { Tokens.ChannelModeSecret, new Secret() },
+        { Tokens.ChannelModeHidden, new Hidden() },
+        { Tokens.ChannelModeInvite, new InviteOnly() },
+        { Tokens.ChannelModeTopicOp, new TopicOp() },
+        { Tokens.ChannelModeNoExtern, new NoExtern() },
+        { Tokens.ChannelModeModerated, new Moderated() },
+        { Tokens.ChannelModeUserLimit, new UserLimit() },
+        { Tokens.ChannelModeBan, new BanList() },
+        { Tokens.ChannelModeKey, new Key() },
 
         // IRCX
-        { IrcStrings.ChannelModeAuthOnly, new AuthOnly() },
-        { IrcStrings.ChannelModeProfanity, new NoFormat() },
-        { IrcStrings.ChannelModeRegistered, new Registered() },
-        { IrcStrings.ChannelModeKnock, new Knock() },
-        { IrcStrings.ChannelModeNoWhisper, new NoWhisper() },
-        { IrcStrings.ChannelModeAuditorium, new Auditorium() },
-        { IrcStrings.ChannelModeCloneable, new Cloneable() },
-        { IrcStrings.ChannelModeClone, new Clone() },
-        { IrcStrings.ChannelModeService, new Service() },
-        { IrcStrings.MemberModeOwner, new Owner() },
+        { Tokens.ChannelModeAuthOnly, new AuthOnly() },
+        { Tokens.ChannelModeProfanity, new NoFormat() },
+        { Tokens.ChannelModeRegistered, new Registered() },
+        { Tokens.ChannelModeKnock, new Knock() },
+        { Tokens.ChannelModeNoWhisper, new NoWhisper() },
+        { Tokens.ChannelModeAuditorium, new Auditorium() },
+        { Tokens.ChannelModeCloneable, new Cloneable() },
+        { Tokens.ChannelModeClone, new Clone() },
+        { Tokens.ChannelModeService, new Service() },
+        { Tokens.MemberModeOwner, new Owner() },
 
         // Apollo
-        { IrcStrings.ChannelModeNoGuestWhisper, new NoGuestWhisper() },
-        { IrcStrings.ChannelModeOnStage, new OnStage() },
-        { IrcStrings.ChannelModeSubscriber, new Subscriber() }
+        { Tokens.ChannelModeNoGuestWhisper, new NoGuestWhisper() },
+        { Tokens.ChannelModeOnStage, new OnStage() },
+        { Tokens.ChannelModeSubscriber, new Subscriber() }
     };
 
     // public override string ToString()

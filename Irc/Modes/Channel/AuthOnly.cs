@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class AuthOnly : ModeRuleChannel
 {
-    public AuthOnly() : base(IrcStrings.ChannelModeAuthOnly)
+    public AuthOnly() : base(Tokens.ChannelModeAuthOnly)
     {
     }
 

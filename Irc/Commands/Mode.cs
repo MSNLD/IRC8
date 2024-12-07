@@ -19,7 +19,7 @@ internal class Mode : Command
             {
                 var protocol = chatFrame.User.Protocol.Ircvers;
                 var isircx = protocol > EnumProtocolType.IRC;
-                chatFrame.User.Send(Raw.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
+                chatFrame.User.Send(Raws.IRCX_RPL_IRCX_800(chatFrame.Server, chatFrame.User, isircx ? 1 : 0, 0,
                     chatFrame.Server.MaxInputBytes, "*"));
             }
         }
@@ -39,7 +39,7 @@ internal class Mode : Command
             if (chatObject == null)
             {
                 // :sky-8a15b323126 403 Sky aaa :No such channel
-                chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, objectName));
+                chatFrame.User.Send(Raws.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, objectName));
                 return;
             }
 
@@ -70,10 +70,10 @@ internal class Mode : Command
 
         if (chatObject is Channel)
             // TODO: Fix below when UserLimit is 0
-            chatFrame.User.Send(Raw.IRCX_RPL_MODE_324(chatFrame.Server, chatFrame.User, (Channel)chatObject,
+            chatFrame.User.Send(Raws.IRCX_RPL_MODE_324(chatFrame.Server, chatFrame.User, (Channel)chatObject,
                 $"{modes} {((Channel)chatObject).UserLimit}"));
         else if (chatObject is User)
-            chatFrame.User.Send(Raw.IRCX_RPL_UMODEIS_221(chatFrame.Server, chatFrame.User,
+            chatFrame.User.Send(Raws.IRCX_RPL_UMODEIS_221(chatFrame.Server, chatFrame.User,
                 string.Join(string.Empty, chatObject.Modes.Keys)));
     }
 }

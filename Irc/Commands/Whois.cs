@@ -24,7 +24,7 @@ public class Whois : Command
         string?[] nicknames = nicknameString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
         foreach (var nickname in nicknames) ProcessWhoisReply(chatFrame.Server, chatFrame.User, nickname);
-        user.Send(IrcRaws.IRC_RAW_318(server, user, nicknameString));
+        user.Send(Raws.IRC_RAW_318(server, user, nicknameString));
     }
 
     public static void ProcessWhoisReply(Server server, User? user, string? nickname)
@@ -33,11 +33,11 @@ public class Whois : Command
 
         if (targetUser == null)
         {
-            user.Send(Raw.IRCX_ERR_NOSUCHNICK_401(server, user, nickname));
+            user.Send(Raws.IRCX_ERR_NOSUCHNICK_401(server, user, nickname));
             return;
         }
 
-        user.Send(IrcRaws.IRC_RAW_311(server, user, targetUser));
+        user.Send(Raws.IRC_RAW_311(server, user, targetUser));
 
         if (targetUser.Channels.Count > 0)
         {
@@ -45,23 +45,23 @@ public class Whois : Command
             var channelStrings = channels.Select(c => $"{c.Value.GetListedMode()}{c.Key}").ToArray();
 
             // TODO: Properly format channels & user modes
-            user.Send(IrcRaws.IRC_RAW_319(server, user, targetUser,
+            user.Send(Raws.IRC_RAW_319(server, user, targetUser,
                 string.Join(' ', channelStrings)
             ));
         }
 
         if (targetUser.Level >= EnumUserAccessLevel.Guide)
-            user.Send(IrcRaws.IRC_RAW_313(server, user, targetUser));
+            user.Send(Raws.IRC_RAW_313(server, user, targetUser));
 
-        if (user.Level >= EnumUserAccessLevel.Guide) user.Send(Raw.IRCX_RPL_WHOISIP_320(server, user, targetUser));
+        if (user.Level >= EnumUserAccessLevel.Guide) user.Send(Raws.IRCX_RPL_WHOISIP_320(server, user, targetUser));
 
         if (user.Secure)
-            user.Send(Raw.IRC2_RPL_WHOISSECURE_671(server, user, targetUser));
+            user.Send(Raws.IRC2_RPL_WHOISSECURE_671(server, user, targetUser));
 
         var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var secondsSinceLogin = (targetUser.LoggedOn - epoch).Ticks / TimeSpan.TicksPerSecond;
         var secondsIdle = (DateTime.UtcNow.Ticks - targetUser.LastIdle.Ticks) / TimeSpan.TicksPerSecond;
 
-        user.Send(IrcRaws.IRC_RAW_317(server, user, targetUser, secondsIdle, secondsSinceLogin));
+        user.Send(Raws.IRC_RAW_317(server, user, targetUser, secondsIdle, secondsSinceLogin));
     }
 }

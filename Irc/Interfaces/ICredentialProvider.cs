@@ -1,7 +1,9 @@
-﻿namespace Irc.Interfaces;
+﻿using Irc.Security;
+
+namespace Irc.Interfaces;
 
 public interface ICredentialProvider
 {
-    ICredential ValidateTokens(Dictionary<string, string> tokens);
-    ICredential GetUserCredentials(string domain, string username);
+    Credential? ValidateTokens(Dictionary<string, string> tokens);
+    Credential GetUserCredentials(string domain, string username);
 }

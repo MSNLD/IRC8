@@ -3,7 +3,7 @@ using Irc.Interfaces;
 
 namespace Irc.Security;
 
-public class Credential : ICredential
+public class Credential
 {
     public string? Domain { get; set; }
     public string? Username { get; set; }

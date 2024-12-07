@@ -6,7 +6,7 @@ namespace Irc.Modes.User;
 
 public class Invisible : ModeRule
 {
-    public Invisible() : base(IrcStrings.UserModeInvisible)
+    public Invisible() : base(Tokens.UserModeInvisible)
     {
     }
 
@@ -14,7 +14,7 @@ public class Invisible : ModeRule
     {
         if (source == target)
         {
-            target.Modes[IrcStrings.UserModeInvisible] = Convert.ToInt32(flag);
+            target.Modes[Tokens.UserModeInvisible] = Convert.ToInt32(flag);
             DispatchModeChange(source, target, flag, parameter);
             return EnumIrcError.OK;
         }

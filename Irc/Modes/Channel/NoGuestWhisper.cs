@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class NoGuestWhisper : ModeRuleChannel
 {
-    public NoGuestWhisper() : base(IrcStrings.ChannelModeNoGuestWhisper)
+    public NoGuestWhisper() : base(Tokens.ChannelModeNoGuestWhisper)
     {
     }
 

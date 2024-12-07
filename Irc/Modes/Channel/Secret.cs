@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class Secret : ModeRuleChannel
 {
-    public Secret() : base(IrcStrings.ChannelModeSecret)
+    public Secret() : base(Tokens.ChannelModeSecret)
     {
     }
 
@@ -22,13 +22,13 @@ public class Secret : ModeRuleChannel
                 if (channel.Private)
                 {
                     channel.Private = false;
-                    DispatchModeChange(IrcStrings.ChannelModePrivate, source, target, false, string.Empty);
+                    DispatchModeChange(Tokens.ChannelModePrivate, source, target, false, string.Empty);
                 }
 
                 if (channel.Hidden)
                 {
                     channel.Hidden = false;
-                    DispatchModeChange(IrcStrings.ChannelModeHidden, source, target, false, string.Empty);
+                    DispatchModeChange(Tokens.ChannelModeHidden, source, target, false, string.Empty);
                 }
             }
 

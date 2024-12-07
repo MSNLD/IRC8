@@ -6,7 +6,7 @@ namespace Irc.Modes.User;
 
 public class WallOps : ModeRule
 {
-    public WallOps() : base(IrcStrings.UserModeWallops)
+    public WallOps() : base(Tokens.UserModeWallops)
     {
     }
 

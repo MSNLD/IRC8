@@ -6,7 +6,7 @@ namespace Irc.Modes.User;
 
 public class Isircx : ModeRule
 {
-    public Isircx() : base(IrcStrings.UserModeIrcx)
+    public Isircx() : base(Tokens.UserModeIrcx)
     {
     }
 

@@ -20,7 +20,7 @@ public class Eprivmsg : Command
         {
             if (!Channel.ValidName(target))
             {
-                chatFrame.User.Send(Raw.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, target));
+                chatFrame.User.Send(Raws.IRCX_ERR_NOSUCHCHANNEL_403(chatFrame.Server, chatFrame.User, target));
                 return;
             }
 
@@ -32,14 +32,14 @@ public class Eprivmsg : Command
             if (!isOnChannel)
             {
                 chatFrame.User.Send(
-                    Raw.IRCX_ERR_NOTONCHANNEL_442(chatFrame.Server, chatFrame.User, channel));
+                    Raws.IRCX_ERR_NOTONCHANNEL_442(chatFrame.Server, chatFrame.User, channel));
                 return;
             }
 
             if (!channel.OnStage)
             {
                 chatFrame.User.Send(
-                    Raw.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));
+                    Raws.IRCX_ERR_CANNOTSENDTOCHAN_404(chatFrame.Server, chatFrame.User, channel));
                 return;
             }
 

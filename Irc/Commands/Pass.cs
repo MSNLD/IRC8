@@ -14,6 +14,6 @@ public class Pass : Command
             // TODO: Encrypt below pass
             chatFrame.User.Pass = chatFrame.Message.Parameters.First();
         else
-            chatFrame.User.Send(IrcRaws.IRC_RAW_462(chatFrame.Server, chatFrame.User));
+            chatFrame.User.Send(Raws.IRC_RAW_462(chatFrame.Server, chatFrame.User));
     }
 }

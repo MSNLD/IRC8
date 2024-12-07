@@ -17,7 +17,7 @@ public class Operator : ModeRule
     -> sky-8a15b323126 MODE #test +o Sky2k
     <- :sky-8a15b323126 485 Sky3k #test :You're not channel owner
      */
-    public Operator() : base(IrcStrings.MemberModeHost, true)
+    public Operator() : base(Tokens.MemberModeHost, true)
     {
     }
 
@@ -37,7 +37,7 @@ public class Operator : ModeRule
         if (targetMember.IsOwner())
         {
             targetMember.SetOwner(false);
-            DispatchModeChange(IrcStrings.MemberModeOwner, source, target, false, targetMember.GetUser().ToString());
+            DispatchModeChange(Tokens.MemberModeOwner, source, target, false, targetMember.GetUser().ToString());
         }
 
         targetMember.SetHost(flag);
@@ -51,11 +51,11 @@ public class Operator : ModeRule
         if (flag && targetMember.IsOwner())
         {
             targetMember.SetOwner(false);
-            DispatchModeChange(IrcStrings.MemberModeOwner, sourceMember, channel, false,
+            DispatchModeChange(Tokens.MemberModeOwner, sourceMember, channel, false,
                 targetMember.GetUser().ToString());
         }
 
         targetMember.SetHost(flag);
-        DispatchModeChange(IrcStrings.MemberModeHost, sourceMember, channel, flag, targetMember.GetUser().ToString());
+        DispatchModeChange(Tokens.MemberModeHost, sourceMember, channel, flag, targetMember.GetUser().ToString());
     }
 }

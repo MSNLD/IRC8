@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class Moderated : ModeRuleChannel
 {
-    public Moderated() : base(IrcStrings.ChannelModeModerated)
+    public Moderated() : base(Tokens.ChannelModeModerated)
     {
     }
 

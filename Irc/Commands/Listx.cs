@@ -32,7 +32,7 @@ internal class Listx : Command
 
                     if (channel == null)
                     {
-                        user.Send(Raw.IRCX_ERR_BADCOMMAND_900(server, user, nameof(Listx)));
+                        user.Send(Raws.IRCX_ERR_BADCOMMAND_900(server, user, nameof(Listx)));
                         return;
                     }
 
@@ -46,21 +46,21 @@ internal class Listx : Command
     public static void ListChannels(Server server, User? user, IList<Channel?> channels)
     {
         // Case "811"      ' Start of LISTX
-        user.Send(Raw.IRCX_RPL_LISTXSTART_811(server, user));
+        user.Send(Raws.IRCX_RPL_LISTXSTART_811(server, user));
         foreach (var channel in channels)
             if (user.IsOn(channel) ||
                 user.Level >= EnumUserAccessLevel.Guide ||
                 (!((Channel)channel).Secret && !channel.Private))
                 //  :TK2CHATCHATA04 812 'Admin_Koach %#Roomname +tnfSl 0 50 :%Chatroom\c\bFor\bBL\bGames\c\bFun\band\bEvents.
-                user.Send(Raw.IRCX_RPL_LISTXLIST_812(
+                user.Send(Raws.IRCX_RPL_LISTXLIST_812(
                     server,
                     user,
                     channel,
                     string.Join("", channel.Modes.Keys),
                     channel.GetMembers().Count,
                     channel.UserLimit,
-                    channel.Props[IrcStrings.ChannelPropTopic] ?? string.Empty
+                    channel.Props[Tokens.ChannelPropTopic] ?? string.Empty
                 ));
-        user.Send(Raw.IRCX_RPL_LISTXEND_817(server, user));
+        user.Send(Raws.IRCX_RPL_LISTXEND_817(server, user));
     }
 }

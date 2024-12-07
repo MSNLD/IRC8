@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class NoFormat : ModeRuleChannel
 {
-    public NoFormat() : base(IrcStrings.ChannelModeProfanity)
+    public NoFormat() : base(Tokens.ChannelModeProfanity)
     {
     }
 

@@ -9,14 +9,14 @@ public static class UserModeRules
 {
     public static Dictionary<char, ModeRule> ModeRules = new()
     {
-        { IrcStrings.UserModeOper, new Oper() },
-        { IrcStrings.UserModeInvisible, new Invisible() },
-        { IrcStrings.UserModeSecure, new Secure() },
-        { IrcStrings.UserModeServerNotice, new ServerNotice() },
-        { IrcStrings.UserModeWallops, new WallOps() },
-        { IrcStrings.UserModeAdmin, new Admin() },
-        { IrcStrings.UserModeIrcx, new Isircx() },
-        { IrcStrings.UserModeGag, new Gag() },
-        { IrcStrings.UserModeHost, new Host() }
+        { Tokens.UserModeOper, new Oper() },
+        { Tokens.UserModeInvisible, new Invisible() },
+        { Tokens.UserModeSecure, new Secure() },
+        { Tokens.UserModeServerNotice, new ServerNotice() },
+        { Tokens.UserModeWallops, new WallOps() },
+        { Tokens.UserModeAdmin, new Admin() },
+        { Tokens.UserModeIrcx, new Isircx() },
+        { Tokens.UserModeGag, new Gag() },
+        { Tokens.UserModeHost, new Host() }
     };
 }

@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class BanList : ModeRuleChannel
 {
-    public BanList() : base(IrcStrings.ChannelModeBan)
+    public BanList() : base(Tokens.ChannelModeBan)
     {
     }
 

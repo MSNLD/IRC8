@@ -6,7 +6,7 @@ namespace Irc.Modes.Channel;
 
 public class NoExtern : ModeRuleChannel
 {
-    public NoExtern() : base(IrcStrings.ChannelModeNoExtern)
+    public NoExtern() : base(Tokens.ChannelModeNoExtern)
     {
     }
 
